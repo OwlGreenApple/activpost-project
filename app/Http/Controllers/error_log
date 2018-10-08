@@ -1,0 +1,1 @@
+[12-Oct-2016 01:46:19 America/Chicago] PHP Fatal error:  Class 'Illuminate\Routing\Controller' not found in /home/celebpost/public_html/celebpost-laravel/app/Http/Controllers/Controller.php on line 11

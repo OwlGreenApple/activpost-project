@@ -1,0 +1,383 @@
+<?php
+
+namespace Celebpost\Http\Controllers\User;
+
+/*Models*/
+
+use Celebpost\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request as req;
+use Celebpost\Http\Controllers\User\ResearchController;
+
+use Celebpost\Models\Image as ImageModel;
+
+use View, Input, Mail, Request, App, Hash, Validator, Carbon, Crypt, Redirect, Image;
+
+class ImageController extends Controller
+{
+  
+	
+	public function save_image()
+	{
+		$user = Auth::user();
+		//check jumlah image
+		$count = ImageModel::where("user_id","=",$user->id)->count();
+		if ($count>50) {
+			$arr["type"] = "error";
+			$arr["message"] = "File Images tidak boleh lebih dari 50";
+			return $arr;
+		}
+		
+		/*if (Request::input("decryptData") == "1") {
+			$file = $decode_data;
+		} else {
+			$file = Request::input("imgData");
+		}
+		$rules = array('file' => 'required|max:2048'); 
+		$validator = Validator::make(array('file'=> $file), $rules);
+		if(!$validator->passes()){
+			$arr["type"] = "error";
+			$arr["message"] = "Ukuran file Maksimum 2MB";
+			return $arr;
+		}*/
+		if (Request::input("decryptData") == "1") {
+		} else {		
+			$arr_size = getimagesize(Request::input("imgData"));
+			// if ( ($arr_size[0]>1400) && ($arr_size[1]>1400) ) {
+			if ( ( ($arr_size[0]>1090) && ($arr_size[1]>1090) ) || ( ($arr_size[0]>1300) && ($arr_size[1]>800) ) || ( ($arr_size[0]>800) && ($arr_size[1]>1300) ) ) {
+				$arr["type"] = "error";
+				$arr["message"] = "Ukuran maximum width = 1080px & height = 1080px";
+				return $arr;
+			}
+			if ( ($arr_size[0]<640) || ($arr_size[1]<640) ) {
+				$arr["type"] = "error";
+				$arr["message"] = "Ukuran file Minimum 640px X 640px";
+				return $arr;
+			}
+			if ( ($arr_size[0]>1080) || ($arr_size[1]>1350) ) {
+				$arr["type"] = "error";
+				$arr["message"] = "Ukuran maximum width = 1080px & height = 1350px";
+				return $arr;
+			}
+			$ratio_img = $arr_size[0] / $arr_size[1];
+			if ( ($ratio_img < 0.8) || ($ratio_img>1.91) ) {
+				$arr["type"] = "error";
+				$arr["message"] = "Ratio image (Width / Height) Harus berkisar antara 0.8 sampai 1.91. Ratio image anda ".$ratio_img;
+				return $arr;
+			}
+		}
+		
+		//slug file name 
+		$last_hit = ImageModel::where("user_id","=",$user->id)
+								->where("file","like","slug%")
+								->orderBy('id', 'desc')->first();
+		if (is_null($last_hit)) {
+			$slug = "slug-00000";
+		} else {
+			$temp_arr1 = explode(".", $last_hit->file );
+			$temp_arr2 = explode("-", $temp_arr1[0] );
+			$ctr = intval($temp_arr2[1]); $ctr++;
+			$slug = "slug-".str_pad($ctr, 5, "0", STR_PAD_LEFT);
+		}
+		
+		$filename = $slug;
+
+		// $dir = public_path('images/users/'.$user->username.'-'.$user->id); 
+		$dir = public_path('../vp/users/'.$user->username.'-'.$user->id); 
+		if (!file_exists($dir)) {
+			mkdir($dir,0741,true);
+		}
+
+		//check imgData url or encode image data
+		// if ( (Request::input("captionData")=="") && (Request::input("ownerData")=="") ) {
+		if (Request::input("decryptData") == "1") {
+			$pieces = explode("?", Crypt::decrypt(Request::input("imgData")));
+			$decode_data = $pieces[0];
+			
+			// Image::make($decode_data)->save($dir."/".$filename.".jpg");
+			// file_put_contents($dir."/".$filename.".jpg",$decode_data);
+			$url = $decode_data;
+			$img = $dir."/".$filename.".jpg";
+			file_put_contents($img, file_get_contents($url));			
+		} else if (Request::input("decryptData") == "0"){
+			Image::make(Request::input("imgData"))->save($dir."/".$filename.".jpg");
+		}
+		$imageM = new ImageModel;
+		$imageM->is_schedule = 0;
+		$imageM->user_id = $user->id;
+		$imageM->file = $filename.".jpg";
+		if ( (Request::input("captionData")=="") && (Request::input("ownerData")=="") ) {
+			$imageM->is_use_caption = 0;
+			$imageM->caption = "";
+			$imageM->owner_post = "";
+			$imageM->save();
+		} else {
+			$imageM->is_use_caption = 1;
+			$val = mb_check_encoding( Request::input("captionData"), 'UTF-8') ?  Request::input("captionData") : utf8_encode( Request::input("captionData"));
+			$val = ResearchController::removeEmoji($val);
+			$imageM->caption =$val;
+			$imageM->owner_post = Request::input("ownerData");
+			$imageM->save();
+			$arr["imageId"] = $imageM->id;
+		}
+		
+		$arr["type"] = "success";
+		return $arr;
+	}
+	
+	public function delete_image()
+	{
+		$arr["type"] = "success";
+		$arr["message"] = "Image berhasil dihapus";
+		
+		$user = Auth::user();
+		if (Request::input("inputId")=="all") { 
+			$images = ImageModel::where("user_id","=",$user->id)
+								->get();
+			foreach ($images as $image) {
+				$image->delete();
+				// $dir = public_path('images/users/'.$user->username.'-'.$user->id); 
+				$dir = public_path('../vp/users/'.$user->username.'-'.$user->id); 
+				unlink($dir."/".$image->file);
+			}
+		} 
+		else {
+			$image = ImageModel::where("user_id","=",$user->id)
+								->where("id","=",Request::input("inputId"))
+								->first();
+			if (!is_null($image)) {
+				$image->delete();
+				// $dir = public_path('images/users/'.$user->username.'-'.$user->id); 
+				$dir = public_path('../vp/users/'.$user->username.'-'.$user->id); 
+				unlink($dir."/".$image->file);
+			} else {
+				$arr["type"] = "error";
+				$arr["message"] = "Image tidak berhasil dihapus";
+			}
+		}
+
+		return $arr;
+	}
+
+	public function save_temp_image(req $request)
+	{
+		$user = Auth::user();
+		// session(['key' => Request::input("url")]);
+		
+		$pieces = explode("?", Crypt::decrypt(Request::input("url")));
+		$path = $pieces[0];
+		$filename = "temp.jpg";
+
+		// $dir = public_path('images/users/'.$user->username.'-'.$user->id); 
+		$dir = public_path('../vp/users/'.$user->username.'-'.$user->id); 
+		if (!file_exists($dir)) {
+			mkdir($dir,0741,true);
+		}
+
+		Image::make($path)->save($dir."/".$filename);
+		$imageM = ImageModel::where("file","=",$filename)
+							->where("user_id","=",$user->id)
+							->first();
+		if(is_null($imageM)) {
+			$imageM = new ImageModel;
+		}
+		$imageM->user_id = $user->id;
+		$imageM->file = $filename;
+		$imageM->is_use_caption = 0;
+		$imageM->caption = "";
+		$imageM->owner_post = "";
+		$imageM->save();
+		
+		// $request->session()->put('url', 'images/users/'.$user->username.'-'.$user->id."/temp.jpg");
+		$request->session()->put('url', '../vp/users/'.$user->username.'-'.$user->id."/temp.jpg");
+		
+		$arr["type"] = "success";
+		$arr["message"] = "Data berhasil disimpan";
+		// $arr["url"] = asset('images/users/'.$user->username.'-'.$user->id."/temp.jpg");
+		$arr["url"] = asset('../vp/users/'.$user->username.'-'.$user->id."/temp.jpg");
+		return $arr;
+		
+	}
+	
+	public function save_image_schedule()
+	{
+		$user = Auth::user();
+		
+		$filename = "temp.jpg";
+
+		// $dir = public_path('images/uploads/'.$user->username.'-'.$user->id); 
+		$dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
+		if (!file_exists($dir)) {
+			mkdir($dir,0741,true);
+		}
+		$arr_size = getimagesize(Request::input("imgData"));
+		if ( ( ($arr_size[0]>1090) && ($arr_size[1]>1090) ) || ( ($arr_size[0]>1300) && ($arr_size[1]>800) ) || ( ($arr_size[0]>800) && ($arr_size[1]>1300) ) ) {
+			$arr["type"] = "error";
+			$arr["message"] = "Ukuran maximum width = 1080px & height = 1080px";
+			return $arr;
+		}
+		if ( ($arr_size[0]<640) || ($arr_size[1]<640) ) {
+			$arr["type"] = "error";
+			$arr["message"] = "Ukuran file Minimum 640px X 640px";
+			return $arr;
+		}
+		if ( ($arr_size[0]>1080) || ($arr_size[1]>1350) ) {
+			$arr["type"] = "error";
+			$arr["message"] = "Ukuran maximum width = 1080px & height = 1350px";
+			return $arr;
+		}
+		$ratio_img = $arr_size[0] / $arr_size[1];
+		if ( ($ratio_img < 0.8) || ($ratio_img>1.91) ) {
+			$arr["type"] = "error";
+			$arr["message"] = "Ratio image (Width / Height) Harus berkisar antara 0.8 sampai 1.91. Ratio image anda ".$ratio_img;
+			return $arr;
+		}
+
+		
+		Image::make(Request::input("imgData"))->save($dir."/".$filename);
+		
+		$arr["type"] = "success";
+		$arr["message"] = "Data berhasil disimpan";
+		// $arr["url"] = asset('images/uploads/'.$user->username.'-'.$user->id."/temp.jpg");
+		$arr["url"] = asset('../vp/uploads/'.$user->username.'-'.$user->id."/temp.jpg");
+		return $arr;
+	}		
+
+	public function multiple_upload	()
+	{
+		$user = Auth::user();
+    // getting all of the post data
+    $files = Input::file('images');
+    // Making counting of uploaded images
+    $file_count = count($files);
+		
+		//check jumlah image
+		$count = ImageModel::where("user_id","=",$user->id)->count();
+		if ($count+$file_count>50) {
+			return Redirect::to('saved-images')->with(array("error"=>"File Images tidak boleh lebih dari 50"));
+		}
+		// return $file_count;
+		
+    $uploadcount = 0;
+		$error_message = "";
+    foreach($files as $file) {
+      // $rules = array('file' => 'required|mimes:png,gif,jpeg,jpg|dimensions:ratio>=0.8|dimensions:ratio<=1.9|dimensions:min_width=640,max_width=1080,min_height=640,max_height=1350'); 
+			$is_error = false;
+			$arr_size = getimagesize($file);
+			// if ( ($arr_size[0]>1400) && ($arr_size[1]>1400) ) {
+			if ( ( ($arr_size[0]>1090) && ($arr_size[1]>1090) ) || ( ($arr_size[0]>1300) && ($arr_size[1]>800) ) || ( ($arr_size[0]>800) && ($arr_size[1]>1300) ) ) {
+				$is_error = true;
+				$error_message .= $file->getClientOriginalName()." -> Ukuran maximum width = 1080px & height = 1080px;";
+			}
+			if ( ($arr_size[0]<640) || ($arr_size[1]<640) ) {
+				$is_error = true;
+				$error_message .= $file->getClientOriginalName()." -> Ukuran file Minimum 640px X 640px;";
+			}
+			if ( ($arr_size[0]>1080) || ($arr_size[1]>1350) ) {
+				$is_error = true;
+				$error_message .= $file->getClientOriginalName()." -> Ukuran maximum width = 1080px & height = 1350px;";
+			}
+			$ratio_img = $arr_size[0] / $arr_size[1];
+			if ( ($ratio_img < 0.8) || ($ratio_img>1.91) ) {
+				$is_error = true;
+ 			  $error_message .= $file->getClientOriginalName()." -> Ratio image (Width / Height) Harus berkisar antara 0.8 sampai 1.91. Ratio image anda ".$ratio_img.";";
+			}
+			
+			
+      /*$validator = Validator::make(array('file'=> $file), $rules);
+      if($validator->passes()){*/
+		  if (!$is_error) {
+        // $destinationPath = 'uploads';
+        // $filename = $file->getClientOriginalName();
+        $uploadcount ++;
+				
+				//slug file name 
+				$last_hit = ImageModel::where("user_id","=",$user->id)
+										->where("file","like","slug%")
+										->orderBy('id', 'desc')->first();
+				if (is_null($last_hit)) {
+					$slug = "slug-00000";
+				} else {
+					$temp_arr1 = explode(".", $last_hit->file );
+					$temp_arr2 = explode("-", $temp_arr1[0] );
+					$ctr = intval($temp_arr2[1]); $ctr++;
+					$slug = "slug-".str_pad($ctr, 5, "0", STR_PAD_LEFT);
+				}
+				
+				$filename = $slug;
+
+				// $dir = public_path('images/users/'.$user->username.'-'.$user->id); 
+				$dir = public_path('../vp/users/'.$user->username.'-'.$user->id); 
+				if (!file_exists($dir)) {
+					mkdir($dir,0741,true);
+				}
+				
+				// Image::make(Request::input("imgData"))->save($dir."/".$filename.".jpg");
+        $upload_success = $file->move($dir, $filename.".".$file->getClientOriginalExtension());
+				
+				$imageM = new ImageModel;
+				$imageM->user_id = $user->id;
+				$imageM->file = $filename.".".$file->getClientOriginalExtension();
+				$imageM->is_use_caption = 0;
+				$imageM->caption = "";
+				$imageM->owner_post = "";
+				$imageM->is_schedule = 0;
+				$imageM->save();
+				
+				
+      }
+    }
+    if($uploadcount == $file_count){
+      // Session::flash('success', 'Upload successfully'); 
+      return Redirect::to('saved-images');
+    } 
+    else {
+			
+			// $errors = $validator->errors();
+			// if ($errors->any()) {
+				// foreach($errors->all() as $error) {
+						// $error_message .= $error."\n";
+				// }
+			// }
+      // return Redirect::to('saved-images')->withInput()->withErrors($validator);
+			return Redirect::to('saved-images')->with(array("error"=>$error_message));
+    }
+	}		
+
+	public function load_images()
+  {
+    $user = Auth::user();
+		
+		$data = ImageModel::where("user_id","=",$user->id)
+						->orderBy('id', 'desc')
+						->paginate(25);
+			
+    return view('user.image.content')->with(
+                array(
+                  'user'=>$user,
+                  'data'=>$data,
+                  'page'=>Request::input('page'),
+                ));
+  }
+
+	public function pagination_images()
+  {
+		$user = Auth::user();
+		// if (Request::input('search')=="") {
+			// $data = Proxies::paginate(15);
+		// } else {
+			$data = ImageModel::where("user_id","=",$user->id)
+							->orderBy('id', 'desc')
+							->paginate(25);
+		// }
+    return view('user.image.pagination')->with(
+                array(
+                  'user'=>$user,
+                  'data'=>$data,
+                  'page'=>Request::input('page'),
+                ));
+  }
+
+	
+	
+}
