@@ -188,24 +188,28 @@ class AccountController extends Controller
 		
 		$cookiefile = base_path('storage/ig-cookies/'.$username.'/').'cookies-celebpost-temp.txt';
 
+    if(env('APP_ENV')=='production'){
+      $url = "https://activfans.com/dashboard/get-proxy-id/".$username;
+      $c = curl_init();
 
-		$url = "https://activfans.com/dashboard/get-proxy-id/".$username;
-		$c = curl_init();
+      curl_setopt($c, CURLOPT_URL, $url);
+      curl_setopt($c, CURLOPT_REFERER, $url);
+      curl_setopt($c, CURLOPT_FOLLOWLOCATION, true);
+      curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($c, CURLOPT_COOKIEFILE, $cookiefile);
+      curl_setopt($c, CURLOPT_COOKIEJAR, $cookiefile);
+      $page = curl_exec($c);
+      curl_close($c);
 
-		curl_setopt($c, CURLOPT_URL, $url);
-		curl_setopt($c, CURLOPT_REFERER, $url);
-		curl_setopt($c, CURLOPT_FOLLOWLOCATION, true);
-		curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($c, CURLOPT_COOKIEFILE, $cookiefile);
-		curl_setopt($c, CURLOPT_COOKIEJAR, $cookiefile);
-		$page = curl_exec($c);
-		curl_close($c);
+      $arr_res = json_decode($page,true);  
 
-		$arr_res = json_decode($page,true);
-		
-		$proxy_id = $arr_res["proxy_id"]; 
-		$is_on_celebgramme = $arr_res["is_on_celebgramme"]; 
+      $proxy_id = $arr_res["proxy_id"]; 
+      $is_on_celebgramme = $arr_res["is_on_celebgramme"]; 
+    } else {
+      $proxy_id = 1; 
+      $is_on_celebgramme = 0; 
+    }
 
 		$account->proxy_id = $proxy_id;
 		$account->is_on_celebgramme = $is_on_celebgramme;
