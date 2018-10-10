@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('upload','TesController@tesvideo');
 Route::get('verifyemail/{cryptedcode}', 'LandingPageController@verifyEmail');
 Route::get('resend-email-activation', 'LandingPageController@resendEmailActivation');
 
