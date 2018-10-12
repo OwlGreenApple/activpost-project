@@ -135,7 +135,10 @@ Route::group(['middleware' => 'auth'], function () {
   Route::get('pagination-schedule-list', 'User\ScheduleController@pagination_schedule');
   Route::post('schedule/call-action-start-schedule-akun', 'User\ScheduleController@call_action_start_schedule_akun');
   
+  //Schedule video new
   Route::get('schedule/video', 'User\ScheduleController@schedule_video');
+  Route::post('schedule/save-video', 'User\ScheduleController@save_video_schedule');
+
 
   // Schedule - video
   Route::get('schedule-video', 'User\ScheduleController@index_video');

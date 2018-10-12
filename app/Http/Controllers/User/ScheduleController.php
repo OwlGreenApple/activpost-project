@@ -907,4 +907,25 @@ $offset = ($page * $perPage) - $perPage;
     
     return view('schedule-video2.add',compact('sid','accounts','collections_captions','hashtags_collections','user','arr_repost','max_date'));
   }
+
+  public function save_video_schedule()
+  {
+    $user = Auth::user();
+    
+    $filename = "video.".Request::input("imgData")->getClientOriginalExtension();
+
+    // $dir = public_path('images/uploads/'.$user->username.'-'.$user->id); 
+    $dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
+    if (!file_exists($dir)) {
+      mkdir($dir,0741,true);
+    }
+  
+    Image::make(Request::input("imgData"))->save($dir."/".$filename);
+    
+    $arr["type"] = "success";
+    $arr["message"] = "Data berhasil disimpan";
+    // $arr["url"] = asset('images/uploads/'.$user->username.'-'.$user->id."/temp.jpg");
+    $arr["url"] = asset('../vp/uploads/'.$user->username.'-'.$user->id."/".$filename);
+    return $arr;
+  } 
 }

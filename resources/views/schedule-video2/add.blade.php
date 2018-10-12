@@ -16,7 +16,7 @@
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 				},
 				type: 'POST',
-				url: "<?php echo url('save-image-schedule'); ?>",
+				url: "<?php echo url('schedule/save-video'); ?>",
 				data: { 
 					imgData: imgData, 
 				},
@@ -147,6 +147,26 @@
     $("#button-upload-file").on("click", function() {
         $("#file-upload").trigger("click");
     });
+
+    $("#file-upload").change(function(){
+      // console.log($(this).val());
+      // load_image($(this).files[0]);
+      
+      var file    = document.querySelector('input[type=file]').files[0];
+      var reader  = new FileReader();
+
+      reader.addEventListener("load", function () {
+        // preview.src = reader.result;
+        load_image(reader.result);
+      }, false);
+
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+  
+    }).click(function(){
+        $(this).val("")
+    });   
     
 		// Datepicker
 		$('.formatted-date').datetimepicker({
@@ -159,14 +179,6 @@
 		$("#publish-at").val('<?php if ($sid<>0) { echo date('Y-m-d H:i',strtotime($schedule->publish_at)); } ?>');
 		$("#delete-at").val('<?php if ($sid<>0) { if ($schedule->is_deleted) { echo date('Y-m-d H:i',strtotime($schedule->delete_at)); } } ?>');
 	
-		
-		
-		$('#button-upload').click(function(e){
-			e.preventDefault();
-			myPixie.open({
-				url: '',
-			});
-		});
 		$( "body" ).on( "dblclick", '.same-height', function(e) {
 			$("#canvas-image").attr('src',$(this).attr("data-url"));
 			$("#imguri").val($(this).attr("data-url"));
@@ -204,28 +216,7 @@
 			$("#delete-at").prop('disabled', false);
 		} else {
 			$("#delete-at").prop('disabled', true);
-		}
-		
-    $("#file-upload").change(function(){
-			// console.log($(this).val());
-			// load_image($(this).files[0]);
-			
-			var file    = document.querySelector('input[type=file]').files[0];
-			var reader  = new FileReader();
-
-			reader.addEventListener("load", function () {
-				// preview.src = reader.result;
-				load_image(reader.result);
-			}, false);
-
-			if (file) {
-				reader.readAsDataURL(file);
-			}
-	
-    }).click(function(){
-        $(this).val("")
-    });		
-		
+		}	
 	});
 </script>
 
