@@ -910,23 +910,25 @@ $offset = ($page * $perPage) - $perPage;
 
   public function save_video_schedule()
   {
+    //dd(Request::all());
     $user = Auth::user();
-    dd(Request::input("imgData"));
-    $filename = "video.".Request::input("imgData")->getClientOriginalExtension();
+    
+    //$filename = "video.".Request::input("imgData")->getClientOriginalExtension();
 
     // $dir = public_path('images/uploads/'.$user->username.'-'.$user->id); 
     $dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
     if (!file_exists($dir)) {
       mkdir($dir,0741,true);
     }
-    
-    Request::input("imgData")->move($dir."/",$filename);
+      
+    Storage::disk('public')->putFile('videos',Request::input("imgData"));
+    //Request::input("imgData")->move($dir."/",$filename);
     //Image::make()->save($dir."/".$filename);
     
     $arr["type"] = "success";
     $arr["message"] = "Data berhasil disimpan";
     // $arr["url"] = asset('images/uploads/'.$user->username.'-'.$user->id."/temp.jpg");
-    $arr["url"] = asset('../vp/uploads/'.$user->username.'-'.$user->id."/".$filename);
+    $arr["url"] = asset('../vp/uploads/'.$user->username.'-'.$user->id."/tes");
     return $arr;
   } 
 }

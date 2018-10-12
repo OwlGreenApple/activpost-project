@@ -11,16 +11,20 @@
 ?>
 <script>
 	function load_image(imgData){
+    var form = $('#form-uploadfile')[0];
+    var formData = new FormData(form);
+
 		$.ajax({
 				headers: {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 				},
 				type: 'POST',
 				url: "<?php echo url('schedule/save-video'); ?>",
-				data: { 
-					imgData: imgData, 
-				},
+				data: formData, 
 				dataType: 'text',
+        cache: false,
+        contentType: false,
+        processData: false,
 				beforeSend: function()
 				{
 					$("#div-loading").show();
@@ -261,7 +265,9 @@
 	<div class="row">
 		<div class="col-md-2 col-xs-4 col-sm-4 margin-bottom">
 			<input type="button" value="Upload Video" class="btn btn-home" id="button-upload-file">
-			<input type="file" style="display: none" id="file-upload" />
+      <form id="form-uploadfile" enctype="multipart/form-data">
+        <input type="file" name="imgData" style="display: none" id="file-upload" />  
+      </form>
 		</div>
 	</div>
 	<div class="row margin-bottom">
