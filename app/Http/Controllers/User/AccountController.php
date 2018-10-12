@@ -271,7 +271,7 @@ class AccountController extends Controller
 		
 
 		$is_error = 0 ;		
-		$i = new Instagram(true,true,[
+		$i = new Instagram(false,false,[
 			"storage"       => "mysql",
 			"dbhost"       => Config::get('database.connections.mysql_celebgramme.host'),
 			"dbname"   => Config::get('database.connections.mysql_celebgramme.database'),
@@ -340,7 +340,8 @@ class AccountController extends Controller
 			catch (\InstagramAPI\Exception\ThrottledException $e) {
 				return response()->json([
 						'login_status' => 403,
-						'msg' => "Code:399 Network busy, silahkan coba lagi",
+						// 'msg' => "Code:399 Network busy, silahkan coba lagi",
+						'msg' => $e->getMessage(),
 						'proxy_id' => $proxy_id
 				]);
 			}
@@ -355,7 +356,8 @@ class AccountController extends Controller
 				if ( (strpos($error_message, 'Network: CURL error') !== false) || (strpos($error_message, 'No response from server') !== false) ) {
 					return response()->json([
 							'login_status' => 403,
-							'msg' => "Code:399 Network busy, silahkan coba lagi",
+							// 'msg' => "Code:399 Network busy, silahkan coba lagi",
+							'msg' => $e->getMessage(),
 							'proxy_id' => $proxy_id
 					]);
 				}
