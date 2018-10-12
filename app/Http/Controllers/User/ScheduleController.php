@@ -911,7 +911,7 @@ $offset = ($page * $perPage) - $perPage;
   public function save_video_schedule()
   {
     $user = Auth::user();
-    
+    dd(Request::input("imgData"));
     $filename = "video.".Request::input("imgData")->getClientOriginalExtension();
 
     // $dir = public_path('images/uploads/'.$user->username.'-'.$user->id); 
@@ -919,8 +919,9 @@ $offset = ($page * $perPage) - $perPage;
     if (!file_exists($dir)) {
       mkdir($dir,0741,true);
     }
-  
-    Image::make(Request::input("imgData"))->save($dir."/".$filename);
+    
+    Request::input("imgData")->move($dir."/",$filename);
+    //Image::make()->save($dir."/".$filename);
     
     $arr["type"] = "success";
     $arr["message"] = "Data berhasil disimpan";
