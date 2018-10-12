@@ -83,9 +83,9 @@ class TesController extends Controller
       }
       
       try {
-          $location = $ig->location->search('40.7439862', '-73.998511')->getVenues()[0];
+        $location = $ig->location->search('40.7439862', '-73.998511')->getVenues()[0];
       } catch (\Exception $e) {
-          echo 'Something went wrong: '.$e->getMessage()."\n";
+        echo 'Something went wrong: '.$e->getMessage()."\n";
       }
 
       $metadata = [
@@ -109,7 +109,7 @@ class TesController extends Controller
           ],
 
           // (optional) To add a location, do BOTH of these:
-          'location_sticker' => [
+          /*'location_sticker' => [
               'width'         => 0.89333333333333331,
               'height'        => 0.071281859070464776,
               'x'             => 0.5,
@@ -118,7 +118,7 @@ class TesController extends Controller
               'is_sticker'    => true,
               'location_id'   => $location->getExternalId(),
           ],
-          'location' => $location,
+          'location' => $location,*/
 
           // (optional) You can use story links ONLY if you have a business account with >= 10k followers.
           // 'link' => 'https://github.com/mgp25/Instagram-API',
