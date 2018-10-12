@@ -83,7 +83,8 @@ class TesController extends Controller
       }
       
       try {
-        $location = $ig->location->search('40.7439862', '-73.998511')->getVenues()[0];
+        $location = $i->location->search('40.7439862', '-73.998511')
+                      ->getVenues()[0];
       } catch (\Exception $e) {
         echo 'Something went wrong: '.$e->getMessage()."\n";
       }

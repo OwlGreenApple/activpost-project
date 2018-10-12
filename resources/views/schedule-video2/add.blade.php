@@ -13,18 +13,26 @@
 	function load_image(imgData){
     var form = $('#form-uploadfile')[0];
     var formData = new FormData(form);
+    var files;
 
+    this.total_files = $("#file-upload")[0].files.length;
+    this.start_process = 0;
+    $.each($("#file-upload")[0].files, function(i,o){
+        files = new FormData();
+        files.append(1, o);
+    });
 		$.ajax({
 				headers: {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 				},
 				type: 'POST',
 				url: "<?php echo url('schedule/save-video'); ?>",
-				data: formData, 
-				dataType: 'text',
+				data: {imgData:files}, 
+				//dataType: 'text',
         cache: false,
         contentType: false,
         processData: false,
+        async:true,
 				beforeSend: function()
 				{
 					$("#div-loading").show();
