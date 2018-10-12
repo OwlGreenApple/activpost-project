@@ -365,7 +365,6 @@ use Celebpost\Models\Account;
 		</button>
 		-->
 		<a href="{{ url('schedule/add') }}" class="btn btn-home fl" style="margin-left:15px;margin-top:0px;"><span class="glyphicon glyphicon-time"></span> Add Schedule</a>
-    <a href="{{ url('schedule/video') }}" class="btn btn-home fl" style="margin-left:15px;margin-top:0px;"><span class="glyphicon glyphicon-time"></span> Schedule Video</a>
 		<!--<a id="button-buy-more" class="btn btn-sm btn-home-light fl" style="margin-left:15px;margin-top:-5px;" href="{{url('/order')}}">Buy More</a>-->
 			
 			<div class="fn"></div>

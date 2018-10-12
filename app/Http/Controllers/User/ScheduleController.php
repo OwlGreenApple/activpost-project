@@ -861,4 +861,50 @@ $offset = ($page * $perPage) - $perPage;
 		});  			 
 		$img->save(public_path('../vp/uploads/asd-new.jpg'));  
 	}  		
+
+  public function schedule_video($sid =0){
+    $user = Auth::user();
+    if (!$user->is_confirmed) {
+      return "Please Confirm Your Email";
+    }
+    
+    $arr_repost = null;
+    
+    //check schedule page users, check schedule publish or not 
+    if ($sid<>0) {
+      //check schedule page users 
+      $check = Schedule::where("user_id","=",$user->id)
+                ->where("schedules.id","=",$sid)
+                ->first();
+      if (is_null($check)) {
+        return "Not authorize";
+      }
+      
+      //check schedule publish or not , klo status 2 = success, 3 = deleted maka schedule ga bole diedit
+      $check = Schedule::where("user_id","=",$user->id)
+                ->where("id","=",$sid)
+                ->where('schedules.status','>=',2)
+                ->first();
+      if (!is_null($check)) {
+        return "error 404";
+      }
+    }
+
+    
+    $accounts = Account::where("user_id","=",$user->id)
+                ->where("is_active","=",1)
+                ->get();
+    
+    $hashtags_collections = Template::where("user_id","=",$user->id)
+                    ->where("type","=","hashtags")
+                    ->get();
+    
+    $collections_captions = Template::where("user_id","=",$user->id)
+                    ->where("type","=","templates")
+                    ->get();
+    
+    $max_date = Carbon::now()->addSeconds($user->active_time)->format('Y-m-d H:i');
+    
+    return view('schedule-video2.add',compact('sid','accounts','collections_captions','hashtags_collections','user','arr_repost','max_date'));
+  }
 }
