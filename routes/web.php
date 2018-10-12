@@ -11,6 +11,8 @@
 |
 */
 Route::get('upload','TesController@tesvideo');
+Route::get('upload-story','TesController@tesStory');
+
 Route::get('verifyemail/{cryptedcode}', 'LandingPageController@verifyEmail');
 Route::get('resend-email-activation', 'LandingPageController@resendEmailActivation');
 
