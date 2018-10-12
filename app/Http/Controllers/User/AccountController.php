@@ -271,7 +271,7 @@ class AccountController extends Controller
 		
 
 		$is_error = 0 ;		
-		$i = new Instagram(false,false,[
+		$i = new Instagram(true,true,[
 			"storage"       => "mysql",
 			"dbhost"       => Config::get('database.connections.mysql_celebgramme.host'),
 			"dbname"   => Config::get('database.connections.mysql_celebgramme.database'),
