@@ -82,6 +82,12 @@ class TesController extends Controller
         $i->login($account->username, $password);
       }
       
+      try {
+          $location = $ig->location->search('40.7439862', '-73.998511')->getVenues()[0];
+      } catch (\Exception $e) {
+          echo 'Something went wrong: '.$e->getMessage()."\n";
+      }
+
       $metadata = [
           // (optional) Captions can always be used, like this:
           'caption'  => '#test This is a great API!',
