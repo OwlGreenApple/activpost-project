@@ -243,11 +243,12 @@ class ImageController extends Controller
 		return $arr;
 	}		
 
-	public function multiple_upload	()
+	public function multiple_upload	(req $request)
 	{
 		$user = Auth::user();
     // getting all of the post data
-    $files = Input::file('images');
+    // $files = Input::file('images');
+    $files = $request->images;
     // Making counting of uploaded images
     $file_count = count($files);
 		
