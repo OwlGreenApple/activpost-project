@@ -54,7 +54,8 @@ class AccountController extends Controller
      
      if ($user->is_admin == 1) {
 
-       $q = Input::get ( 'q' );
+       // $q = Input::get ( 'q' );
+       $q = $request->q;
     
 
       $searchid2 = Users::join("accounts","users.id", '=', "accounts.user_id")
@@ -65,7 +66,7 @@ class AccountController extends Controller
                      ->paginate(15);
 
       $pagination = $searchid2->appends ( array (
-        'q' => Input::get ( 'q' ) 
+        'q' => $request->q
     ) );
      
       
@@ -161,9 +162,9 @@ class AccountController extends Controller
 
   }
   
-	public function check_login_ig()
+	public function check_login_ig(req $request)
 	{
-		$account = Account::find(Input::get("inputId"));
+		$account = Account::find($request->inputId);
 		
 		//carikan proxy baru, yang available, ganti cara baru  
 		$availableProxy = ViewProxyUses::select("id","proxy","cred","port","auth",DB::connection('mysql_celebgramme')->raw("sum(count_proxy) as countP"))
@@ -213,9 +214,9 @@ class AccountController extends Controller
 		return "";
 	}
 
-	public function process_valid_account()
+	public function process_valid_account(req $request)
 	{
-		$account = Account::find(Input::get("inputId"));
+		$account = Account::find($request->inputId);
 		$account->is_active = 1;
 		$account->save();
 		

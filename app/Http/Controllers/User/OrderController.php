@@ -272,7 +272,8 @@ class OrderController extends Controller
     //$userer = Users::where('email', '=', $ad)->first();
 
 		
-    if (!Input::file('gambar')->isValid()) {
+    // if (!Input::file('gambar')->isValid()) {
+    if (!$request->gambar->isValid()) {
       $arr["message"]= "Upload bukti transfer tidak valid";
       $arr["type"]= "error";
       return $arr;
@@ -315,7 +316,8 @@ class OrderController extends Controller
         $fileName   = $file->getClientOriginalName();
         //$destinationPath = base_path("storage/images/");
         $destinationPath = "storage/images/";
-        Input::file('gambar')->move($destinationPath, $fileName);
+        // Input::file('gambar')->move($destinationPath, $fileName);
+        $request->gambar->move($destinationPath, $fileName);
 
         $conpay = OrderMeta::createMeta("no_order",$request->no_order,$orderid->id);
         $conpay = OrderMeta::createMeta("nama_bank",$request->nama_bank,$orderid->id);
@@ -356,11 +358,13 @@ class OrderController extends Controller
           $message->subject('[Activpost] Order Confirmation');
         });
       } else {
-        $fileName   = $orderid->no_order.".".Input::file('gambar')->getClientOriginalExtension();
+        // $fileName   = $orderid->no_order.".".Input::file('gambar')->getClientOriginalExtension();
+        $fileName   = $orderid->no_order.".".$request->gambar->getClientOriginalExtension();
 
         //Storage::disk('s3')->put('confirm-payment/'.$fileName,File::get(Input::file('gambar')),'public');
 
-        $image = Image::make(Input::file('gambar')->getRealPath())
+        // $image = Image::make(Input::file('gambar')->getRealPath())
+        $image = Image::make($request->gambar->getRealPath())
                 ->resize(600, null, function ($constraint) {
                     $constraint->aspectRatio();
                 })                
