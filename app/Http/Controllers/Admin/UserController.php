@@ -130,7 +130,7 @@ class UserController extends Controller
       //$query  = $request->get('q');
 
       if ($user->is_admin == 1) {
-       $q = Input::get ( 'q' );
+       $q = $request->q;
   /*
        $accounts = Account::where("user_id","=",$user->id)
                 ->orderBy('username','asc')->paginate(15);
@@ -187,7 +187,7 @@ class UserController extends Controller
       //$query  = $request->get('q');
 
       if ($user->is_admin == 1) {
-       $q = Input::get ( 'q' );
+       $q = $request->q;
   /*
        $accounts = Account::where("user_id","=",$user->id)
                 ->orderBy('username','asc')->paginate(15);
@@ -216,7 +216,7 @@ class UserController extends Controller
       //$query  = $request->get('q');
 
       if ($user->is_admin == 1) {
-       $q = Input::get ( 'q' );
+       $q = $request->q;
   /*
        $accounts = Account::where("user_id","=",$user->id)
                 ->orderBy('username','asc')->paginate(15);
@@ -285,7 +285,7 @@ class UserController extends Controller
       //$query  = $request->get('q');
 
       if ($user->is_admin == 1) {
-       $q = Input::get ( 'q' );
+       $q = $request->q;
   /*
        $accounts = Account::where("user_id","=",$user->id)
                 ->orderBy('username','asc')->paginate(15);
@@ -320,7 +320,7 @@ class UserController extends Controller
         ->get();
         
        $pagination = $usern->appends ( array (
-        'q' => Input::get ( 'q' ) 
+        'q' => $request->q 
     ) );
           */
      
@@ -619,14 +619,15 @@ class UserController extends Controller
 
   public function importxls(req $request)
   {
-      //$path = Input::file('import_file')->getRealPath();
+      //$path = $request->import_file->getRealPath();
       //echo $days = $request->time_d;
     $admin = Auth::user();
 
     if ($admin->is_admin == 1) {
 
         $active_d = strtotime(''.$request->time_d.' day 0 second', 0);
-      $data = Excel::load(Input::file('import_file'), function($reader) {
+      // $data = Excel::load(Input::file('import_file'), function($reader) {
+      $data = Excel::load($request->import_file, function($reader) {
 
       })->get();
 

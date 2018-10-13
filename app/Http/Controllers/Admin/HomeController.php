@@ -223,7 +223,8 @@ class HomeController extends Controller
 			//$path = Input::file('import_file')->getRealPath();
 			//echo $days = $request->time_d;
 			$active_d = strtotime(''.$request->time_d.' day 0 second', 0);
-			$data = Excel::load(Input::file('import_file'), function($reader) {
+			// $data = Excel::load(Input::file('import_file'), function($reader) {
+			$data = Excel::load($request->import_file, function($reader) {
 
 			})->get();
 

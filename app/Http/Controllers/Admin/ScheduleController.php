@@ -44,14 +44,14 @@ class ScheduleController extends Controller
 
       if ($user->is_admin == 1) {
 
-        $id = Input::get('id');
+        $id = $request->id;
 
       $accountschedule = ScheduleAccount::join('accounts', 'schedule_account.account_id', '=', 'accounts.id')
                                           ->join('schedules', 'schedule_account.schedule_id', '=', 'schedules.id')
                                           ->select('schedule_account.*', 'schedules.*', 'accounts.*')
                                           ->where('schedule_account.schedule_id', '=', $id)
                                           ->paginate(15);
-      $pagination = $accountschedule->appends (array('id' => Input::get('id')));
+      $pagination = $accountschedule->appends (array('id' => $request->id));
      
 
       return view('admin.schedule.scheduleaccount', compact('user','accountschedule'))->renderSections()['content'];
@@ -72,7 +72,7 @@ class ScheduleController extends Controller
    // $query = $request->get('q');
     if ($user->is_admin == 1) {
 
-    $q = Input::get ( 'q' );
+    $q = $request->q;
     $listschedule = Users::join('accounts', 'users.id', '=', 'accounts.user_id')
                  ->join('schedules', 'users.id', '=', 'schedules.user_id')
                  ->where('users.username', 'LIKE', '%'.$q.'%')
@@ -80,7 +80,7 @@ class ScheduleController extends Controller
                  ->paginate(15);
                 
     $pagination = $listschedule->appends ( array (
-        'q' => Input::get ( 'q' ) 
+        'q' => $request->q 
     ) );
 
       return view('admin.schedule.shedule-search', compact('listschedule','user'));

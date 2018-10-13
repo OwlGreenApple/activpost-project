@@ -52,7 +52,8 @@ class OrderController extends Controller
   {
     $user = Auth::user();
     if ($user->is_admin == 1) {
-      $q2 = Input::get ( 'q2' );
+      // $q2 = Input::get ( 'q2' );
+      $q2 = $request->q2;
       if ($q2) {
         if ($q2 == "Confirmed" || $q2 == "Not Confirmed") {
           $listorder = Users::join("orders","users.id", '=', "orders.user_id")
@@ -65,7 +66,7 @@ class OrderController extends Controller
 					}
 
           $pagination = $listorder->appends ( array (
-						'q2'=> Input::get ( 'q2') 
+						'q2'=> $request->q2 
           ) ); 
         }else{
           $listorder = Users::join("orders","users.id", '=', "orders.user_id")
@@ -81,7 +82,7 @@ class OrderController extends Controller
       }
 
         
-			$q = Input::get ( 'q' );
+			$q = $request->q;
 			if ($q){
 				$listorder = Users::join("orders","users.id", '=', "orders.user_id")
 									->where('orders.no_order', '=', $q)
@@ -91,7 +92,7 @@ class OrderController extends Controller
 
 				$pes = "other"; 
 				$pagination = $listorder->appends ( array (
-					'q' => Input::get ( 'q' ) 
+					'q' => $request->q 
 				));
 			}
 			return view('admin.order.searchorders', compact('user', 'listorder','pes'));
