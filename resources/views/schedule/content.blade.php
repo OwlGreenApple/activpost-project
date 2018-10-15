@@ -27,7 +27,7 @@
       <td align="center">
 				<!--<img src="{{$arr->image}}" class="img-responsive" width="65" height="65">-->
 				<!--<img src="{{'images/uploads/'.$user->username.'-'.$user->id.'/'.$arr->slug.'.jpg'}}" class="img-responsive" width="65" height="65">-->
-				<img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$arr->slug.'.jpg'}}" class="img-responsive" width="65" height="65">
+        <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$arr->slug.'.jpg'}}" class="img-responsive" width="65" height="65">
       </td>
       <td align="center">
 				<?php 

@@ -11,6 +11,7 @@
 ?>
 <script>
 	function load_image(imgData){
+<<<<<<< HEAD
     var form = $('#form-uploadfile')[0];
     var formData = new FormData(form);
     var files;
@@ -21,18 +22,31 @@
         files = new FormData();
         files.append(1, o);
     });
+=======
+    var form = $('#form-publish')[0];
+    var formData = new FormData(form);
+    
+>>>>>>> 358547e4bdb4b388e5ed7c4a015866c66d61af52
 		$.ajax({
 				headers: {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 				},
 				type: 'POST',
 				url: "<?php echo url('schedule/save-video'); ?>",
+<<<<<<< HEAD
 				data: {imgData:files}, 
 				//dataType: 'text',
         cache: false,
         contentType: false,
         processData: false,
         async:true,
+=======
+        data: formData, 
+				dataType: 'text',
+        cache: false,
+        contentType: false,
+        processData: false,
+>>>>>>> 358547e4bdb4b388e5ed7c4a015866c66d61af52
 				beforeSend: function()
 				{
 					$("#div-loading").show();
@@ -45,7 +59,12 @@
 							$("#alert").hide();
 							$("#imguri").val(dataR.url);
 							$("#image-id").val(0);
+<<<<<<< HEAD
 							$("#canvas-image").attr('src',imgData);
+=======
+							$("#video-preview").show();
+              $("#video-preview").attr('src',imgData);
+>>>>>>> 358547e4bdb4b388e5ed7c4a015866c66d61af52
 						}
 						else if(dataR.type=='error')
 						{
@@ -95,17 +114,32 @@
 		// fill hidden input before process
 		$("#hidden-description").val(descriptionPostEmoji[0].emojioneArea.getText());
 		
+<<<<<<< HEAD
+=======
+    var form = $('#form-publish')[0];
+    var formData = new FormData(form);
+>>>>>>> 358547e4bdb4b388e5ed7c4a015866c66d61af52
 		$.ajax({
 				headers: {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 				},
 				type: 'POST',
+<<<<<<< HEAD
 				url: "<?php echo url('schedule/publish'); ?>",
 				data: $("#form-publish").serialize(),
 				// data: { 
 					// imgData: data, 
 				// },
 				dataType: 'text',
+=======
+				url: "<?php echo url('schedule/publish-video'); ?>",
+				//data: $("#form-publish").serialize(),
+        data: formData,
+				dataType: 'text',
+        cache: false,
+        contentType: false,
+        processData: false,
+>>>>>>> 358547e4bdb4b388e5ed7c4a015866c66d61af52
 				beforeSend: function()
 				{
 					$("#div-loading").show();
@@ -161,9 +195,12 @@
     });
 
     $("#file-upload").change(function(){
+<<<<<<< HEAD
       // console.log($(this).val());
       // load_image($(this).files[0]);
       
+=======
+>>>>>>> 358547e4bdb4b388e5ed7c4a015866c66d61af52
       var file    = document.querySelector('input[type=file]').files[0];
       var reader  = new FileReader();
 
@@ -188,6 +225,10 @@
 			// maxDate: "2016-12-01 00:00",
 			maxDate: "<?php echo $max_date; ?>",
 		});
+<<<<<<< HEAD
+=======
+
+>>>>>>> 358547e4bdb4b388e5ed7c4a015866c66d61af52
 		$("#publish-at").val('<?php if ($sid<>0) { echo date('Y-m-d H:i',strtotime($schedule->publish_at)); } ?>');
 		$("#delete-at").val('<?php if ($sid<>0) { if ($schedule->is_deleted) { echo date('Y-m-d H:i',strtotime($schedule->delete_at)); } } ?>');
 	
@@ -273,9 +314,15 @@
 	<div class="row">
 		<div class="col-md-2 col-xs-4 col-sm-4 margin-bottom">
 			<input type="button" value="Upload Video" class="btn btn-home" id="button-upload-file">
+<<<<<<< HEAD
       <form id="form-uploadfile" enctype="multipart/form-data">
         <input type="file" name="imgData" style="display: none" id="file-upload" />  
       </form>
+=======
+      <!--<form id="form-uploadfile" enctype="multipart/form-data">
+            <input type="file" name="imgData" style="display: none" id="file-upload" />  
+          </form>-->
+>>>>>>> 358547e4bdb4b388e5ed7c4a015866c66d61af52
 		</div>
 	</div>
 	<div class="row margin-bottom">
@@ -291,15 +338,27 @@
 												if (!is_null($arr_repost)){ echo $arr_repost['url'];} 
 												if ($sid<>0) { echo $schedule->image; } 
 											?>">
+<<<<<<< HEAD
+=======
+                      <input type="file" name="imgData" style="display: none" id="file-upload" />  
+>>>>>>> 358547e4bdb4b388e5ed7c4a015866c66d61af52
 											<input type="hidden" name="saveuri" value="{{ url('schedule/publish') }}">
 											<input type="hidden" name="ruri" value="{{ url('schedule') }}">
 											<input type="hidden" name="id" value="{{ $sid }}">
 											<input type="hidden" id="image-id" name="image_id" value="">
 											<input type="hidden" id="slug" name="slug" value="<?php if ($sid<>0) { echo $schedule->slug; } ?>"> 
+<<<<<<< HEAD
 											<img id="canvas-image" class="img-responsive" src="<?php 
 											if ($sid<>0) { echo $schedule->image; } 
 											else if (!is_null($arr_repost)){ echo $arr_repost['url'];}
 											?>">
+=======
+
+                      <video id="video-preview" <?php if($sid==0) echo 'style="display: none;"' ?> src="<?php 
+                      if ($sid<>0) { echo $schedule->image; } 
+                      else if (!is_null($arr_repost)){ echo $arr_repost['url'];}
+                      ?>" width="320" height="240" controls></video>
+>>>>>>> 358547e4bdb4b388e5ed7c4a015866c66d61af52
 												
 											<div class="form-group">
 													<label>Caption
@@ -419,7 +478,15 @@
 													</div>
 											</div>
 											<div class="row">
+<<<<<<< HEAD
 											<h3><div id="dates2" style="font-weight: bold;float: left;"></div><div style="float: left;">&nbsp;</div> <div id="clock2" style="color: #15b49e;"></div></h3>
+=======
+											<h3>
+                        <div id="dates2" style="font-weight: bold;float: left;"></div>
+                        <div style="float: left;">&nbsp;</div> 
+                        <div id="clock2" style="color: #15b49e;"></div>
+                      </h3>
+>>>>>>> 358547e4bdb4b388e5ed7c4a015866c66d61af52
 													<div class="form-group col-md-6 col-sm-12 col-xs-12">
 															<label>Schedule At <span class="glyphicon glyphicon-time"></span></label>
 															<div id="clock2"></div>
@@ -440,7 +507,11 @@
 			</div>
 	</div>
 </div>
+<<<<<<< HEAD
     @if (Request::is('schedule/add') || Request::is('schedule/edit*') || Request::is('schedule/repost*'))
+=======
+    @if (Request::is('schedule/add') || Request::is('schedule/edit*') || Request::is('schedule/repost*') || Request::is('schedule/video*'))
+>>>>>>> 358547e4bdb4b388e5ed7c4a015866c66d61af52
         <script src="{{ asset('/js/schedule.js') }}"></script>
 				
     @endif

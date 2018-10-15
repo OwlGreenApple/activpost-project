@@ -140,7 +140,12 @@ Route::group(['middleware' => 'auth'], function () {
   //Schedule video new
   Route::get('schedule/video', 'User\ScheduleController@schedule_video');
   Route::post('schedule/save-video', 'User\ScheduleController@save_video_schedule');
+<<<<<<< HEAD
 
+=======
+  Route::post('schedule/publish-video', 'User\ScheduleController@publish_video_schedule');
+  Route::get('schedule/edit-video/{sid}', 'User\ScheduleController@schedule_video');
+>>>>>>> 358547e4bdb4b388e5ed7c4a015866c66d61af52
 
   // Schedule - video
   Route::get('schedule-video', 'User\ScheduleController@index_video');

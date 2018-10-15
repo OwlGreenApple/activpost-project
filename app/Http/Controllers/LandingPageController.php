@@ -27,22 +27,30 @@ use View, Input, Mail, Request, App, Hash, Validator, Crypt, DB, Image, Exceptio
 class LandingPageController extends Controller
 {
   
-	public function post_back_idaff(){	
-		$idaff = Idaff::where("invoice","=",Input::get("invoice"))->first();
+	public function post_back_idaff(req $request){	
+		// $idaff = Idaff::where("invoice","=",Input::get("invoice"))->first();
+		$idaff = Idaff::where("invoice","=",$request->invoice)->first();
 		if (is_null($idaff)){
 			$idaff = new Idaff;
-			$idaff->trans_id = Input::get("transid");
-			$idaff->invoice = Input::get("invoice");
+			// $idaff->trans_id = Input::get("transid");
+			$idaff->trans_id = $request->transid;
+			// $idaff->invoice = Input::get("invoice");
+			$idaff->invoice = $request->invoice;
 			$idaff->executed = 0;
 		} else {
-			$idaff = Idaff::where("invoice","=",Input::get("invoice"))->first();
+			// $idaff = Idaff::where("invoice","=",Input::get("invoice"))->first();
+			$idaff = Idaff::where("invoice","=",$request->invoice)->first();
 		}
 		
-		$idaff->name = Input::get("cname");
-		$idaff->email = Input::get("cemail");
-		$idaff->phone = Input::get("cmphone");
-		$idaff->status = Input::get("status");
-		$idaff->grand_total = Input::get("grand_total");
+		// $idaff->name = Input::get("cname");
+		// $idaff->email = Input::get("cemail");
+		// $idaff->phone = Input::get("cmphone");
+		// $idaff->status = Input::get("status");
+		$idaff->name = $request->cname;
+		$idaff->email = $request->cemail;
+		$idaff->phone = $request->cmphone;
+		$idaff->status = $request->status;
+		$idaff->grand_total = $request->grand_total;
 		$idaff->save();
 		
 		if ( ($idaff->status == "SUCCESS") && (!$idaff->executed) ) {
@@ -74,13 +82,17 @@ class LandingPageController extends Controller
 			$order->no_order = $order_number;
 			$order->order_status = "cron dari affiliate";
 			
-			$order->total = intval(Input::get("grand_total"));
+			// $order->total = intval(Input::get("grand_total"));
+			$order->total = intval($request->grand_total);
 			$order->user_id = $user->id;
 			$order->order_type = "IDAFF";
 			$order->base_price = 0;
-			$order->sub_price = intval(Input::get("grand_total"));
-			$order->potong_affiliate = intval(Input::get("grand_total"))*65/100;
-			$order->affiliate = intval(Input::get("grand_total"))*35/100;
+			// $order->sub_price = intval(Input::get("grand_total"));
+			// $order->potong_affiliate = intval(Input::get("grand_total"))*65/100;
+			// $order->affiliate = intval(Input::get("grand_total"))*35/100;
+			$order->sub_price = intval($request->grand_total);
+			$order->potong_affiliate = intval($request->grand_total)*65/100;
+			$order->affiliate = intval($request->grand_total)*35/100;
 			$order->discount = 0;
 			$order->package_id = 0;
 			$order->month = 4;

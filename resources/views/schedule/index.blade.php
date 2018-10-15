@@ -364,7 +364,11 @@ use Celebpost\Models\Account;
 			<span class='glyphicon glyphicon-stop'></span> Stop All
 		</button>
 		-->
+<<<<<<< HEAD
 		<a href="{{ url('schedule/add') }}" class="btn btn-home fl" style="margin-left:15px;margin-top:0px;"><span class="glyphicon glyphicon-time"></span> Add Schedule</a>
+=======
+		<a href="{{ url('schedule/add') }}" class="btn btn-home fl" style="margin-left:15px;margin-top:0px;"><span class="glyphicon glyphicon-time"></span> Schedule Photo</a>
+>>>>>>> 358547e4bdb4b388e5ed7c4a015866c66d61af52
     <a href="{{ url('schedule/video') }}" class="btn btn-home fl" style="margin-left:15px;margin-top:0px;"><span class="glyphicon glyphicon-time"></span> Schedule Video</a>
 		<!--<a id="button-buy-more" class="btn btn-sm btn-home-light fl" style="margin-left:15px;margin-top:-5px;" href="{{url('/order')}}">Buy More</a>-->
 			

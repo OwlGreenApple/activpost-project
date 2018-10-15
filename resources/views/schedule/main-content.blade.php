@@ -7,7 +7,11 @@ $user = Auth::user();
 		<div class="col-md-3 schedule-div col-xs-6 col-sm-6">
 			@if (!empty($schedule->image))
 				<!--<img src="{{$schedule->image}}" class="img-responsive schedule-image" data-zoom-image="{{$schedule->image}}" >-->
-				<img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$schedule->slug.'.jpg'}}" class="img-responsive schedule-image" data-zoom-image="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$schedule->slug.'.jpg'}}" >
+        <?php if($schedule->media_type=='photo') { ?>
+				  <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$schedule->slug.'.jpg'}}" class="img-responsive schedule-image" data-zoom-image="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$schedule->slug.'.jpg'}}" >
+        <?php } else { ?>
+          <video src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$schedule->slug}}" width="260" height="240" controls></video>
+        <?php } ?>
 			@endif
 		</div>
 		<div class="col-md-3 schedule-div col-xs-6 col-sm-6">
@@ -44,9 +48,15 @@ $user = Auth::user();
 				?>
 			</p>
 
-			<?php if ($schedule->status<2) { ?>
-			<a class="btn btn-sm btn-info" href='{{url("schedule/edit/".$schedule->id)}}'>Edit Schedule</a>
-			<?php } ?>
+			<?php if ($schedule->status<2) { 
+              if($schedule->media_type=='photo'){
+      ?>
+			          <a class="btn btn-sm btn-info" href='{{url("schedule/edit/".$schedule->id)}}'>Edit Schedule</a>
+			<?php   } else { ?>
+                <a class="btn btn-sm btn-info" href='{{url("schedule/edit-video/".$schedule->id)}}'>Edit Schedule</a>
+      <?php   } 
+            }
+      ?>
 			
 			<?php if ( ($schedule->status<2) || ( ($schedule->status<3) && ($schedule->is_deleted) ) ) { ?>
 			<a class="btn btn-sm btn-danger" data-toggle="modal" href='#del-{{$schedule->id}}'>Delete</a>

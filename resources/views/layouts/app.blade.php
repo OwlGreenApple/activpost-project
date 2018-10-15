@@ -32,7 +32,7 @@
     @if (Request::is('order') || Request::is('confir-payment') || Request::is('list-order') || Request::is('search-orders') || Request::is('orders') || Request::is('confirm-payment') || Request::is('prices'))
         <script src="{{ asset('/js/orderbuymore.js') }}"></script>
     @endif
-    @if (Request::is('schedule') || Request::is('schedule/add') || Request::is('schedule/edit*') ||  Request::is('schedule/repost*') )
+    @if (Request::is('schedule') || Request::is('schedule/add') || Request::is('schedule/edit*') ||  Request::is('schedule/repost*') || Request::is('schedule/video'))
         <script src="{{ asset('/js/realtime.js') }}"></script>
     @endif
 		<script src="{{ asset('/js/jquery-ui.js') }}"></script>
