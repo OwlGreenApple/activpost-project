@@ -133,7 +133,12 @@ class PostInstagram extends Command
 								// $dir = base_path('../public_html/dashboard/images/uploads/'.$user->username.'-'.$user->id); 
 								$dir = base_path('../public_html/vp/uploads/'.$user->username.'-'.$user->id); 
 								// $photo = $sc->image;
-								$photo = $dir."/".$sc->slug.".jpg";
+                if($sc->media_type='photo'){
+                  $photo = $dir."/".$sc->slug.".jpg";
+                } else {
+                  $photo = $dir."/".$sc->slug;
+                }
+								
 								$caption = $sc->description;
 								
 								$i = new Instagram(true,true,[
@@ -315,6 +320,16 @@ class PostInstagram extends Command
 									} 
 									else if ($sc->media_type == "video") {
 										// $i->uploadVideo($photo, $caption);
+
+                    $caption = str_replace("\r\n", "\n", $caption);
+                    
+                    $instagram = $i->timeline->uploadVideo($photo, ['caption' => $caption]);
+                    
+                    //update last post 
+                    $dt = Carbon::now();
+                    $update_account = Account::find($account->id);
+                    $update_account->last_post = strtotime($dt->toDateTimeString());
+                    $update_account->save();
 									}
 								} 
 								catch (Exception $e) {

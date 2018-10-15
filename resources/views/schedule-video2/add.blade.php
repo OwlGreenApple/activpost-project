@@ -292,7 +292,7 @@
 											<input type="hidden" id="image-id" name="image_id" value="">
 											<input type="hidden" id="slug" name="slug" value="<?php if ($sid<>0) { echo $schedule->slug; } ?>"> 
 
-                      <video id="video-preview" style="display: none;" src="<?php 
+                      <video id="video-preview" <?php if($sid==0) echo 'style="display: none;"' ?> src="<?php 
                       if ($sid<>0) { echo $schedule->image; } 
                       else if (!is_null($arr_repost)){ echo $arr_repost['url'];}
                       ?>" width="320" height="240" controls></video>

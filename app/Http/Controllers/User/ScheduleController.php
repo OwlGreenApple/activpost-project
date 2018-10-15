@@ -1058,7 +1058,7 @@ $offset = ($page * $perPage) - $perPage;
     } else {
       // edit schedule
       $uploadedFile = $request->file('imgData');   
-      $filename = $request->slug.'.'.$uploadedFile->getClientOriginalExtension();
+      $filename = $request->slug;
       $uploadedFile->move($dir, $filename);   
 
       //Storage::move($request->imguri, $dir.'/'.$request->slug.'mp4');
