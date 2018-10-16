@@ -862,11 +862,7 @@ $offset = ($page * $perPage) - $perPage;
 		$img->save(public_path('../vp/uploads/asd-new.jpg'));  
 	}  		
 
-<<<<<<< HEAD
-  public function schedule_video($sid =0){
-=======
   public function schedule_video($sid=0){
->>>>>>> 358547e4bdb4b388e5ed7c4a015866c66d61af52
     $user = Auth::user();
     if (!$user->is_confirmed) {
       return "Please Confirm Your Email";
@@ -912,16 +908,6 @@ $offset = ($page * $perPage) - $perPage;
     return view('schedule-video2.add',compact('sid','accounts','collections_captions','hashtags_collections','user','arr_repost','max_date'));
   }
 
-<<<<<<< HEAD
-  public function save_video_schedule()
-  {
-    //dd(Request::all());
-    $user = Auth::user();
-    
-    //$filename = "video.".Request::input("imgData")->getClientOriginalExtension();
-
-    // $dir = public_path('images/uploads/'.$user->username.'-'.$user->id); 
-=======
   public function save_video_schedule(req $request)
   {
     $user = Auth::user();
@@ -929,24 +915,10 @@ $offset = ($page * $perPage) - $perPage;
 
     $filename = "temp.".$uploadedFile->getClientOriginalExtension();
 
->>>>>>> 358547e4bdb4b388e5ed7c4a015866c66d61af52
     $dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
     if (!file_exists($dir)) {
       mkdir($dir,0741,true);
     }
-<<<<<<< HEAD
-      
-    Storage::disk('public')->putFile('videos',Request::input("imgData"));
-    //Request::input("imgData")->move($dir."/",$filename);
-    //Image::make()->save($dir."/".$filename);
-    
-    $arr["type"] = "success";
-    $arr["message"] = "Data berhasil disimpan";
-    // $arr["url"] = asset('images/uploads/'.$user->username.'-'.$user->id."/temp.jpg");
-    $arr["url"] = asset('../vp/uploads/'.$user->username.'-'.$user->id."/tes");
-    return $arr;
-  } 
-=======
     
     if($request->hasFile('imgData')){
       $upload_success = $uploadedFile->move($dir, $filename);   
@@ -1163,5 +1135,4 @@ $offset = ($page * $perPage) - $perPage;
     $arr["message"]="Process publish berhasil disimpan";
     return $arr;
   }
->>>>>>> 358547e4bdb4b388e5ed7c4a015866c66d61af52
 }
