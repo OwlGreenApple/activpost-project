@@ -320,7 +320,7 @@ class PostInstagram extends Command
 									} 
 									else if ($sc->media_type == "video") {
 										// $i->uploadVideo($photo, $caption);
-
+                    var_dump($photo);
                     $caption = str_replace("\r\n", "\n", $caption);
                     
                     $instagram = $i->timeline->uploadVideo($photo, ['caption' => $caption]);
