@@ -204,7 +204,7 @@ class RegisterController extends Controller
 			}
 	
 		} else {
-			echo "data tidak valid";
+			echo $validator->errors()->first();
 		}
 		// return "";
 		return redirect('/');
