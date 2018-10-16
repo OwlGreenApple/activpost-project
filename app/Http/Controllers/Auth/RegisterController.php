@@ -69,15 +69,25 @@ class RegisterController extends Controller
 	 * @return User
 	 */
 	protected function create(array $data)
-	{
-		return User::create([
+  {
+		/*return User::create([
 			'name' => $data['name'],
-			'email' => $data['email'],
 			'username' => $data['email'],
+      'email' => $data['email'],
 			// 'timezone' => $data['timezone'],
 			'password' => Hash::make($data['password']),
 			'is_confirmed' => 0,
-		]);
+		]);*/
+
+    $user = new User;
+    $user->name = $data['name'];
+    $user->username = $data['email'];
+    $user->email = $data['email'];
+    $user->password = Hash::make($data['password']);
+    $user->is_confirmed = 0;
+    $user->save();
+
+    return $user;
 	}
 
 	public function showRegistrationForm()
@@ -89,6 +99,7 @@ class RegisterController extends Controller
 	public function register(req $req)
 	{
 		$data = $req->input("data");
+
 		$validator = $this->validator($data);
 		// dd($validator);
 		if (!$validator->fails()){
