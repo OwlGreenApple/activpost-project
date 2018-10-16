@@ -1135,4 +1135,278 @@ $offset = ($page * $perPage) - $perPage;
     $arr["message"]="Process publish berhasil disimpan";
     return $arr;
   }
+
+  public function schedule_story($sid=0){
+    $user = Auth::user();
+    if (!$user->is_confirmed) {
+      return "Please Confirm Your Email";
+    }
+    
+    $arr_repost = null;
+    
+    //check schedule page users, check schedule publish or not 
+    if ($sid<>0) {
+      //check schedule page users 
+      $check = Schedule::where("user_id","=",$user->id)
+                ->where("schedules.id","=",$sid)
+                ->first();
+      if (is_null($check)) {
+        return "Not authorize";
+      }
+      
+      //check schedule publish or not , klo status 2 = success, 3 = deleted maka schedule ga bole diedit
+      $check = Schedule::where("user_id","=",$user->id)
+                ->where("id","=",$sid)
+                ->where('schedules.status','>=',2)
+                ->first();
+      if (!is_null($check)) {
+        return "error 404";
+      }
+    }
+
+    
+    $accounts = Account::where("user_id","=",$user->id)
+                ->where("is_active","=",1)
+                ->get();
+    
+    $hashtags_collections = Template::where("user_id","=",$user->id)
+                    ->where("type","=","hashtags")
+                    ->get();
+    
+    $collections_captions = Template::where("user_id","=",$user->id)
+                    ->where("type","=","templates")
+                    ->get();
+    
+    $max_date = Carbon::now()->addSeconds($user->active_time)->format('Y-m-d H:i');
+    
+    return view('schedule-story.add',compact('sid','accounts','collections_captions','hashtags_collections','user','arr_repost','max_date'));
+  }
+
+  public function save_story_schedule(req $request)
+  {
+    $user = Auth::user();
+    /*$uploadedFile = $request->file('imgData');   
+
+    $filename = "temp.".$uploadedFile->getClientOriginalExtension();
+
+    $dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
+    if (!file_exists($dir)) {
+      mkdir($dir,0741,true);
+    }
+    
+    if($request->hasFile('imgData')){
+      $upload_success = $uploadedFile->move($dir, $filename);   
+    }*/
+    
+    $arr["type"] = "success";
+    $arr["message"] = "Data berhasil disimpan";
+    //$arr["url"] = asset('../vp/uploads/'.$user->username.'-'.$user->id."/".$filename);
+    //$arr["url"] = $dir.'.'.$filename;
+    $arr["url"] = 'file uploaded';
+    return $arr;
+  } 
+
+  public function publish_story_schedule(req $request)
+  {
+    $user = Auth::user();
+ 
+    //check before publish
+    if (!$request->has('accounts')) {
+      $arr["type"]="error";
+      $arr["message"]="Silahkan pilih account yang akan di post";
+      return $arr;
+    }
+    
+    //error klo ga ada image 
+    if (Request::input("imguri")=="") {
+      $arr["type"]="error";
+      $arr["message"]="Silahkan Input file yang akan diupload";
+      return $arr;
+    }
+    
+    if ( ($request->hidden_method=="schedule") && ($request->publish_at == "") ) {
+      $arr["type"]="error";
+      $arr["message"]="Silahkan Input Waktu Publish File";
+      return $arr;
+    }
+    
+    if ( ($request->checkbox_delete) && ($request->delete_at == "") ) {
+      $arr["type"]="error";
+      $arr["message"]="Silahkan Input Waktu Delete File";
+      return $arr;
+    }
+
+    if (count(explode("#",$request->description)) - 1 > 30 ) {
+      $arr["type"] = "error";
+      $arr["message"] = "hashtags tidak boleh lebih dari 30";
+      return $arr;
+    }
+    
+    if ( strlen($request->description) > 1700 ) {
+      $arr["type"] = "error";
+      $arr["message"] = "Character tidak boleh lebih dari 1700";
+      return $arr;
+    }    
+    
+    //check klo delete at < publish at
+    if ($request->hidden_method=="schedule")  {
+      if ( ($request->checkbox_delete) && (strtotime($request->delete_at) <= strtotime($request->publish_at)) ) {
+        $arr["type"]="error";
+        $arr["message"]="Delete at harus lebih besar dari publish at";
+        return $arr;
+      }
+    }
+    
+    //post tidak boleh lebih dari 3 dalam 1 jam untuk tiap accountnya
+    /*if ($request->hidden_method=="schedule")  {
+      $dt1 = Carbon::createFromFormat('Y-m-d H:i', $request->publish_at)->subMinutes(30);
+      $dt2 = Carbon::createFromFormat('Y-m-d H:i', $request->publish_at)->addMinutes(30);
+    }
+    if ($request->hidden_method=="now")  {
+      $dt1 = Carbon::now()->subMinutes(30);
+      $dt2 = Carbon::now()->addMinutes(30);
+    }*/
+      foreach ($request->accounts as $account){
+        $check = Account::find($account);
+        if (!is_null($check)) {
+          if (!$check->is_started){
+            $arr["type"] = "pending";
+            return $arr;
+          }
+        }
+        /*$check = Schedule::join("schedule_account","schedule_account.schedule_id","=","schedules.id")
+                  ->where("user_id","=",$user->id)
+                  ->where("account_id","=",$account)
+                  // ->where("schedules.publish_at",">=",$dt1->toDateString()." ".$dt1->format('H').":00:00" )
+                  // ->where("schedules.publish_at","<=",$dt1->toDateString()." ".$dt1->format('H').":59:59" )
+                  ->whereBetween(DB::raw('DATE(schedules.publish_at)'), array($dt1, $dt2))
+                  ->count();
+        if ($check>3) {
+          $arr["type"]="error";
+          $arr["message"] = "Schedule Post maksimum 3 Post tiap jamnya";
+          return $arr;
+        }*/
+      }
+  
+    //check klo publish_at lebih kecil dari now 
+    $now = Carbon::now();
+    if ($request->hidden_method=="schedule") {
+      $dt1 = Carbon::createFromFormat('Y-m-d H:i', $request->publish_at);
+      if ( $dt1->lt($now) ) {
+        $arr["type"]="error";
+        $arr["message"]="Input waktu publish tidak boleh lebih kecil dari waktu sekarang";
+        return $arr;
+      }
+    }
+    
+    $dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
+    if (!file_exists($dir)) {
+      mkdir($dir,0741,true);
+    }
+
+    if ($request->id == 0) {
+      // new schedule
+      //copy file jadi file publish
+      //slug file name 
+      $last_hit = Schedule::where("user_id","=",$user->id)
+                  ->where("slug","like","VideoFile%")
+                  ->orderBy('id', 'desc')->first();
+      if (is_null($last_hit)) {
+        $slug = "VideoFile-00000";
+      } else {
+        $temp_arr1 = explode(".", $last_hit->slug );
+        $temp_arr2 = explode("-", $temp_arr1[0] );
+        $ctr = intval($temp_arr2[1]); $ctr++;
+        $slug = "VideoFile-".str_pad($ctr, 5, "0", STR_PAD_LEFT);
+      }
+      
+      $uploadedFile = $request->file('imgData');   
+      $filename = $slug.'.'.$uploadedFile->getClientOriginalExtension();
+      $uploadedFile->move($dir, $filename);   
+
+      //Storage::move($request->imguri, $dir.'/'.$filename.'mp4');
+
+      $schedule = new Schedule;
+      $schedule->image = url('/../vp/uploads/'.$user->username.'-'.$user->id.'/'.$filename);
+      $schedule->slug = $filename;
+    } else {
+      // edit schedule
+      $uploadedFile = $request->file('imgData');   
+      $filename = $request->slug;
+      $uploadedFile->move($dir, $filename);   
+
+      //Storage::move($request->imguri, $dir.'/'.$request->slug.'mp4');
+      
+      $schedule = Schedule::findOrFail($request->id);
+      $schedule->slug = $request->slug;
+      
+      $check_sa = ScheduleAccount::where("schedule_id","=",$schedule->id)
+                  ->where("status","=",5)
+                  ->get();
+      foreach($check_sa as $data) {
+        $update_sa = ScheduleAccount::find($data->id);
+        $update_sa->status = 0;
+        $update_sa->status_helper = 0;
+        $update_sa->status_process = 0;
+        $update_sa->save();
+      }
+      
+    }
+
+    $schedule->user_id = $user->id;
+    $schedule->description = $request->description;
+    $schedule->status = 1;
+    if ($request->hidden_method=="schedule")  {
+      $schedule->publish_at = strtotime($request->publish_at);
+    }
+    if ($request->hidden_method=="now")  {
+      $schedule->publish_at = Carbon::now();
+    }
+    
+    if ($request->checkbox_delete) {
+      $schedule->delete_at = strtotime($request->delete_at);
+      $schedule->is_deleted = 1;
+    } else {
+      $schedule->is_deleted = 0;
+    }
+    $schedule->media_type = "video";
+    $schedule->save();
+    if ($request->has('accounts')) {
+      //klo edit maka schedule account dihapus dulu, klo uda ada yang keposting maka akan ke schedule ulang
+      if ($request->id <> 0) {
+        $delete_sa = ScheduleAccount::where("schedule_id", "=", $request->id)
+                  ->delete();
+      }
+      
+      // Account
+      // $account = array();
+      // foreach($request->accounts as $data) {
+        // $account[] = array(
+                      // "id"=>$data->id,
+                      // "publish_at"=>$schedule->publish_at,
+                    // );
+      // }
+      $schedule->PutAccount($request->accounts);
+      // $schedule->PutAccount($accounts);
+    }
+    $schedule->save();
+    $check_sa = ScheduleAccount::where("schedule_id","=",$schedule->id)
+                ->get();
+    foreach($check_sa as $data) {
+      $update_sa = ScheduleAccount::find($data->id);
+      $update_sa->publish_at = $schedule->publish_at;
+      $update_sa->save();
+    }
+    
+    //kasi tanda image sudah dischedule
+    $imageM = ImageModel::find(Request::input("image_id"));
+    if (!is_null($imageM)) {
+      $imageM->is_schedule = 1;
+      $imageM->save();      
+    }
+
+    $arr["type"]="success";
+    $arr["message"]="Process publish berhasil disimpan";
+    return $arr;
+  }
 }

@@ -78,6 +78,7 @@ class PostInstagram extends Command
 							->orderBy('schedules.publish_at', 'asc')
 							->get();
 			$smsg = '';
+
 			foreach ($scs as $sc) {
 				$user = Users::find($sc->user_id);
 				if (!is_null($user)) {
@@ -88,6 +89,7 @@ class PostInstagram extends Command
 				
 				// foreach ($sc->accounts as $account) {
 				$account = Account::find($sc->account_id);
+
 				if (!is_null($account)) {
 						if ( (!$account->is_started) || (!$account->is_active) ) {
 							continue;
@@ -304,6 +306,7 @@ class PostInstagram extends Command
 								}
 								// Upload
 								try {
+                  var_dump($sc);
 									if ($sc->media_type == "photo") {
 										// $caption = str_replace(chr(13),"\n",$caption);
 										// $caption = str_replace(chr(13).chr(10),"\n"."\n",$caption);
@@ -320,10 +323,10 @@ class PostInstagram extends Command
 									} 
 									else if ($sc->media_type == "video") {
 										// $i->uploadVideo($photo, $caption);
-                    var_dump($photo);
+                    //var_dump($photo);
                     $caption = str_replace("\r\n", "\n", $caption);
-                    
-                    $instagram = $i->timeline->uploadVideo($photo, ['caption' => $caption]);
+                    //var_dump($caption);
+                    //$instagram = $i->timeline->uploadVideo($photo, ['caption' => $caption]);
                     
                     //update last post 
                     $dt = Carbon::now();
