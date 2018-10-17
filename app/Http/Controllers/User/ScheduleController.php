@@ -1198,6 +1198,15 @@ $offset = ($page * $perPage) - $perPage;
       $upload_success = $uploadedFile->move($dir, $filename);   
     }*/
     
+    $extFile = $request->file('imgData')->getClientOriginalExtension();   
+    $image =  array("jpg", "png", "gif", "bmp", "jpeg","tiff","JPG","PNG","GIF","BMP","JPEG","TIFF");
+
+    if(in_array($extFile,$image) ) {
+      $arr['jenisfile'] = 'image';
+    } else {
+      $arr['jenisfile'] = 'video';
+    }
+
     $arr["type"] = "success";
     $arr["message"] = "Data berhasil disimpan";
     //$arr["url"] = asset('../vp/uploads/'.$user->username.'-'.$user->id."/".$filename);
@@ -1309,15 +1318,15 @@ $offset = ($page * $perPage) - $perPage;
       //copy file jadi file publish
       //slug file name 
       $last_hit = Schedule::where("user_id","=",$user->id)
-                  ->where("slug","like","VideoFile%")
+                  ->where("slug","like","StoryFile%")
                   ->orderBy('id', 'desc')->first();
       if (is_null($last_hit)) {
-        $slug = "VideoFile-00000";
+        $slug = "StoryFile-00000";
       } else {
         $temp_arr1 = explode(".", $last_hit->slug );
         $temp_arr2 = explode("-", $temp_arr1[0] );
         $ctr = intval($temp_arr2[1]); $ctr++;
-        $slug = "VideoFile-".str_pad($ctr, 5, "0", STR_PAD_LEFT);
+        $slug = "StoryFile-".str_pad($ctr, 5, "0", STR_PAD_LEFT);
       }
       
       $uploadedFile = $request->file('imgData');   
@@ -1331,14 +1340,19 @@ $offset = ($page * $perPage) - $perPage;
       $schedule->slug = $filename;
     } else {
       // edit schedule
-      $uploadedFile = $request->file('imgData');   
-      $filename = $request->slug;
+
+      $uploadedFile = $request->file('imgData'); 
+
+      $ext = explode('.', $request->slug);
+
+      $filename = $ext[0].'.'.$uploadedFile->getClientOriginalExtension();
       $uploadedFile->move($dir, $filename);   
 
       //Storage::move($request->imguri, $dir.'/'.$request->slug.'mp4');
       
       $schedule = Schedule::findOrFail($request->id);
-      $schedule->slug = $request->slug;
+      $schedule->image = url('/../vp/uploads/'.$user->username.'-'.$user->id.'/'.$filename);
+      $schedule->slug = $filename;
       
       $check_sa = ScheduleAccount::where("schedule_id","=",$schedule->id)
                   ->where("status","=",5)
@@ -1369,7 +1383,13 @@ $offset = ($page * $perPage) - $perPage;
     } else {
       $schedule->is_deleted = 0;
     }
-    $schedule->media_type = "video";
+
+    if($request->type=='image'){
+      $schedule->media_type = "photo";
+    } else {
+      $schedule->media_type = "video";  
+    }
+    
     $schedule->save();
     if ($request->has('accounts')) {
       //klo edit maka schedule account dihapus dulu, klo uda ada yang keposting maka akan ke schedule ulang
@@ -1396,13 +1416,6 @@ $offset = ($page * $perPage) - $perPage;
       $update_sa = ScheduleAccount::find($data->id);
       $update_sa->publish_at = $schedule->publish_at;
       $update_sa->save();
-    }
-    
-    //kasi tanda image sudah dischedule
-    $imageM = ImageModel::find(Request::input("image_id"));
-    if (!is_null($imageM)) {
-      $imageM->is_schedule = 1;
-      $imageM->save();      
     }
 
     $arr["type"]="success";

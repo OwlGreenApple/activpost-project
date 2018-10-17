@@ -7,8 +7,13 @@ $user = Auth::user();
 		<div class="col-md-3 schedule-div col-xs-6 col-sm-6">
 			@if (!empty($schedule->image))
 				<!--<img src="{{$schedule->image}}" class="img-responsive schedule-image" data-zoom-image="{{$schedule->image}}" >-->
-        <?php if($schedule->media_type=='photo') { ?>
-				  <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$schedule->slug.'.jpg'}}" class="img-responsive schedule-image" data-zoom-image="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$schedule->slug.'.jpg'}}" >
+        <?php if($schedule->media_type=='photo') { 
+          $img = $schedule->slug;
+          if(strpos($schedule->slug, 'PublishFile')===0){ //check jika diawali 
+            $img = $img.'.jpg';
+          }
+        ?>
+				  <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$img}}" class="img-responsive schedule-image" data-zoom-image="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$img}}" >
         <?php } else { ?>
           <video src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$schedule->slug}}" width="260" height="240" controls></video>
         <?php } ?>
@@ -49,7 +54,11 @@ $user = Auth::user();
 			</p>
 
 			<?php if ($schedule->status<2) { 
-              if($schedule->media_type=='photo'){
+              if(strpos($schedule->slug, 'StoryFile')===0){
+      ?>
+                <a class="btn btn-sm btn-info" href='{{url("schedule/edit-story/".$schedule->id)}}'>Edit Schedule</a>
+      <?php
+              } else if($schedule->media_type=='photo'){
       ?>
 			          <a class="btn btn-sm btn-info" href='{{url("schedule/edit/".$schedule->id)}}'>Edit Schedule</a>
 			<?php   } else { ?>

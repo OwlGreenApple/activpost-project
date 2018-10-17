@@ -37,8 +37,19 @@
 							$("#alert").hide();
 							$("#imguri").val(dataR.url);
 							$("#image-id").val(0);
-							$("#video-preview").show();
-              $("#video-preview").attr('src',imgData);
+
+              if(dataR.jenisfile=='image'){
+                $("#canvas-image").show();
+                $("#video-preview").hide();
+                $("#canvas-image").attr('src',imgData);
+              } else {
+                $("#video-preview").show();
+                $("#canvas-image").hide();
+                $("#video-preview").attr('src',imgData);
+              }
+
+              $('#type-file').val(dataR.jenisfile);
+
 						}
 						else if(dataR.type=='error')
 						{
@@ -279,6 +290,7 @@
 
 									<form role="form" id="form-publish" enctype="multipart/form-data">
 											{{ csrf_field() }}
+                      <input type="hidden" name="type" id="type-file">
 											<input type="hidden" id="imguri" name="imguri" 
 											value="<?php 
 												if (!is_null($arr_repost)){ echo $arr_repost['url'];} 
@@ -291,7 +303,11 @@
 											<input type="hidden" id="image-id" name="image_id" value="">
 											<input type="hidden" id="slug" name="slug" value="<?php if ($sid<>0) { echo $schedule->slug; } ?>">
 
-                      <video id="video-preview" <?php if($sid==0) echo 'style="display: none;"' ?> src="<?php 
+                      <img id="canvas-image" <?php if($sid==0 || $schedule->media_type=='video') echo 'style="display: none;"' ?> class="img-responsive" src="<?php 
+                      if ($sid<>0) { echo $schedule->image; } 
+                      else if (!is_null($arr_repost)){ echo $arr_repost['url'];}
+                      ?>">
+                      <video id="video-preview" <?php if($sid==0 || $schedule->media_type=='photo') echo 'style="display: none;"' ?> src="<?php 
                       if ($sid<>0) { echo $schedule->image; } 
                       else if (!is_null($arr_repost)){ echo $arr_repost['url'];}
                       ?>" width="320" height="240" controls></video>
@@ -439,7 +455,7 @@
 			</div>
 	</div>
 </div>
-    @if (Request::is('schedule/add') || Request::is('schedule/edit*') || Request::is('schedule/repost*') || Request::is('schedule/video*'))
+    @if (Request::is('schedule/add') || Request::is('schedule/edit*') || Request::is('schedule/repost*') || Request::is('schedule/video') || Request::is('schedule/story'))
         <script src="{{ asset('/js/schedule.js') }}"></script>
 				
     @endif
