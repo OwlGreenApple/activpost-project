@@ -27,16 +27,7 @@
       <td align="center">
 				<!--<img src="{{$arr->image}}" class="img-responsive" width="65" height="65">-->
 				<!--<img src="{{'images/uploads/'.$user->username.'-'.$user->id.'/'.$arr->slug.'.jpg'}}" class="img-responsive" width="65" height="65">-->
-        <?php if($arr->media_type=='photo') { 
-          $img = $arr->slug;
-          if(strpos($arr->slug, 'PublishFile')===0){ //check jika diawali 
-            $img = $img.'.jpg';
-          }
-        ?>
-          <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$img}}" class="img-responsive" width="65" height="65" >
-        <?php } else { ?>
-          <video src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$arr->slug}}" width="65" height="65"></video>
-        <?php } ?>
+				<img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$arr->slug.'.jpg'}}" class="img-responsive" width="65" height="65">
       </td>
       <td align="center">
 				<?php 

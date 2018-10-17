@@ -72,13 +72,15 @@ class PostInstagram extends Command
 							->where('schedule_account.status_process',0)
 							// ->where( 'schedules.publish_at', '<=', $this->waktu->toDateTimeString() )
 							// ->whereDate('schedules.publish_at','>=',$this->waktu->toDateString())
-							->whereDate('schedules.publish_at',$this->waktu->format('Y-m-d'))
-							->whereTime('schedules.publish_at','<=',$this->waktu->format('H:i:s'))
+							//->whereDate('schedules.publish_at',$this->waktu->format('Y-m-d'))
+							//->whereTime('schedules.publish_at','<=',$this->waktu->format('H:i:s'))
 							->groupBy('schedule_account.account_id')
 							->orderBy('schedules.publish_at', 'asc')
 							->get();
 			$smsg = '';
+
 			foreach ($scs as $sc) {
+        var_dump($sc);
 				$user = Users::find($sc->user_id);
 				if (!is_null($user)) {
 					// if (!$user->is_started) {
@@ -88,6 +90,7 @@ class PostInstagram extends Command
 				
 				// foreach ($sc->accounts as $account) {
 				$account = Account::find($sc->account_id);
+
 				if (!is_null($account)) {
 						if ( (!$account->is_started) || (!$account->is_active) ) {
 							continue;
@@ -133,10 +136,15 @@ class PostInstagram extends Command
 								// $dir = base_path('../public_html/dashboard/images/uploads/'.$user->username.'-'.$user->id); 
 								$dir = base_path('../public_html/vp/uploads/'.$user->username.'-'.$user->id); 
 								// $photo = $sc->image;
-                if($sc->media_type='photo'){
+                /*if($sc->media_type='photo'){
                   $photo = $dir."/".$sc->slug.".jpg";
                 } else {
                   $photo = $dir."/".$sc->slug;
+                }*/
+                if($sc->media_type=='video' || strpos($sc->slug, 'StoryFile')===0){
+                  $photo = $dir."/".$sc->slug;
+                } else {
+                  $photo = $dir."/".$sc->slug.".jpg";
                 }
 								
 								$caption = $sc->description;
@@ -304,13 +312,18 @@ class PostInstagram extends Command
 								}
 								// Upload
 								try {
-									if ($sc->media_type == "photo") {
+
+                  if ($sc->media_type == "photo") {
 										// $caption = str_replace(chr(13),"\n",$caption);
 										// $caption = str_replace(chr(13).chr(10),"\n"."\n",$caption);
 										// $caption = str_replace(chr(126),"."."\n"."\n",$caption);
 										$caption = str_replace("\r\n", "\n", $caption);
 										
-										$instagram = $i->timeline->uploadPhoto($photo, ['caption' => $caption]);
+                    if(strpos($sc->slug, 'StoryFile')===0){
+                      $instagram = $i->story->uploadPhoto($photo, ['caption' => $caption]);
+                    } else {
+                      $instagram = $i->timeline->uploadPhoto($photo, ['caption' => $caption]);  
+                    }
 										
 										//update last post 
 										$dt = Carbon::now();
@@ -320,10 +333,14 @@ class PostInstagram extends Command
 									} 
 									else if ($sc->media_type == "video") {
 										// $i->uploadVideo($photo, $caption);
-                    var_dump($photo);
+                    
                     $caption = str_replace("\r\n", "\n", $caption);
                     
-                    $instagram = $i->timeline->uploadVideo($photo, ['caption' => $caption]);
+                    if(strpos($sc->slug, 'StoryFile')===0){
+                      $instagram = $i->story->uploadVideo($photo, ['caption' => $caption]);
+                    } else {
+                      $instagram = $i->timeline->uploadVideo($photo, ['caption' => $caption]);
+                    }
                     
                     //update last post 
                     $dt = Carbon::now();
