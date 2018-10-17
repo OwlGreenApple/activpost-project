@@ -64,6 +64,7 @@ class PostInstagram extends Command
 			* status_process -> untuk membantu pengecekan klo post tersebut sudah di process(biar ga di process berulang kali)
 			*
 			*/
+      $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
 			$scs = Schedule::
 							join("schedule_account","schedules.id","=","schedule_account.schedule_id")
 							// ->join("accounts","accounts.id","=","schedule_account.account_id")
@@ -80,7 +81,9 @@ class PostInstagram extends Command
 			$smsg = '';
 
 			foreach ($scs as $sc) {
-        var_dump($sc);
+        $logs = date("Y-m-d h:i:sa").' '.$sc->slug.'-'.$sc->media_type.", Looping schedule\n";
+        fwrite($myfile, $logs);
+
 				$user = Users::find($sc->user_id);
 				if (!is_null($user)) {
 					// if (!$user->is_started) {
@@ -174,6 +177,9 @@ class PostInstagram extends Command
 									}
 									// $i->setUser($username, $password);
 									$i->login($username, $password, 300);
+
+                  $logs = $sc->slug.'-'.$sc->media_type.", Login akun\n";
+                  fwrite($myfile, $logs);
 								} 
 								catch (\InstagramAPI\Exception\IncorrectPasswordException $e) {
 									$is_error = 1 ;
@@ -312,7 +318,6 @@ class PostInstagram extends Command
 								}
 								// Upload
 								try {
-
                   if ($sc->media_type == "photo") {
 										// $caption = str_replace(chr(13),"\n",$caption);
 										// $caption = str_replace(chr(13).chr(10),"\n"."\n",$caption);
@@ -320,9 +325,21 @@ class PostInstagram extends Command
 										$caption = str_replace("\r\n", "\n", $caption);
 										
                     if(strpos($sc->slug, 'StoryFile')===0){
+                      $logs = $sc->slug.'-'.$sc->media_type.", Pra posting\n";
+                      fwrite($myfile, $logs);
+
                       $instagram = $i->story->uploadPhoto($photo, ['caption' => $caption]);
+
+                      $logs = $sc->slug.'-'.$sc->media_type.", Posting Story foto\n";
+                      fwrite($myfile, $logs);
                     } else {
+                      $logs = $sc->slug.'-'.$sc->media_type.", Pra posting\n";
+                      fwrite($myfile, $logs);
+
                       $instagram = $i->timeline->uploadPhoto($photo, ['caption' => $caption]);  
+
+                      $logs = $sc->slug.'-'.$sc->media_type.", Posting foto\n";
+                      fwrite($myfile, $logs);
                     }
 										
 										//update last post 
@@ -333,13 +350,24 @@ class PostInstagram extends Command
 									} 
 									else if ($sc->media_type == "video") {
 										// $i->uploadVideo($photo, $caption);
-                    
                     $caption = str_replace("\r\n", "\n", $caption);
                     
                     if(strpos($sc->slug, 'StoryFile')===0){
+                      $logs = $sc->slug.'-'.$sc->media_type.", Pra posting\n";
+                      fwrite($myfile, $logs);
+
                       $instagram = $i->story->uploadVideo($photo, ['caption' => $caption]);
+
+                      $logs = $sc->slug.'-'.$sc->media_type.", Posting story video\n";
+                      fwrite($myfile, $logs);
                     } else {
+                      $logs = $sc->slug.'-'.$sc->media_type.", Pra posting\n";
+                      fwrite($myfile, $logs);
+
                       $instagram = $i->timeline->uploadVideo($photo, ['caption' => $caption]);
+
+                      $logs = $sc->slug.'-'.$sc->media_type.", Posting video\n";
+                      fwrite($myfile, $logs);
                     }
                     
                     //update last post 
@@ -347,6 +375,9 @@ class PostInstagram extends Command
                     $update_account = Account::find($account->id);
                     $update_account->last_post = strtotime($dt->toDateTimeString());
                     $update_account->save();
+
+                    $logs = $sc->slug.'-'.$sc->media_type.", Pasca posting\n";
+                    fwrite($myfile, $logs);
 									}
 								} 
 								catch (Exception $e) {
@@ -536,7 +567,7 @@ class PostInstagram extends Command
 				// $userlog->admin_id = 0;
 				// $userlog->save();
 
-				
+      fclose($myfile);	
 			
     }
 		
