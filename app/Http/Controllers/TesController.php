@@ -126,7 +126,7 @@ class TesController extends Controller
       ];
 
       $dir = base_path('images/uploads/puspitanurhidayati@gmail.com-6'); 
-      $photoFilename = $dir."/StoryFile-00000.jpg";
+      $photoFilename = $dir."/StoryFile-00000.mp4";
       //$videoname = $dir."/videoplayback.mp4";
       //$video = new \InstagramAPI\Media\Video\InstagramVideo($videoname);
       //$caption = "tes caption";
