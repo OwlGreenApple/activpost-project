@@ -135,6 +135,7 @@ class TesController extends Controller
       //$instagram = $i->timeline->uploadVideo($video->getFile(), ['caption' => $caption]);
       $caption = 'apayaaa';
       //$photo = new \InstagramAPI\Media\Photo\InstagramPhoto($photoFilename, ['targetFeed' => \InstagramAPI\Constants::FEED_STORY]);
-      $i->story->uploadPhoto($photoFilename, $metadata);
+      //$i->story->uploadPhoto($photoFilename, $metadata);
+      $i->story->uploadVideo($photoFilename, $metadata);
     }
 }
