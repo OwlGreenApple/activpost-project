@@ -1198,11 +1198,20 @@ $offset = ($page * $perPage) - $perPage;
       $upload_success = $uploadedFile->move($dir, $filename);   
     }*/
     
-    $extFile = $request->file('imgData')->getClientOriginalExtension();   
+    $uploadedFile = $request->file('imgData');
+    $extFile = $uploadedFile->getClientOriginalExtension();   
     $image =  array("jpg", "png", "gif", "bmp", "jpeg","tiff","JPG","PNG","GIF","BMP","JPEG","TIFF");
 
     if(in_array($extFile,$image) ) {
       $arr['jenisfile'] = 'image';
+
+      $arr_size = getimagesize($uploadedFile);
+      $ratio = $arr_size[0]/$arr_size[1];
+      if($ratio!=0.5625){
+        $arr['type'] = 'error';
+        $arr['message'] = 'Image harus memiliki aspect ratio 9:16';
+        return $arr;
+      }
     } else {
       $arr['jenisfile'] = 'video';
     }
