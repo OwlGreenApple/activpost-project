@@ -325,7 +325,7 @@ class PostInstagram extends Command
 										$caption = str_replace("\r\n", "\n", $caption);
 										
                     if(strpos($sc->slug, 'StoryFile')===0){
-                      $logs = $sc->slug.'-'.$sc->media_type.", Pra posting\n";
+                      $logs = $sc->slug.'-'.$sc->media_type.", Pra posting story foto\n";
                       fwrite($myfile, $logs);
 
                       $photo = new \InstagramAPI\Media\Photo\InstagramPhoto($photo, ['targetFeed' => \InstagramAPI\Constants::FEED_STORY]);
