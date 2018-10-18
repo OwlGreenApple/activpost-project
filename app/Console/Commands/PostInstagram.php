@@ -363,7 +363,7 @@ class PostInstagram extends Command
                     } else {
                       $logs = $sc->slug.'-'.$sc->media_type.", Pra posting\n";
                       fwrite($myfile, $logs);
-
+                      
                       $instagram = $i->timeline->uploadVideo($photo, ['caption' => $caption]);
 
                       $logs = $sc->slug.'-'.$sc->media_type.", Posting video\n";

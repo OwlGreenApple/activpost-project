@@ -1214,6 +1214,27 @@ $offset = ($page * $perPage) - $perPage;
       }
     } else {
       $arr['jenisfile'] = 'video';
+
+      $ffprobe = FFMpeg\FFProbe::create();
+      $video_dimensions = $ffprobe
+          ->streams( $uploadedFile )   // extracts streams informations
+          ->videos()                      // filters video streams
+          ->first()                       // returns the first video stream
+          ->getDimensions();              // returns a FFMpeg\Coordinate\Dimension object
+      $width = $video_dimensions->getWidth();
+      $height = $video_dimensions->getHeight();
+      $ratio = $width/$height;
+      $duration = $ffprobe->format( $uploadedFile )->get('duration');
+
+      if($ratio!=0.5625){
+        $arr['type'] = 'error';
+        $arr['message'] = 'Video harus memiliki aspect ratio 9:16';
+        return $arr;
+      } else if ($duration>15) {
+        $arr['type'] = 'error';
+        $arr['message'] = 'Durasi video untuk upload story maksimal 15 detik';
+        return $arr;
+      }
     }
 
     $arr["type"] = "success";
