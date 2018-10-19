@@ -13,7 +13,17 @@
 	function load_image(imgData){
     var form = $('#form-publish')[0];
     var formData = new FormData(form);
-  
+
+    var videoId = "videoMain";
+    var $videoEl = $('<video id="' + videoId + '"></video>');
+    $videoEl.attr('src', imgData);
+    var videoTagRef = $videoEl[0];
+    videoTagRef.addEventListener('loadedmetadata', function(e){
+      console.log(videoTagRef.videoWidth, videoTagRef.videoHeight);
+      $('#width_video').val(videoTagRef.videoWidth);
+      $('#height_video').val(videoTagRef.videoHeight);
+    });
+
 		$.ajax({
 				headers: {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -173,7 +183,9 @@
 
       reader.addEventListener("load", function () {
         // preview.src = reader.result;
+
         load_image(reader.result);
+
       }, false);
 
       if (file) {
@@ -291,6 +303,8 @@
 									<form role="form" id="form-publish" enctype="multipart/form-data">
 											{{ csrf_field() }}
                       <input type="hidden" name="type" id="type-file">
+                      <input type="hidden" name="width_video" id="width_video">
+                      <input type="hidden" name="height_video" id="height_video">
 											<input type="hidden" id="imguri" name="imguri" 
 											value="<?php 
 												if (!is_null($arr_repost)){ echo $arr_repost['url'];} 
