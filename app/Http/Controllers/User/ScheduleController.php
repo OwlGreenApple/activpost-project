@@ -1225,17 +1225,17 @@ $offset = ($page * $perPage) - $perPage;
       $height = $video_dimensions->getHeight();
       $ratio = $width/$height;
       $duration = $ffprobe->format( $uploadedFile )->get('duration');*/
-      dd($request->all());
+
       $ratio = $request->width_video / $request->height_video;
       if($ratio<0.56 || $ratio>0.67){
         $arr['type'] = 'error';
         $arr['message'] = 'Video harus memiliki aspect ratio 9:16';
         return $arr;
-      } /*else if ($duration>15) {
+      } else if ($request->duration_video>15) {
         $arr['type'] = 'error';
         $arr['message'] = 'Durasi video untuk upload story maksimal 15 detik';
         return $arr;
-      }*/
+      }
     }
 
     $arr["type"] = "success";
