@@ -162,7 +162,23 @@
 
       reader.addEventListener("load", function () {
         // preview.src = reader.result;
-        load_image(reader.result);
+        if(file.type.match("^video")){
+          var videoId = "videoMain";
+          var $videoEl = $('<video id="' + videoId + '"></video>');
+          $videoEl.attr('src', reader.result);
+          var videoTagRef = $videoEl[0];
+          videoTagRef.addEventListener('loadedmetadata', function(e){
+            $('#width_video').val(videoTagRef.videoWidth);
+            $('#height_video').val(videoTagRef.videoHeight);
+            $('#duration_video').val(videoTagRef.duration);
+            
+            load_image(reader.result);
+          });
+        } else {
+          $(window).scrollTop(0);
+          $("#alert").show();
+          $("#alert").html("File yang diupload harus dalam format video");
+        }
       }, false);
 
       if (file) {
@@ -279,6 +295,9 @@
 
 									<form role="form" id="form-publish" enctype="multipart/form-data">
 											{{ csrf_field() }}
+                      <input type="hidden" name="width_video" id="width_video">
+                      <input type="hidden" name="height_video" id="height_video">
+                      <input type="hidden" name="duration_video" id="duration_video">
 											<input type="hidden" id="imguri" name="imguri" 
 											value="<?php 
 												if (!is_null($arr_repost)){ echo $arr_repost['url'];} 

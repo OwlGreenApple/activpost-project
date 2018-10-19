@@ -923,6 +923,11 @@ $offset = ($page * $perPage) - $perPage;
     if($request->hasFile('imgData')){
       $upload_success = $uploadedFile->move($dir, $filename);   
     }*/
+    if($request->duration_video>60){
+      $arr["type"] = "error";
+      $arr["message"] = "Durasi video untuk upload post maksimal 1 menit";  
+      return $arr;
+    }
     
     $arr["type"] = "success";
     $arr["message"] = "Data berhasil disimpan";
