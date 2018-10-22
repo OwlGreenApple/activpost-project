@@ -1062,14 +1062,26 @@ $offset = ($page * $perPage) - $perPage;
       $schedule->slug = $filename;
     } else {
       // edit schedule
-      $uploadedFile = $request->file('imgData');   
-      $filename = $request->slug;
-      $uploadedFile->move($dir, $filename);   
-
-      //Storage::move($request->imguri, $dir.'/'.$request->slug.'mp4');
-      
       $schedule = Schedule::findOrFail($request->id);
-      $schedule->slug = $request->slug;
+      //dd($request->all());
+      if($request->hasFile('imgData')){
+        $uploadedFile = $request->file('imgData');   
+
+        $ext = explode('.', $request->slug);
+
+        $filename = $ext[0].'.'.$uploadedFile->getClientOriginalExtension();
+
+        if($ext[1]!=$uploadedFile->getClientOriginalExtension()){
+          //delete file lama 
+          File::delete($dir.'/'.$request->slug);
+        }
+
+        $uploadedFile->move($dir, $filename);   
+
+        //Storage::move($request->imguri, $dir.'/'.$request->slug.'mp4');
+        
+        $schedule->slug = $request->slug;
+      }
       
       $check_sa = ScheduleAccount::where("schedule_id","=",$schedule->id)
                   ->where("status","=",5)
@@ -1254,7 +1266,7 @@ $offset = ($page * $perPage) - $perPage;
   public function publish_story_schedule(req $request)
   {
     $user = Auth::user();
- 
+
     //check before publish
     if (!$request->has('accounts')) {
       $arr["type"]="error";
@@ -1376,19 +1388,27 @@ $offset = ($page * $perPage) - $perPage;
       $schedule->slug = $filename;
     } else {
       // edit schedule
-
-      $uploadedFile = $request->file('imgData'); 
-
-      $ext = explode('.', $request->slug);
-
-      $filename = $ext[0].'.'.$uploadedFile->getClientOriginalExtension();
-      $uploadedFile->move($dir, $filename);   
-
-      //Storage::move($request->imguri, $dir.'/'.$request->slug.'mp4');
-      
       $schedule = Schedule::findOrFail($request->id);
-      $schedule->image = url('/../vp/uploads/'.$user->username.'-'.$user->id.'/'.$filename);
-      $schedule->slug = $filename;
+      
+      if($request->hasFile('imgData')){
+        $uploadedFile = $request->file('imgData'); 
+
+        $ext = explode('.', $request->slug);
+
+        $filename = $ext[0].'.'.$uploadedFile->getClientOriginalExtension();
+
+        if($ext[1]!=$uploadedFile->getClientOriginalExtension()){
+          //delete file lama 
+          File::delete($dir.'/'.$request->slug);
+        }
+
+        $uploadedFile->move($dir, $filename);   
+
+        //Storage::move($request->imguri, $dir.'/'.$request->slug.'mp4');
+        
+        $schedule->image = url('/../vp/uploads/'.$user->username.'-'.$user->id.'/'.$filename);
+        $schedule->slug = $filename;
+      }
       
       $check_sa = ScheduleAccount::where("schedule_id","=",$schedule->id)
                   ->where("status","=",5)

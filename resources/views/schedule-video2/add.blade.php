@@ -10,6 +10,10 @@
 
 ?>
 <script>
+  var temp_file = "<?php if (!is_null($arr_repost)){ echo $arr_repost['url'];} 
+                         if ($sid<>0) { echo $schedule->image; } 
+                    ?>";
+
 	function load_image(imgData){
     var form = $('#form-publish')[0];
     var formData = new FormData(form);
@@ -42,9 +46,14 @@
 						}
 						else if(dataR.type=='error')
 						{
+              //location.reload();
 							$(window).scrollTop(0);
 							$("#alert").show();
 							$("#alert").html(dataR.message);
+
+              $("#imguri").val(temp_file);
+              $("#video-preview").attr('src',temp_file);
+              $("#file-upload").val(null);
 						}
 				}
 		});

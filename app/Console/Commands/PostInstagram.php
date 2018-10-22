@@ -73,8 +73,8 @@ class PostInstagram extends Command
 							->where('schedule_account.status_process',0)
 							// ->where( 'schedules.publish_at', '<=', $this->waktu->toDateTimeString() )
 							// ->whereDate('schedules.publish_at','>=',$this->waktu->toDateString())
-							//->whereDate('schedules.publish_at',$this->waktu->format('Y-m-d'))
-							//->whereTime('schedules.publish_at','<=',$this->waktu->format('H:i:s'))
+							->whereDate('schedules.publish_at',$this->waktu->format('Y-m-d'))
+							->whereTime('schedules.publish_at','<=',$this->waktu->format('H:i:s'))
 							->groupBy('schedule_account.account_id')
 							->orderBy('schedules.publish_at', 'asc')
 							->get();
