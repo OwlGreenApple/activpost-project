@@ -10,20 +10,16 @@
 
 ?>
 <script>
-  var temp_file = "<?php if (!is_null($arr_repost)){ echo $arr_repost['url'];} 
-                         if ($sid<>0) { echo $schedule->image; } 
-                    ?>";
-
 	function load_image(imgData){
     var form = $('#form-publish')[0];
     var formData = new FormData(form);
-  
+
 		$.ajax({
 				headers: {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 				},
 				type: 'POST',
-				url: "<?php echo url('schedule/save-video'); ?>",
+				url: "<?php echo url('schedule/save-story'); ?>",
         data: formData, 
 				dataType: 'text',
         cache: false,
@@ -41,19 +37,25 @@
 							$("#alert").hide();
 							$("#imguri").val(dataR.url);
 							$("#image-id").val(0);
-							$("#video-preview").show();
-              $("#video-preview").attr('src',imgData);
+
+              if(dataR.jenisfile=='image'){
+                $("#canvas-image").show();
+                $("#video-preview").hide();
+                $("#canvas-image").attr('src',imgData);
+              } else {
+                $("#video-preview").show();
+                $("#canvas-image").hide();
+                $("#video-preview").attr('src',imgData);
+              }
+
+              $('#type-file').val(dataR.jenisfile);
+
 						}
 						else if(dataR.type=='error')
 						{
-              //location.reload();
 							$(window).scrollTop(0);
 							$("#alert").show();
 							$("#alert").html(dataR.message);
-
-              $("#imguri").val(temp_file);
-              $("#video-preview").attr('src',temp_file);
-              $("#file-upload").val(null);
 						}
 				}
 		});
@@ -104,7 +106,7 @@
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 				},
 				type: 'POST',
-				url: "<?php echo url('schedule/publish-video'); ?>",
+				url: "<?php echo url('schedule/publish-story'); ?>",
 				//data: $("#form-publish").serialize(),
         data: formData,
 				dataType: 'text',
@@ -171,7 +173,9 @@
 
       reader.addEventListener("load", function () {
         // preview.src = reader.result;
-        if(file.type.match("^video")){
+        if(file.type.match("^image")){
+          load_image(reader.result);
+        } else {
           var videoId = "videoMain";
           var $videoEl = $('<video id="' + videoId + '"></video>');
           $videoEl.attr('src', reader.result);
@@ -183,11 +187,8 @@
             
             load_image(reader.result);
           });
-        } else {
-          $(window).scrollTop(0);
-          $("#alert").show();
-          $("#alert").html("File yang diupload harus dalam format video");
         }
+
       }, false);
 
       if (file) {
@@ -290,7 +291,7 @@
 	<h3><div id="dates" style="font-weight: bold;float: left;"></div><div style="float: left;">&nbsp;</div> <div id="clock" style="color: #15b49e;"></div></h3>
 	<div class="row">
 		<div class="col-md-2 col-xs-4 col-sm-4 margin-bottom">
-			<input type="button" value="Upload Video" class="btn btn-home" id="button-upload-file">
+			<input type="button" value="Upload Story" class="btn btn-home" id="button-upload-file">
       <!--<form id="form-uploadfile" enctype="multipart/form-data">
             <input type="file" name="imgData" style="display: none" id="file-upload" />  
           </form>-->
@@ -304,6 +305,7 @@
 
 									<form role="form" id="form-publish" enctype="multipart/form-data">
 											{{ csrf_field() }}
+                      <input type="hidden" name="type" id="type-file">
                       <input type="hidden" name="width_video" id="width_video">
                       <input type="hidden" name="height_video" id="height_video">
                       <input type="hidden" name="duration_video" id="duration_video">
@@ -319,7 +321,11 @@
 											<input type="hidden" id="image-id" name="image_id" value="">
 											<input type="hidden" id="slug" name="slug" value="<?php if ($sid<>0) { echo $schedule->slug; } ?>">
 
-                      <video id="video-preview" <?php if($sid==0) echo 'style="display: none;"' ?> src="<?php 
+                      <img id="canvas-image" <?php if($sid==0 || $schedule->media_type=='video') echo 'style="display: none;"' ?> class="img-responsive" src="<?php 
+                      if ($sid<>0) { echo $schedule->image; } 
+                      else if (!is_null($arr_repost)){ echo $arr_repost['url'];}
+                      ?>">
+                      <video id="video-preview" <?php if($sid==0 || $schedule->media_type=='photo') echo 'style="display: none;"' ?> src="<?php 
                       if ($sid<>0) { echo $schedule->image; } 
                       else if (!is_null($arr_repost)){ echo $arr_repost['url'];}
                       ?>" width="320" height="240" controls></video>
@@ -467,7 +473,7 @@
 			</div>
 	</div>
 </div>
-    @if (Request::is('schedule/add') || Request::is('schedule/edit*') || Request::is('schedule/repost*') || Request::is('schedule/video*'))
+    @if (Request::is('schedule/add') || Request::is('schedule/edit*') || Request::is('schedule/repost*') || Request::is('schedule/video') || Request::is('schedule/story'))
         <script src="{{ asset('/js/schedule.js') }}"></script>
 				
     @endif

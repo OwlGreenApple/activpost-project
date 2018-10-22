@@ -126,15 +126,16 @@ class TesController extends Controller
       ];
 
       $dir = base_path('images/uploads/puspitanurhidayati@gmail.com-6'); 
-      $photoFilename = $dir."/PublishFile-00000.jpg";
+      $photoFilename = $dir."/StoryFile-00000.mp4";
       //$videoname = $dir."/videoplayback.mp4";
       //$video = new \InstagramAPI\Media\Video\InstagramVideo($videoname);
       //$caption = "tes caption";
 
       //$instagram = $i->timeline->uploadPhoto($photo, ['caption' => $caption]);
       //$instagram = $i->timeline->uploadVideo($video->getFile(), ['caption' => $caption]);
-
-      $photo = new \InstagramAPI\Media\Photo\InstagramPhoto($photoFilename, ['targetFeed' => \InstagramAPI\Constants::FEED_STORY]);
-      $i->story->uploadPhoto($photo->getFile(), $metadata);
+      $caption = 'apayaaa';
+      //$photo = new \InstagramAPI\Media\Photo\InstagramPhoto($photoFilename, ['targetFeed' => \InstagramAPI\Constants::FEED_STORY]);
+      //$i->story->uploadPhoto($photoFilename, $metadata);
+      $i->story->uploadVideo($photoFilename, $metadata);
     }
 }
