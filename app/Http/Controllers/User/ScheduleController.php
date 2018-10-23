@@ -1096,6 +1096,7 @@ $offset = ($page * $perPage) - $perPage;
       
     }
 
+    $schedule->thumbnail_video = $request->thumbnail;
     $schedule->user_id = $user->id;
     $schedule->description = $request->description;
     $schedule->status = 1;

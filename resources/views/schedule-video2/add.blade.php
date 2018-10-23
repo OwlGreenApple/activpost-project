@@ -14,6 +14,13 @@
                          if ($sid<>0) { echo $schedule->image; } 
                     ?>";
 
+  function set_thumbnail(){
+    var vid = document.getElementById("video-preview");
+    $('#thumbnail').val(vid.currentTime);
+    $('#span-thumbnail').html(Math.round(vid.currentTime)+' seconds');
+    alert('Thumbnail berhasil di set');
+  }
+
 	function load_image(imgData){
     var form = $('#form-publish')[0];
     var formData = new FormData(form);
@@ -43,6 +50,7 @@
 							$("#image-id").val(0);
 							$("#video-preview").show();
               $("#video-preview").attr('src',imgData);
+              $('.div-thumbnail').show();
 						}
 						else if(dataR.type=='error')
 						{
@@ -143,6 +151,9 @@
 		$("#button-start-user-close").click(function(e){
 			//window.location.href = "<?php echo url('schedule'); ?>";
 		});
+    $("#btn-thumbnail").click(function(e){
+      set_thumbnail();
+    });
 		$('#button-action').click(function(e){
 			action_activity();
 		});
@@ -307,6 +318,7 @@
                       <input type="hidden" name="width_video" id="width_video">
                       <input type="hidden" name="height_video" id="height_video">
                       <input type="hidden" name="duration_video" id="duration_video">
+                      <input type="hidden" name="thumbnail" id="thumbnail" value="0">
 											<input type="hidden" id="imguri" name="imguri" 
 											value="<?php 
 												if (!is_null($arr_repost)){ echo $arr_repost['url'];} 
@@ -323,6 +335,12 @@
                       if ($sid<>0) { echo $schedule->image; } 
                       else if (!is_null($arr_repost)){ echo $arr_repost['url'];}
                       ?>" width="320" height="240" controls></video>
+
+                      <div class="div-thumbnail" style="display: none;">
+                        <span style="font-size: 12px">Silahkan play video, kemudian pause dan klik Set Thumbnail untuk mengeset thumbnail video</span> <br>
+                        <span id="span-thumbnail" style="font-weight: bold"></span> <br>
+                        <input type="button" value="Set Thumbnail" class="btn btn-home" id="btn-thumbnail"> <br> <br>
+                      </div>
 												
 											<div class="form-group">
 													<label>Caption
