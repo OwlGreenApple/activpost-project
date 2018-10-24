@@ -43,7 +43,7 @@ Route::group(['middleware' => 'auth'], function () {
   //Route::get('/', 'User\AccountController@index');
   Route::get('/','Admin\UserController@index');
   Route::get('home','Admin\UserController@index');
-  Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+  
   /*
   * ADMIN 
   */
@@ -190,4 +190,9 @@ Route::group(['middleware' => 'auth'], function () {
   //Route::post('search-orders','Admin\OrderController@searchorder');
   
   Route::get('test-image', 'User\ScheduleController@test_image');
+});
+
+/* Middleware admin */
+Route::group(['middleware' => ['web','auth','admin']], function() {
+  Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');  
 });
