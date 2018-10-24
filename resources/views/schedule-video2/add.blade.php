@@ -182,6 +182,8 @@
 
       reader.addEventListener("load", function () {
         // preview.src = reader.result;
+        console.log(file.type);
+
         if(file.type.match("^video")){
           var videoId = "videoMain";
           var $videoEl = $('<video id="' + videoId + '"></video>');
@@ -294,7 +296,7 @@
 
 
 	<h1>
-		Schedules
+		Schedules Video
 		<span class="glyphicon glyphicon-question-sign hint-button tooltipPlugin" title="<div class='panel-heading'>Schedules</div><div class='panel-content'>Schedule Post maksimum 3 Post tiap jamnya</div>">
 		</span>
 	</h1>

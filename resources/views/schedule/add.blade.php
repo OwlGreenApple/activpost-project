@@ -299,7 +299,7 @@
 
 
 	<h1>
-		Schedules
+		Schedules Photo
 		<span class="glyphicon glyphicon-question-sign hint-button tooltipPlugin" title="<div class='panel-heading'>Schedules</div><div class='panel-content'>Schedule Post maksimum 3 Post tiap jamnya</div>">
 		</span>
 	</h1>

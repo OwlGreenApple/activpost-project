@@ -97,7 +97,7 @@
 			return false;
 		}
 		// fill hidden input before process
-		$("#hidden-description").val(descriptionPostEmoji[0].emojioneArea.getText());
+		//$("#hidden-description").val(descriptionPostEmoji[0].emojioneArea.getText());
 		
     var form = $('#form-publish')[0];
     var formData = new FormData(form);
@@ -284,7 +284,7 @@
 
 
 	<h1>
-		Schedules
+		Schedules Story
 		<span class="glyphicon glyphicon-question-sign hint-button tooltipPlugin" title="<div class='panel-heading'>Schedules</div><div class='panel-content'>Schedule Post maksimum 3 Post tiap jamnya</div>">
 		</span>
 	</h1>
@@ -331,10 +331,10 @@
                       ?>" width="320" height="240" controls></video>
 												
 											<div class="form-group">
-													<label>Caption
+													<!--<label>Caption
 														<span class="glyphicon glyphicon-question-sign hint-button tooltipPlugin" title="<div class='panel-heading'>Caption</div><div class='panel-content'>Caption untuk post yang akan dischedule</div>">
 														</span>														
-													</label>
+													</label>-->
 													<!--<textarea name="description" id="input-description-box" class="form-control" rows="5"><?php 
 													// if ($sid<>0) { echo $schedule->description; } 
 													// else if (!is_null($arr_repost)){ 
@@ -344,7 +344,7 @@
 													// }  
 													?></textarea>-->
 
-													<input type="hidden" name="description" id="hidden-description">
+													<!--<input type="hidden" name="description" id="hidden-description">
 													<div id="divInput-description-post"></div>
 													<?php 
 														$description = "";
@@ -410,7 +410,7 @@
 															<span class="glyphicon glyphicon-plus"></span>														
 														</button>
 													</div>
-											</div>
+											</div>-->
 											<div class="form-group">
 													<label>Accounts
 														<span class="glyphicon glyphicon-question-sign hint-button tooltipPlugin" title="<div class='panel-heading'>Accounts</div><div class='panel-content'>Account-account yang akan diposting</div>">
