@@ -43,7 +43,7 @@ Route::group(['middleware' => 'auth'], function () {
   //Route::get('/', 'User\AccountController@index');
   Route::get('/','Admin\UserController@index');
   Route::get('home','Admin\UserController@index');
-  
+  Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
   /*
   * ADMIN 
   */
