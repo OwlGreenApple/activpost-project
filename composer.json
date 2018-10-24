@@ -18,7 +18,8 @@
         "maatwebsite/excel": "~2.0",
         "mgp25/instagram-php": "dev-master",
         "nesbot/carbon": "^1.21",
-        "pda/pheanstalk": "^3.1"
+        "pda/pheanstalk": "^3.1",
+        "rap2hpoutre/laravel-log-viewer": "^0.22.1"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

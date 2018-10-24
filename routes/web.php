@@ -205,3 +205,8 @@ Route::group(['middleware' => 'auth'], function () {
   
   Route::get('test-image', 'User\ScheduleController@test_image');
 });
+
+/* Middleware admin */
+Route::group(['middleware' => ['web','auth','admin']], function() {
+  Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');  
+});

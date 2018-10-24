@@ -193,6 +193,7 @@ return [
         'Maatwebsite\Excel\ExcelServiceProvider',
         'Camroncade\Timezone\TimezoneServiceProvider',
 
+        Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
     ],
 
     /*

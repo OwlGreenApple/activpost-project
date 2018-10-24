@@ -1096,6 +1096,7 @@ $offset = ($page * $perPage) - $perPage;
       
     }
 
+    $schedule->thumbnail_video = $request->thumbnail;
     $schedule->user_id = $user->id;
     $schedule->description = $request->description;
     $schedule->status = 1;
@@ -1293,7 +1294,7 @@ $offset = ($page * $perPage) - $perPage;
       return $arr;
     }
 
-    if (count(explode("#",$request->description)) - 1 > 30 ) {
+    /*if (count(explode("#",$request->description)) - 1 > 30 ) {
       $arr["type"] = "error";
       $arr["message"] = "hashtags tidak boleh lebih dari 30";
       return $arr;
@@ -1303,7 +1304,7 @@ $offset = ($page * $perPage) - $perPage;
       $arr["type"] = "error";
       $arr["message"] = "Character tidak boleh lebih dari 1700";
       return $arr;
-    }    
+    }*/    
     
     //check klo delete at < publish at
     if ($request->hidden_method=="schedule")  {
@@ -1424,7 +1425,8 @@ $offset = ($page * $perPage) - $perPage;
     }
 
     $schedule->user_id = $user->id;
-    $schedule->description = $request->description;
+    //$schedule->description = $request->description;
+    $schedule->description = '';
     $schedule->status = 1;
     if ($request->hidden_method=="schedule")  {
       $schedule->publish_at = strtotime($request->publish_at);
