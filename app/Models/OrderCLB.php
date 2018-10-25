@@ -82,8 +82,8 @@ class OrderCLB extends Model
         Mail::send('emails.info-order-admin', $emaildata, function ($message) use ($type_message) {
           $message->from('no-reply@activpost.net', 'activpost');
           $message->to(array(
-            "michaelsugih@gmail.com",
-            "celebgramme.dev@gmail.com",
+            "activfans@gmail.com",
+            // "celebgramme.dev@gmail.com",
           ));
           $message->subject($type_message);
         });
