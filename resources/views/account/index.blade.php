@@ -324,7 +324,7 @@ use Celebpost\Models\Proxies;
 							<div class="modal-body">
 								<div class="form-group">
 									<label for="" class="control-label">Silahkan login dahulu ke Instagram.com via browser, & jangan di logout sebelum berhasil add account <br>
-									STOP Celebgramme dahulu(Jika Celebgramme anda dalam posisi belum distop), & dapat di START lagi setelah berhasil Edit Password</label>
+									STOP Activfans dahulu(Jika Activfans anda dalam posisi belum distop), & dapat di START lagi setelah berhasil Edit Password</label>
 								</div>
                 <div class="form-group">
                     <label for="insta_password">Password</label>
@@ -668,9 +668,9 @@ use Celebpost\Models\Proxies;
 													</div>
 													<div class="modal-body">
 															Delete <strong>{{ $account->username }}</strong> Account?<br>
-															Silahkan Stop akun Celebgramme terlebih dulu apabila anda akan melakukan <br>
+															Silahkan Stop akun Activfans terlebih dulu apabila anda akan melakukan <br>
 															delete & add akun ulang(refresh Session IG akun).<br>
-															*Abaikan pesan diatas apabila akun ini tidak sedang aktif memakai Celebgramme
+															*Abaikan pesan diatas apabila akun ini tidak sedang aktif memakai Activfans
 													</div>
 													<div class="modal-footer">
 															<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
@@ -745,25 +745,25 @@ https://celebpost.freshdesk.com/solution/articles/19000035607--instagram-error-i
 												<div class="col-sm-12 col-md-12">
 													<label for="terms-add-account8" class="control-label">
                             <input type="checkbox" class="checkbox-term" id="terms-add-account8">
-                            Saya sudah membaca dan mempelajari  <a href="https://docs.google.com/document/d/1CA7hxRL-3DTQiR8CoEX7yw58mx4LNRmfLKahaHtKFic/edit" target="_blank">Tutorial Celebpost </a>
+                            Saya sudah membaca dan mempelajari  <a href="https://docs.google.com/document/d/1CA7hxRL-3DTQiR8CoEX7yw58mx4LNRmfLKahaHtKFic/edit" target="_blank">Tutorial Activpost </a>
                           </label>
 												</div>
 												<div class="col-sm-12 col-md-12">
 													<label for="terms-add-account9" class="control-label">
                             <input type="checkbox" class="checkbox-term" id="terms-add-account9">
-                            Saya sudah mempelajari  <a href="https://youtu.be/sys-y7F36bk" target="_blank"> Video Tutorial Celebpost </a>
+                            Saya sudah mempelajari  <a href="https://youtu.be/sys-y7F36bk" target="_blank"> Video Tutorial Activpost </a>
                           </label>
 												</div>
 												<div class="col-sm-12 col-md-12">
 													<label for="terms-add-account10" class="control-label">
                             <input type="checkbox" class="checkbox-term" id="terms-add-account10">
-                            Saya sudah membaca & menyetujui <a href="https://activpost.net/terms-conditions/">TERMS & CONDITIONS</a> Celebpost 
+                            Saya sudah membaca & menyetujui <a href="https://activpost.net/terms-conditions/">TERMS & CONDITIONS</a> Activpost 
                           </label>
 												</div>
 												<div class="col-sm-12 col-md-12">
 													<label for="terms-add-account12" class="control-label">
                             <input type="checkbox" class="checkbox-term" id="terms-add-account12"> 
-                            STOP Celebgramme dahulu(Jika Celebgramme anda dalam posisi belum distop), & dapat di START lagi setelah berhasil add account 
+                            STOP Activfans dahulu(Jika Activfans anda dalam posisi belum distop), & dapat di START lagi setelah berhasil add account 
                           </label>
 												</div>
 												<div class="col-sm-12 col-md-12">
@@ -773,7 +773,7 @@ https://celebpost.freshdesk.com/solution/articles/19000035607--instagram-error-i
                           </label>
 													<p style="font-size:11px; margin-left:20px;"> PS : <br>
 													1. Stop Celebpost terlebih dahulu apabila akan melakukan activity Instagram secara manual <br> (Follow / Like / Comment / Unfollow / Post) atau bisa melakukan activity diluar jam schedule Celebpost <br>
-													2. Jika anda sedang aktif menggunakan Celebgramme, sebaiknya jangan menggunakan fitur post now pada celebpost. Beri waktu setidaknya 15 menit kemudian dari waktu post now.</p>
+													2. Jika anda sedang aktif menggunakan Activfans, sebaiknya jangan menggunakan fitur post now pada celebpost. Beri waktu setidaknya 15 menit kemudian dari waktu post now.</p>
 													
 												</div>
 											</div>
