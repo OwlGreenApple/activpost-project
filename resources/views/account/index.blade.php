@@ -732,8 +732,7 @@ use Celebpost\Models\Proxies;
 												<div class="col-sm-12 col-md-12">
 													<label for="terms-add-account7" class="control-label">
                             <input type="checkbox" class="checkbox-term" id="terms-add-account7">
-                            Turn OFF 2 Factor Authentications ( Khusus followers >1000 ) <a href="
-https://celebpost.freshdesk.com/solution/articles/19000035607--instagram-error-instagram-selalu-minta-verifikasi-no-telp"> >> Link Help << </a> 
+                            Turn OFF 2 Factor Authentications ( Khusus followers >1000 ) 
                           </label>
 												</div>
 												<div class="col-sm-12 col-md-12">
