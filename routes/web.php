@@ -210,3 +210,9 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => ['web','auth','admin']], function() {
   Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');  
 });
+
+/* Middleware API */
+Route::group(['middleware' => ['APIMiddleware']], function() {
+  Route::get('/post-ig/{data}','APIController@post_ig');
+});
+
