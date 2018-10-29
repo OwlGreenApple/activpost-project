@@ -73,8 +73,8 @@ class APIController extends Controller
 			}
 			$i->login($username, $password, 300);
 
-			$logs = $sc->slug.'-'.$sc->media_type.", Login akun\n";
-			fwrite($myfile, $logs);
+			// $logs = $sc->slug.'-'.$sc->media_type.", Login akun\n";
+			// fwrite($myfile, $logs);
 		} 
 		catch (\InstagramAPI\Exception\IncorrectPasswordException $e) {
 			$is_error = 1 ;
@@ -176,21 +176,21 @@ class APIController extends Controller
 				$caption = str_replace("\r\n", "\n", $caption);
 				
 				if(strpos($sc->slug, 'StoryFile')===0){
-					$logs = $sc->slug.'-'.$sc->media_type.", Pra posting story foto\n";
-					fwrite($myfile, $logs);
+					// $logs = $sc->slug.'-'.$sc->media_type.", Pra posting story foto\n";
+					// fwrite($myfile, $logs);
 
 					$instagram = $i->story->uploadPhoto($photo, ['caption' => $caption]);
 
-					$logs = $sc->slug.'-'.$sc->media_type.", Posting Story foto\n";
-					fwrite($myfile, $logs);
+					// $logs = $sc->slug.'-'.$sc->media_type.", Posting Story foto\n";
+					// fwrite($myfile, $logs);
 				} else {
-					$logs = $sc->slug.'-'.$sc->media_type.", Pra posting\n";
-					fwrite($myfile, $logs);
+					// $logs = $sc->slug.'-'.$sc->media_type.", Pra posting\n";
+					// fwrite($myfile, $logs);
 
 					$instagram = $i->timeline->uploadPhoto($photo, ['caption' => $caption]);  
 
-					$logs = $sc->slug.'-'.$sc->media_type.", Posting foto\n";
-					fwrite($myfile, $logs);
+					// $logs = $sc->slug.'-'.$sc->media_type.", Posting foto\n";
+					// fwrite($myfile, $logs);
 				}
 				
 				//update last post 
@@ -204,21 +204,21 @@ class APIController extends Controller
 				$caption = str_replace("\r\n", "\n", $caption);
 				
 				if(strpos($sc->slug, 'StoryFile')===0){
-					$logs = $sc->slug.'-'.$sc->media_type.", Pra posting\n";
-					fwrite($myfile, $logs);
+					// $logs = $sc->slug.'-'.$sc->media_type.", Pra posting\n";
+					// fwrite($myfile, $logs);
 
 					$instagram = $i->story->uploadVideo($photo, ['caption' => $caption]);
 
-					$logs = $sc->slug.'-'.$sc->media_type.", Posting story video\n";
-					fwrite($myfile, $logs);
+					// $logs = $sc->slug.'-'.$sc->media_type.", Posting story video\n";
+					// fwrite($myfile, $logs);
 				} else {
-					$logs = $sc->slug.'-'.$sc->media_type.", Pra posting\n";
-					fwrite($myfile, $logs);
+					// $logs = $sc->slug.'-'.$sc->media_type.", Pra posting\n";
+					// fwrite($myfile, $logs);
 					
 					$instagram = $i->timeline->uploadVideo($photo, ['caption' => $caption, 'timestamp' => 20]);
 
-					$logs = $sc->slug.'-'.$sc->media_type.", Posting video\n";
-					fwrite($myfile, $logs);
+					// $logs = $sc->slug.'-'.$sc->media_type.", Posting video\n";
+					// fwrite($myfile, $logs);
 				}
 				
 				//update last post 
@@ -227,8 +227,8 @@ class APIController extends Controller
 				$update_account->last_post = strtotime($dt->toDateTimeString());
 				$update_account->save();
 
-				$logs = $sc->slug.'-'.$sc->media_type.", Pasca posting\n";
-				fwrite($myfile, $logs);
+				// $logs = $sc->slug.'-'.$sc->media_type.", Pasca posting\n";
+				// fwrite($myfile, $logs);
 			}
 		} 
 		catch (Exception $e) {
