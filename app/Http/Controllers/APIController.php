@@ -11,7 +11,7 @@ use Celebpost\Models\UserLog;
 use Celebpost\Models\Account;
 use Celebpost\Jobs\PostTask;
 
-use Config;
+use Config,Crypt;
 
 class APIController extends Controller
 {
