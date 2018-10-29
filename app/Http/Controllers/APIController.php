@@ -11,6 +11,8 @@ use Celebpost\Models\UserLog;
 use Celebpost\Models\Account;
 use Celebpost\Jobs\PostTask;
 
+use \InstagramAPI\Instagram;
+
 use Config,Crypt;
 
 class APIController extends Controller
