@@ -121,7 +121,8 @@ class APIController extends Controller
 					$check_sa->save();
 				}
 				
-				continue;
+				// continue;
+				return "";
 			}
 			$smsg .= " Line: ".$e->getTraceAsString(); // this prints the line where the error occurs
 			
@@ -135,7 +136,8 @@ class APIController extends Controller
 				$check_sa->save();
 			}
 			
-			continue;
+			// continue;
+			return "";
 		}
 		if ($is_error) {
 				$check_sa->status = 5;
@@ -163,7 +165,8 @@ class APIController extends Controller
 				$message->subject($subject_message);
 			});
 			
-			continue;
+			// continue;
+			return "";
 		}
 		// Upload
 		try {
@@ -250,7 +253,8 @@ class APIController extends Controller
 					$check_sa->save();
 				}
 				
-				continue;
+				// continue;
+				return "";
 			}
 			$smsg .= " Line: ".$e->getTraceAsString(); // this prints the line where the error occurs
 			
@@ -282,7 +286,8 @@ class APIController extends Controller
 				$message->subject($subject_message);
 			});
 			
-			continue;
+			// continue;
+			return "";
 		}
 		catch (\InstagramAPI\Exception\BadRequestException $e) {
 			//supaya diproses lagi
@@ -292,7 +297,8 @@ class APIController extends Controller
 				$check_sa->save();
 			}
 			
-			continue;
+			// continue;
+			return "";
 		}
 	
 		$dt = Carbon::now();
