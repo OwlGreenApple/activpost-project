@@ -39,7 +39,6 @@ class APIController extends Controller
 			if ($account->is_error) {
 				return "";
 			}
-			$check_sa = ScheduleAccount::find($sc->said);
 			if (!is_null($check_sa)){
 				if ($check_sa->status_process <> 0) {
 					return "";
