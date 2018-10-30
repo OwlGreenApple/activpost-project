@@ -214,5 +214,6 @@ Route::group(['middleware' => ['web','auth','admin']], function() {
 /* Middleware API */
 Route::group(['middleware' => ['APIMiddleware']], function() {
   Route::get('/post-ig','APIController@post_ig');
+  Route::get('/delete-post-ig','APIController@delete_post_ig');
 });
 

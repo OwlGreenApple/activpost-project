@@ -18,6 +18,9 @@ use Config,Crypt;
 
 class APIController extends Controller
 {
+	/*
+	API for help automation to do post task 
+	*/
 	public function post_ig(req $request){
 		//init 
 		$check_sa = ScheduleAccount::find($request->schedule_account_id);
@@ -27,21 +30,21 @@ class APIController extends Controller
 		
 		if (!is_null($account)) {
 			if ( (!$account->is_started) || (!$account->is_active) ) {
-				return "";
+				return "account not started or not active ";
 			}
 			if (!is_null($account->last_post)) {
 				$dt = Carbon::now();
 				$last_post = Carbon::parse($account->last_post);
 				if ($last_post->diffInSeconds($dt) <= 120 ) {
-					return "";
+					return "last post below 120 second";
 				}
 			}
 			if ($account->is_error) {
-				return "";
+				return "account error";
 			}
 			if (!is_null($check_sa)){
 				if ($check_sa->status_process <> 0) {
-					return "";
+					return "account processed";
 				}
 				if ($check_sa->status < 2) {
 					//start
@@ -142,7 +145,7 @@ class APIController extends Controller
 							}
 							
 							// continue;
-							return "";
+							return "Error Login ".$smsg;
 						}
 						$smsg .= " Line: ".$e->getTraceAsString(); // this prints the line where the error occurs
 						
@@ -157,7 +160,7 @@ class APIController extends Controller
 						}
 						
 						// continue;
-						return "";
+						return "Error Bad request(login)";
 					}
 					if ($is_error) {
 							$check_sa->status = 5;
@@ -186,7 +189,7 @@ class APIController extends Controller
 						});
 						
 						// continue;
-						return "";
+						return "Error ".$smsg." (login)";
 					}
 					// Upload
 					try {
@@ -274,7 +277,7 @@ class APIController extends Controller
 							}
 							
 							// continue;
-							return "";
+							return "Error ".$smsg."(posting)";
 						}
 						$smsg .= " Line: ".$e->getTraceAsString(); // this prints the line where the error occurs
 						
@@ -307,7 +310,7 @@ class APIController extends Controller
 						});
 						
 						// continue;
-						return "";
+						return "Error ".$smsg."(posting)";
 					}
 					catch (\InstagramAPI\Exception\BadRequestException $e) {
 						//supaya diproses lagi
@@ -318,7 +321,7 @@ class APIController extends Controller
 						}
 						
 						// continue;
-						return "";
+						return "Error  badrequest (posting)";
 					}
 				
 					$dt = Carbon::now();
@@ -367,5 +370,168 @@ class APIController extends Controller
 		}
 
 		
+	}
+
+	/*
+	API for help automation to do delete task 
+	*/
+	public function delete_post_ig(req $request){
+		//init 
+		$account = Account::find($request->account_id);
+		$user = Users::find($request->user_id);
+		$sc = Schedule::find($request->schedule_id);
+		if ( (!$account->is_started) || (!$account->is_active) ) {
+			return "account not started or not active ";
+		}
+		$dt = Carbon::now();
+		$last_post = Carbon::parse($account->last_post);
+		if ($last_post->diffInSeconds($dt) <= 120 ) {
+			return "last post below 120 second";
+		}
+		if ($account->is_error) {
+			return "account error";
+		}
+		if ($account->pivot->status < 3) {
+			// Decrypt
+			$decrypted_string = Crypt::decrypt($account->password);
+			$pieces = explode(" ~space~ ", $decrypted_string);
+			$pass = $pieces[0];
+			
+			$username = $account->username;
+			$password = $pass;
+			$photo = $sc->image;
+			$caption = $sc->description;
+			$i = new Instagram(false,false,[
+				"storage"       => "mysql",
+				"dbhost"       => Config::get('database.connections.mysql_celebgramme.host'),
+				"dbname"   => Config::get('database.connections.mysql_celebgramme.database'),
+				"dbusername"   => Config::get('database.connections.mysql_celebgramme.username'),
+				"dbpassword"   => Config::get('database.connections.mysql_celebgramme.password'),
+			]);
+			
+			//get proxy 
+			$proxy = Proxies::find($account->proxy_id);
+			
+			// Login
+			$is_error = 0 ;
+			try {
+				if (!is_null($proxy)) {
+					if($proxy->cred==""){
+						$i->setProxy("http://".$proxy->proxy.":".$proxy->port);
+					}
+					else {
+						$i->setProxy("http://".$proxy->cred."@".$proxy->proxy.":".$proxy->port);
+					}
+				}
+				// $i->setUser($username, $password);
+				$i->login($username, $password, 300);
+			} 
+			catch (\InstagramAPI\Exception\IncorrectPasswordException $e) {
+				$is_error = 1 ;
+				$update_account = Account::find($account->id);
+				$update_account->is_error = 1;
+				$update_account->save();
+				$smsg = $e->getMessage();
+			}
+			catch (Exception $e) {
+				$is_error = 1 ;
+				$smsg = $e->getMessage();
+				if ( (strpos($e->getMessage(), 'Network: CURL error') !== false) || (strpos($e->getMessage(), 'No response from server') !== false) ) {
+					return "error ".$smsg." (login)";
+				}
+				$smsg .= " Line: ".$e->getTraceAsString(); // this prints the line where the error occurs                  
+				
+			}
+			if ($is_error) {
+				// ob_start();
+				// var_dump($e);
+				// $result = ob_get_clean();    
+				// $smsg .= " ".$result;
+					
+				$userlog = new UserLog;
+				$userlog->user_id = $sc->user_id;
+				$userlog->description = "Error Cron Posting (Login Delete Schedule), instagram account=".$username." detail=".$smsg;
+				$userlog->admin_id = 0;
+				$userlog->save();
+				
+				return "error ".$smsg." (login)";
+			}
+			$is_error = 0;
+			// Upload
+			try {
+				$media_id = "";
+				$sched_account = ScheduleAccount::where("schedule_id","=",$sc->id)
+													->where("account_id",$account->id)
+													->first();
+				if (!is_null($sched_account)) {
+					$media_id = $sched_account->media_id;
+				}
+				
+				//update last post 
+				$dt = Carbon::now();
+				$update_account = Account::find($account->id);
+				$update_account->last_post = strtotime($dt->toDateTimeString());
+				$update_account->save();
+				
+				$i->media->delete($media_id);
+			} catch (Exception $e) {
+				$smsg = $e->getMessage();
+				if ( (strpos($e->getMessage(), 'Network: CURL error') !== false) || (strpos($e->getMessage(), 'No response from server') !== false) ) {
+					return "error ".$smsg." (delete)";
+				}
+				$smsg .= " Line: ".$e->getTraceAsString(); // this prints the line where the error occurs                  
+				
+					// ob_start();
+					// var_dump($e);
+					// $result = ob_get_clean();    
+					// $smsg .= " ".$result;
+					
+				//biar ga error dikasi ini dulu
+				$sc->accounts()->syncWithoutDetaching([
+					$account->id => [
+						'status' => 3,
+					]
+				]);
+				
+				$userlog = new UserLog;
+				$userlog->user_id = $sc->user_id;
+				$userlog->description = "Error Cron Posting (Deleting Delete Schedule), instagram account=".$username." schedule id = ".$sc->id." detail=".$smsg;
+				$userlog->admin_id = 0;
+				$userlog->save();
+				
+				return "error ".$smsg." (delete)";
+			}
+			
+			$dt = Carbon::now();
+			$sc->accounts()->syncWithoutDetaching([
+				$account->id => [
+					'status' => 3,
+				]
+			]);
+			$sa = ScheduleAccount::where("account_id","=",$account->id)
+						->where("schedule_id","=",$sc->id)
+						->first();
+			if (!is_null($sa)){
+				$sa->deleted_time = strtotime($dt->toDateTimeString());
+				$sa->save();
+			}
+
+
+
+			//last step
+			//klo uda finish semua tiap accountnya, schedule status diganti 3 
+			$check_sa = ScheduleAccount::where("schedule_id","=",$sc->id)->get();
+			$flag = true;
+			foreach($check_sa as $data) {
+				if ($data->status < 3 ) {
+					$flag = false;
+				}
+			}
+			if ($flag) {
+				$update_schedule = Schedule::find($sc->id);
+				$update_schedule->status = 3;
+				$update_schedule->save();
+			}
+		}
 	}
 }
