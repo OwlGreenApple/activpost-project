@@ -157,6 +157,10 @@
     
 </head>
 <body>
+    <script type="text/javascript">
+      var env = "<?php echo env('APP_PROJECT'); ?>";
+    </script>
+    
     <div id="div-loading">
       <div class="loadmain"></div>
       <div class="background-load"></div>

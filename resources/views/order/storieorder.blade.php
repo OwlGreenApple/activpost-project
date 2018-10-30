@@ -97,7 +97,7 @@
       <?php $nor= str_replace('OCLB', '', $orderlist->no_order) ?>
       <!--<td>{{number_format($orderlist->base_price, 0,'.','.')}} </td>
       <td>{{$orderlist->month}} </td>-->
-      <td>{{number_format($orderlist->total, 0,'.','.')}} </td>
+      <td>{{number_format($orderlist->total - $orderlist->discount, 0,'.','.')}} </td>
       <td>{{date('M d, Y',strtotime($orderlist->created_at))}} <strong>{{date('H:i',strtotime($orderlist->created_at))}}</strong></td>
      
       <td 

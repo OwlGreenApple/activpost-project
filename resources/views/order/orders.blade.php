@@ -4,7 +4,6 @@
 @section('content')
 
 <script type="text/javascript">
-  var env = "<?php echo env('APP_PROJECT'); ?>";
   $.ajaxSetup({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -165,19 +164,19 @@
 											</div>
 											<div class="row"></div>
 											<div class="form-group col-md-12 col-sm-12 col-xs-12 pull-right">
-												<div class="col-xs-4 col-sm-4 col-md-4 col-md-offset-1 col-sm-offset-1 col-xs-offset-1" style="<?php if(env('APP_PROJECT')=='Amelia') echo 'display: none'?>">
+												<div class="col-xs-4 col-sm-4 col-md-4 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
 													<input type="text" name="coupon_code" id="coupon_code" class="form-control" placeholder="kode kupon" value="" >
 												</div>
-												<div class="col-xs-2 col-sm-2 col-md-2" style="<?php if(env('APP_PROJECT')=='Amelia') echo 'display: none'?>">
+												<div class="col-xs-2 col-sm-2 col-md-2">
 												<!--
 												 <button type="button" class="btn btn-primary" id='addk'><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
 												 -->
 													<button type="button" class="btn btn-primary" id='addk'>Enter Kupon</button>
 												</div>
-												<div class="col-xs-2 col-sm-2 col-md-2 text-center" style="<?php if(env('APP_PROJECT')=='Amelia') echo 'display: none'?>">
+												<div class="col-xs-2 col-sm-2 col-md-2 text-center">
 												 <div id="msg" style="margin-top: 10px;">=</div>
 												</div>
-												<div class="col-xs-12 col-sm-2 col-md-2" style="<?php if(env('APP_PROJECT')=='Amelia') echo 'display: none'?>">
+												<div class="col-xs-12 col-sm-2 col-md-2">
 												<div class="kupon text-left" style="margin-top: 10px;">0</div>
 												<div class="kupon2" style="margin-top: 10px;display: none;"></div>
 												</div>
@@ -233,9 +232,7 @@
         <div class="col-md-3 text-left" id="pakets"><strong> Paket       :</strong></div>
         <div class="row"></div>
         <div class="col-md-3 text-left" id="coupon">
-          <?php if(env('APP_PROJECT')=='Celebgramme') { ?>
-            <strong>Discount       :</strong>
-          <?php } ?>
+          <strong>Discount       :</strong>
         </div>
         <div class="row"></div>
         <div class="col-md-3 text-left" id="hari"><strong>Total Hari       :</strong></div>

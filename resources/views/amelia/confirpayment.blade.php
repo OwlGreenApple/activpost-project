@@ -25,14 +25,14 @@
         <div class="row"></div>
         <div class="col-md-3 text-left" id="pakets"><strong> Paket       :</strong></div><div class="col-md-3 text-left"><strong>Rp {{number_format($orderdis->total, 0,'.','.')}}</strong></div>
         <div class="row"></div>
-        <!--<div class="col-md-3 text-left" id="bulans"><strong>Discount       :</strong> </div><div class="col-md-6 text-left"><strong>Rp {{number_format($orderdis->discount, 0,'.','.') }}</strong></div>-->
+        <div class="col-md-3 text-left" id="bulans"><strong>Discount       :</strong> </div><div class="col-md-6 text-left"><strong>Rp {{number_format($orderdis->discount, 0,'.','.') }}</strong></div>
         <div class="row"></div>
          <div class="col-md-3 text-left" id="subtotals"><strong> Total Hari    : </strong></div><div class="col-md-6 text-left"><strong>
           <?php if($package) { ?>
-          {{$package->paket}} hari   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            {{$package->paket}} hari   
           <?php } ?>   </strong></div>
         <div class="row"></div>
-        <div class="col-md-3 text-left" id="totalprices"><strong>Total Price : </strong> </div><div class="col-md-3 text-left"><strong>Rp {{number_format($orderdis->total, 0,'.','.')}}</strong></div>
+        <div class="col-md-3 text-left" id="totalprices"><strong>Total Price : </strong> </div><div class="col-md-3 text-left"><strong>Rp {{number_format($orderdis->total - $orderdis->discount, 0,'.','.')}}</strong></div>
         </div>
         
         <div class="col-md-5">
