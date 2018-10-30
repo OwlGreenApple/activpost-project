@@ -377,9 +377,11 @@ class APIController extends Controller
 	*/
 	public function delete_post_ig(req $request){
 		//init 
-		$account = Account::find($request->account_id);
+		// $account = Account::find($request->account_id);
 		$user = Users::find($request->user_id);
 		$sc = Schedule::find($request->schedule_id);
+		$account = Account::find($request->account_id);
+		$account_pivot_status = $request->account_pivot_status;
 		if ( (!$account->is_started) || (!$account->is_active) ) {
 			return "account not started or not active ";
 		}
@@ -391,7 +393,7 @@ class APIController extends Controller
 		if ($account->is_error) {
 			return "account error";
 		}
-		if ($account->pivot->status < 3) {
+		if ($account_pivot_status < 3) {
 			// Decrypt
 			$decrypted_string = Crypt::decrypt($account->password);
 			$pieces = explode(" ~space~ ", $decrypted_string);
