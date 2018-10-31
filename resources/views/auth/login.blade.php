@@ -28,33 +28,7 @@
 				<div class="container-home-2" >  
           <div class="div-logo">
             <a href="https://activfans.com"><div class="logo"></div></a>
-          </div>
-
-						<div class="notif-user">
-							@if ($errors->has('username'))
-								<div class="alert alert-danger">
-									<p align="center">{{ $errors->first('username') }}</p>
-								</div>
-							@endif
-
-							@if ($errors->has('password'))
-								<div class="alert alert-danger">
-									<p align="center">{{ $errors->first('password') }}</p>
-								</div>
-							@endif
-							@if (session('error') )
-								<div class="alert alert-danger">
-									<p align="center">{{session('error')}}</p>
-								</div>
-							@endif
-							@if (session('success') )
-								<div class="alert alert-success">
-									<p align="center">{{session('success')}}</p>
-								</div>
-							@endif
-						</div>
-					
-					
+          </div>	
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
                         {{ csrf_field() }}
 
@@ -95,7 +69,30 @@
 												
                     </form>
 					
+                <div class="notif-user">
+              @if ($errors->has('username'))
+                <div class="alert alert-danger">
+                  <p align="center">{{ $errors->first('username') }}</p>
+                </div>
+              @endif
 
+              @if ($errors->has('password'))
+                <div class="alert alert-danger">
+                  <p align="center">{{ $errors->first('password') }}</p>
+                </div>
+              @endif
+              @if (session('error') )
+                <div class="alert alert-danger">
+                  <p align="center">{{session('error')}}</p>
+                </div>
+              @endif
+              @if (session('success') )
+                <div class="alert alert-success">
+                  <p align="center">{{session('success')}}</p>
+                </div>
+              @endif
+            </div>
+            
 					</div>
         </div>
 
