@@ -17,6 +17,7 @@ use Celebpost\Models\OrderCLB;
 use Celebpost\Models\OrderAffiliate;
 use Celebpost\Models\OrderUserAffiliate;
 use Celebpost\Models\Coupon;
+use Celebpost\Models\CouponAffiliate;
 use Celebpost\Models\Package;
 use Celebpost\Models\PackageAffiliate;
 use Celebpost\Models\OrderMeta;
@@ -55,16 +56,23 @@ class OrderController extends Controller
     $kupon = $request->get('coupon_code');
     
 		$today = date("Y-m-d H:i:s");
-		$listordercoupon = Coupon::where('coupon_code', '=', $kupon)
+
+    if(env('APP_PROJECT')=='Celebgramme'){
+      $listordercoupon = Coupon::where('coupon_code', '=', $kupon)
                         // ->where('user_id', '=', $id)
                         ->where('valid_until', '>=', $today)
                         ->first();
+    } else {
+      $listordercoupon = CouponAffiliate::where('kodekupon', $kupon)
+                        ->first();
+    }
+		
 
     return response ()->json ( $listordercoupon );
   }
 
 
-  public function save_order_amelia($useraffiliate,$total,$no_order,$paket_id,$type){
+  public function save_order_amelia($useraffiliate,$total,$no_order,$paket_id,$type,$coupon,$diskon){
     if(!is_null($useraffiliate)){
       $owner = UserAffiliate::where('is_admin',$useraffiliate->owner_id)
               ->first();
@@ -73,13 +81,18 @@ class OrderController extends Controller
       $order->no_order = $no_order;
       $order->type = 'extend';
       $order->owner_id = $owner->is_admin;
-      $order->total = $total;
+      $order->total = $total - $diskon;
       $order->tagihan = $order->total*$owner->komisi_new/100;
       $order->save();
 
       $orderuser = new OrderUserAffiliate;
       $orderuser->order_id = $order->id;
       $orderuser->user_id = $useraffiliate->id;
+
+      if($type!='max-account' && !is_null($coupon)){
+        $orderuser->coupon_id = $coupon->id;
+        $orderuser->diskon = $diskon;
+      }
 
       if($type == "max-account"){
         $orderuser->paket_id = 0;
@@ -108,6 +121,7 @@ class OrderController extends Controller
 
       $useraffiliate = UserAffiliate::where('user_id_celebpost',$user->id)
                         ->first();
+      $coupon = CouponAffiliate::where('kodekupon',$request->coupon_code)->first();
 
       if(!is_null($useraffiliate)){ 
         $data = array (
@@ -117,14 +131,16 @@ class OrderController extends Controller
           "order_status" => "pending",
           "user_idclb" => $useraffiliate->user_id_celebgramme,
           "user_id" => $user->id,
+          "base_price" => $request->base_price,
           "order_total" => $request->total,
+          "coupon" => $coupon,
           "package_manage_id" => $paket_id,
           "logs" => "EXISTING MEMBER",
         );
 
         $order = OrderCLB::createOrder($data,true);
 
-        $this->save_order_amelia($useraffiliate,$request->total,$order['order']->no_order,$paket_id,$type);
+        $this->save_order_amelia($useraffiliate,$order['order']->total,$order['order']->no_order,$paket_id,$type,$coupon,$order['order']->discount);
 
         return response ()->json ($order);
       }
