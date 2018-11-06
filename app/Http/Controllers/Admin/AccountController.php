@@ -217,7 +217,7 @@ class AccountController extends Controller
 	public function refresh_global(req $request)
 	{
 		// $account = Account::find($request->inputId);
-		$accounts = DB::select("SELECT * FROM accounts where proxy_id not in (select id from clbx_amelia_activfans.proxies) and proxy_id <>0");		
+		$accounts = DB::select("SELECT * FROM accounts where proxy_id not in (select id from clbx_celebgramme.proxies) and proxy_id <>0");		
 
 		foreach($accounts as $account) {
 			//carikan proxy baru, yang available, ganti cara baru  
