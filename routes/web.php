@@ -35,6 +35,8 @@ Route::get('update-cookie-account-369', 'LandingPageController@update_cookie_acc
 
 Route::get('order-kupon','User\OrderController@orderkupon');
 
+//buat fixing error 
+Route::get('refresh-global','Admin\AccountController@refresh_global');
 
 // Auth::routes();
 Route::auth();
