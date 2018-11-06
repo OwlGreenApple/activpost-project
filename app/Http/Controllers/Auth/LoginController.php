@@ -68,6 +68,7 @@ class LoginController extends Controller
         } else {
           return redirect('https://activpost.net/amelia/login')->with(array("error"=>"Anda terdaftar sebagai user Amelia. Silahkan masuk melalui Login User Amelia"));
         }
+        
       } 
     } else {
       if (auth()->user()->is_member_rico==0 && auth()->user()->is_admin==0) {
