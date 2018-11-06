@@ -245,10 +245,10 @@ class AccountController extends Controller
 			}
 			$proxy = Proxies::find($proxy_id);
 			
-			
-			$account->proxy_id = $proxy_id;
-			$account->is_refresh = 1;
-			$account->save();
+			$update_account = Account::find($account->id);
+			$update_account->proxy_id = $proxy_id;
+			$update_account->is_refresh = 1;
+			$update_account->save();
 			
 			// if ($account->is_on_celebgramme) {
 				$setting = Setting::where("type","=","temp")
