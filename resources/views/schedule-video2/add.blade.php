@@ -338,9 +338,9 @@
                       else if (!is_null($arr_repost)){ echo $arr_repost['url'];}
                       ?>" width="320" height="240" controls></video>
 
-                      <div class="div-thumbnail" style="display: none;">
+                      <div class="div-thumbnail" <?php if($sid==0) echo 'style="display: none;"' ?>>
                         <span style="font-size: 12px">Silahkan play video, kemudian pause dan klik Set Thumbnail untuk mengeset thumbnail video</span> <br>
-                        <span id="span-thumbnail" style="font-weight: bold"></span> <br>
+                        <span id="span-thumbnail" style="font-weight: bold"><?php if($sid!=0) echo round($schedule->thumbnail_video).' seconds'; ?></span> <br>
                         <input type="button" value="Set Thumbnail" class="btn btn-home" id="btn-thumbnail"> <br> <br>
                       </div>
 												
