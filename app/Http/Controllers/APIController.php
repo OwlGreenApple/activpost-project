@@ -241,7 +241,6 @@ class APIController extends Controller
 								// $logs = $sc->slug.'-'.$sc->media_type.", Posting video\n";
 								// fwrite($myfile, $logs);
 							}
-							exec('sudo rm '.$photo);
 							
 							//update last post 
 							$dt = Carbon::now();
@@ -347,6 +346,11 @@ class APIController extends Controller
 						$update_schedule = Schedule::find($sc->id);
 						$update_schedule->status = 2;
 						$update_schedule->save();
+						
+						if($update_schedule->media_type=='video' || strpos($update_schedule->slug, 'StoryFile')===0){
+							$photo = $dir."/".$update_schedule->slug;
+							unlink($photo);
+						}
 					}
 					
 					if (!$account->is_post_berurutan) {
