@@ -3,7 +3,6 @@
 namespace Celebpost\Http\Controllers;
 
 use Illuminate\Http\Request as req;
-use Illuminate\Support\Facades\Storage;
 use Celebpost\Models\Schedule;
 use Celebpost\Models\Proxies;
 use Celebpost\Models\ScheduleAccount;
@@ -242,7 +241,7 @@ class APIController extends Controller
 								// $logs = $sc->slug.'-'.$sc->media_type.", Posting video\n";
 								// fwrite($myfile, $logs);
 							}
-							Storage::delete($photo);
+							exec('sudo rm '.$photo);
 							
 							//update last post 
 							$dt = Carbon::now();
