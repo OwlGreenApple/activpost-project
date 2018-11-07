@@ -458,13 +458,15 @@
 															<div id="clock2"></div>
 															<input type="text" id="publish-at" name="publish_at" class="form-control formatted-date" required="required">
 													</div>
+													<!--
 													<div class="form-group col-md-6 col-sm-12 col-xs-12">
 															<label>Delete At <span class="glyphicon glyphicon-time"></span></label>
 															<input type="checkbox" id="checkbox-delete" name="checkbox_delete" <?php 
-																if ($sid<>0) { if($schedule->is_deleted) { echo "checked"; } }
+																//if ($sid<>0) { if($schedule->is_deleted) { echo "checked"; } }
 															?>>
 															<input type="text" id="delete-at" name="delete_at" class="form-control formatted-date" required="required" disabled>
 													</div>
+													-->
 											</div>
 											<button type="button" id="button-publish" class="btn btn-home" style="margin-bottom : 75px;">Schedule <span class="glyphicon glyphicon-time"></span></button>
 											<button type="button" id="button-postnow" class="btn btn-home" style="margin-bottom : 75px;">Post Now <span class="glyphicon glyphicon-time"></span></button>

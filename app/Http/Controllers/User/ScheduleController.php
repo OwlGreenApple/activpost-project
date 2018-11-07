@@ -947,6 +947,16 @@ $offset = ($page * $perPage) - $perPage;
       $arr["message"]="Silahkan pilih account yang akan di post";
       return $arr;
     }
+		
+		//pengecekan cuman bole schedule 10 video(yang belum terpost) dalam user email
+		$schedule_count = Schedule::where("media_type","video")
+											->where("status","<",2)
+											->count();
+		if ($schedule_count> 10 ) {
+      $arr["type"]="error";
+      $arr["message"]="Schedule Video maksimal 10 video yang belum terposting(Post &Story)";
+      return $arr;
+		}
     
     //error klo ga ada image 
     if (Request::input("imguri")=="") {
@@ -1275,6 +1285,16 @@ $offset = ($page * $perPage) - $perPage;
       return $arr;
     }
     
+		//pengecekan cuman bole schedule 10 video(yang belum terpost) dalam user email
+		$schedule_count = Schedule::where("media_type","video")
+											->where("status","<",2)
+											->count();
+		if ($schedule_count> 10 ) {
+      $arr["type"]="error";
+      $arr["message"]="Schedule Video maksimal 10 video yang belum terposting(Post &Story)";
+      return $arr;
+		}
+    
     //error klo ga ada image 
     if (Request::input("imguri")=="") {
       $arr["type"]="error";
@@ -1435,12 +1455,14 @@ $offset = ($page * $perPage) - $perPage;
       $schedule->publish_at = Carbon::now();
     }
     
+		/* diremark karena ga ada delete di story
     if ($request->checkbox_delete) {
       $schedule->delete_at = strtotime($request->delete_at);
       $schedule->is_deleted = 1;
     } else {
       $schedule->is_deleted = 0;
     }
+		*/
 
     if($request->type=='image'){
       $schedule->media_type = "photo";
