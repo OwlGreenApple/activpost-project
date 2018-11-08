@@ -88,6 +88,7 @@ class OrderController extends Controller
       $orderuser = new OrderUserAffiliate;
       $orderuser->order_id = $order->id;
       $orderuser->user_id = $useraffiliate->id;
+      $orderuser->harga = $total;
 
       if($type!='max-account' && !is_null($coupon)){
         $orderuser->coupon_id = $coupon->id;
