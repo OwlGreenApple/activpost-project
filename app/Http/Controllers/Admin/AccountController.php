@@ -193,6 +193,7 @@ class AccountController extends Controller
 		
 		
 		$account->proxy_id = $proxy_id;
+		$account->is_error = 0;
 		$account->is_refresh = 1;
 		$account->save();
 		
