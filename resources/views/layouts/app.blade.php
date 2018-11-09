@@ -272,7 +272,8 @@
                                 Hi, {{ Auth::user()->name }} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li @if(Request::is('order')) class="active" @endif><a href="{{ url('/order') }}">Buy More</a></li>
+                                <li @if(Request::is('order')) class="active" @endif><a href="<?php if (Auth::user()->is_member_rico) { echo 'https://amelia.id/order.php'; } else { echo url('/order'); } ?>">Buy More</a></li>
+
                                 <li @if(Request::is('change-password')) class="active" @endif><a href="{{ url('/change-password') }}">Ubah Password</a></li>
                                 
                                 <li>
@@ -328,7 +329,7 @@
                             <ul class="dropdown-menu" role="menu">
 															<li @if(Request::is('order')) class="active" @endif>
 																<!--<a href="<?php if (!Auth::user()->is_member_rico) { echo url('/order'); } else {echo "https://amelia.id/order.php";} ?>">-->
-                                <a href="<?php echo url('/order'); ?>">
+                                <a href="<?php if (Auth::user()->is_member_rico) { echo 'https://amelia.id/order.php'; } else { echo url('/order'); } ?>">
 																<!--<a disabled>-->
 																	Buy More
 																</a>
@@ -341,7 +342,7 @@
 															</li>
 															-->
 															<li @if(Request::is('confirm-order')) class="active" @endif>
-																<a href="<?php echo url('/confirm-order'); ?>">
+																<a href="<?php if (Auth::user()->is_member_rico) { echo 'https://amelia.id/order.php'; } else { echo url('/confirm-order'); } ?>">
 																	Confirm Order
 																</a>
 															</li>

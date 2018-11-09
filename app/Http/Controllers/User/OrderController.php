@@ -35,6 +35,11 @@ class OrderController extends Controller
 
     $user = Auth::user();
     //Auth::logout();
+
+    if($user->is_member_rico==1){
+      return Redirect::to('https://amelia.id/order.php');
+    }
+
     $packages = null;
     if(env('APP_PROJECT')=='Amelia'){
       $packages = PackageAffiliate::where('owner_id',1)
@@ -496,6 +501,10 @@ class OrderController extends Controller
 
     $user = Auth::user();
 
+    if($user->is_member_rico==1){
+      return Redirect::to('https://amelia.id/order.php');
+    }
+    
     $orderlistuser = Users::join("orders","users.id", '=', "orders.user_id")
                    ->where('orders.user_id', '=', $user->id)
                    ->orderBy('orders.created_at', 'desc')
