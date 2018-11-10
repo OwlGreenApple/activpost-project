@@ -732,8 +732,7 @@ use Celebpost\Models\Proxies;
 												<div class="col-sm-12 col-md-12">
 													<label for="terms-add-account7" class="control-label">
                             <input type="checkbox" class="checkbox-term" id="terms-add-account7">
-                            Turn OFF 2 Factor Authentications ( Khusus followers >1000 ) <a href="
-https://celebpost.freshdesk.com/solution/articles/19000035607--instagram-error-instagram-selalu-minta-verifikasi-no-telp"> >> Link Help << </a> 
+                            Turn OFF 2 Factor Authentications ( Khusus followers >1000 ) 
                           </label>
 												</div>
 												<div class="col-sm-12 col-md-12">
@@ -772,8 +771,8 @@ https://celebpost.freshdesk.com/solution/articles/19000035607--instagram-error-i
                             Silahkan login dahulu ke Instagram.com via browser, & jangan di logout sebelum &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;berhasil add account 
                           </label>
 													<p style="font-size:11px; margin-left:20px;"> PS : <br>
-													1. Stop Celebpost terlebih dahulu apabila akan melakukan activity Instagram secara manual <br> (Follow / Like / Comment / Unfollow / Post) atau bisa melakukan activity diluar jam schedule Celebpost <br>
-													2. Jika anda sedang aktif menggunakan Activfans, sebaiknya jangan menggunakan fitur post now pada celebpost. Beri waktu setidaknya 15 menit kemudian dari waktu post now.</p>
+													1. Stop Activpost terlebih dahulu apabila akan melakukan activity Instagram secara manual <br> (Follow / Like / Comment / Unfollow / Post) atau bisa melakukan activity diluar jam schedule Activpost <br>
+													2. Jika anda sedang aktif menggunakan Activfans, sebaiknya jangan menggunakan fitur post now pada Activpost. Beri waktu setidaknya 15 menit kemudian dari waktu post now.</p>
 													
 												</div>
 											</div>

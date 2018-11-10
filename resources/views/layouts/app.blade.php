@@ -157,6 +157,10 @@
     
 </head>
 <body>
+    <script type="text/javascript">
+      var env = "<?php echo env('APP_PROJECT'); ?>";
+    </script>
+    
     <div id="div-loading">
       <div class="loadmain"></div>
       <div class="background-load"></div>
@@ -268,7 +272,8 @@
                                 Hi, {{ Auth::user()->name }} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li @if(Request::is('order')) class="active" @endif><a href="{{ url('/order') }}">Buy More</a></li>
+                                <li @if(Request::is('order')) class="active" @endif><a href="<?php if (Auth::user()->is_member_rico) { echo 'https://amelia.id/order.php'; } else { echo url('/order'); } ?>">Buy More</a></li>
+
                                 <li @if(Request::is('change-password')) class="active" @endif><a href="{{ url('/change-password') }}">Ubah Password</a></li>
                                 
                                 <li>
@@ -324,7 +329,7 @@
                             <ul class="dropdown-menu" role="menu">
 															<li @if(Request::is('order')) class="active" @endif>
 																<!--<a href="<?php if (!Auth::user()->is_member_rico) { echo url('/order'); } else {echo "https://amelia.id/order.php";} ?>">-->
-                                <a href="<?php echo url('/order'); ?>">
+                                <a href="<?php if (Auth::user()->is_member_rico) { echo 'https://amelia.id/order.php'; } else { echo url('/order'); } ?>">
 																<!--<a disabled>-->
 																	Buy More
 																</a>
@@ -337,12 +342,12 @@
 															</li>
 															-->
 															<li @if(Request::is('confirm-order')) class="active" @endif>
-																<a href="<?php echo url('/confirm-order'); ?>">
+																<a href="<?php if (Auth::user()->is_member_rico) { echo 'https://amelia.id/order.php'; } else { echo url('/confirm-order'); } ?>">
 																	Confirm Order
 																</a>
 															</li>
 															<li @if(Request::is('change-password')) class="active" @endif><a href="{{ url('/change-password') }}">Ubah Password</a></li>
-															<li><a href="https://youtu.be/sys-y7F36bk" target="_blank"> <span class="glyphicon glyphicon-film"></span> Tutorial Video</a></li>
+															<li><a href="https://youtu.be/i7bwoTDmXBU" target="_blank"> <span class="glyphicon glyphicon-film"></span> Tutorial Video</a></li>
 															<li><a href="https://docs.google.com/document/d/1CA7hxRL-3DTQiR8CoEX7yw58mx4LNRmfLKahaHtKFic/edit" target="_blank"><span class="glyphicon glyphicon-list-alt"></span> Tutorial PDF </a></a></li>
 															<li>
 																<a href="{{ url('/logout') }}"

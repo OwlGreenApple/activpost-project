@@ -446,7 +446,12 @@ class ScheduleController extends Controller
 				$cookiefile = base_path('storage/ig-cookies/'.$account->username.'/').'cookies-celebpost-temp.txt';
 
 
-				$url = "https://activfans.com/dashboard/get-proxy-id/".$account->username;
+				if ($user->is_member_rico==0) {
+					$url = "https://activfans.com/dashboard/get-proxy-id/".$account->username;
+				}
+				else{
+					$url = "https://activfans.com/amelia/get-proxy-id/".$account->username;
+				}
 				$c = curl_init();
 
 				curl_setopt($c, CURLOPT_URL, $url);

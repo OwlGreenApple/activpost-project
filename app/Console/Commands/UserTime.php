@@ -89,8 +89,8 @@ class UserTime extends Command
 				else {
 					$account->running_time = $now->toDateTimeString();
 				}
-				$update_user->save();
 				$account->save();
+				$update_user->save();
 			}
     }
 }

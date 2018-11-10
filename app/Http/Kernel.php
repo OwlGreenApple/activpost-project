@@ -61,7 +61,10 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'admin' => \Celebpost\Http\Middleware\IsAdmin::class,
+<<<<<<< HEAD
 				'APIMiddleware' => \Celebpost\Http\Middleware\APIMiddleware::class,
+=======
+>>>>>>> cabf51a2068973aeca5f534409a7e90c9f9500be
     ];
 
     /**

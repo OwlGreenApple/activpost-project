@@ -396,8 +396,12 @@ class ResearchController extends Controller
 		
 		$cookiefile = base_path('storage/ig-cookies/'.$user->id.'/').'cookies-celebpost-temp.txt';
 
-
-		$url = "https://activfans.com/dashboard/get-photo-hashtags/".$input_hashtags;
+		if ($user->is_member_rico==0) {
+			$url = "https://activfans.com/dashboard/get-photo-hashtags/".$input_hashtags;
+		}
+		else {
+			$url = "https://activfans.com/amelia/get-photo-hashtags/".$input_hashtags;
+		}
 		$c = curl_init();
 
 		curl_setopt($c, CURLOPT_URL, $url);
@@ -438,8 +442,12 @@ class ResearchController extends Controller
 		
 		$cookiefile = base_path('storage/ig-cookies/'.$user->id.'/').'cookies-celebpost-temp.txt';
 
-
-		$url = "https://activfans.com/dashboard/get-photo-hashtags/".Request::input("inputHashtags").'/'.Request::input("endCursor");
+		if ($user->is_member_rico==0) {
+			$url = "https://activfans.com/dashboard/get-photo-hashtags/".Request::input("inputHashtags").'/'.Request::input("endCursor");
+		}
+		else {
+			$url = "https://activfans.com/amelia/get-photo-hashtags/".Request::input("inputHashtags").'/'.Request::input("endCursor");
+		}
 		$c = curl_init();
 
 		curl_setopt($c, CURLOPT_URL, $url);

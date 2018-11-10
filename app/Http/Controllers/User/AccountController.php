@@ -189,7 +189,12 @@ class AccountController extends Controller
 		$cookiefile = base_path('storage/ig-cookies/'.$username.'/').'cookies-celebpost-temp.txt';
 
     if(env('APP_ENV')=='production'){
-      $url = "https://activfans.com/dashboard/get-proxy-id/".$username;
+			if ($user->is_member_rico==0) {
+				$url = "https://activfans.com/dashboard/get-proxy-id/".$username;
+			}
+			else{
+				$url = "https://activfans.com/amelia/get-proxy-id/".$username;
+			}
       $c = curl_init();
 
       curl_setopt($c, CURLOPT_URL, $url);
@@ -768,8 +773,12 @@ class AccountController extends Controller
 
 			$cookiefile = base_path('storage/ig-cookies/'.$account->username.'/').'cookies-celebpost-temp.txt';
 
-
-			$url = "https://activfans.com/dashboard/get-proxy-id/".$account->username;
+			if ($user->is_member_rico==0) {
+				$url = "https://activfans.com/dashboard/get-proxy-id/".$account->username;
+			}
+			else {
+				$url = "https://activfans.com/amelia/get-proxy-id/".$account->username;
+			}
 			$c = curl_init();
 
 			curl_setopt($c, CURLOPT_URL, $url);
@@ -821,8 +830,12 @@ class AccountController extends Controller
 
 				$cookiefile = base_path('storage/ig-cookies/'.$account->username.'/').'cookies-celebpost-temp.txt';
 
-
-				$url = "https://activfans.com/dashboard/get-proxy-id/".$account->username;
+				if ($user->is_member_rico==0) {
+					$url = "https://activfans.com/dashboard/get-proxy-id/".$account->username;
+				}
+				else {
+					$url = "https://activfans.com/amelia/get-proxy-id/".$account->username;
+				}
 				$c = curl_init();
 
 				curl_setopt($c, CURLOPT_URL, $url);

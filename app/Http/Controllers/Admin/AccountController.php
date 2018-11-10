@@ -193,6 +193,7 @@ class AccountController extends Controller
 		
 		
 		$account->proxy_id = $proxy_id;
+		$account->is_error = 0;
 		$account->is_refresh = 1;
 		$account->save();
 		
@@ -211,6 +212,61 @@ class AccountController extends Controller
 				}
 			}
 		// }
+		return "";
+	}
+
+	public function refresh_global(req $request)
+	{
+		// $account = Account::find($request->inputId);
+		$accounts = DB::select("SELECT * FROM accounts where proxy_id not in (select id from clbx_celebgramme.proxies) and proxy_id <>0");		
+
+		foreach($accounts as $account) {
+			//carikan proxy baru, yang available, ganti cara baru  
+			$availableProxy = ViewProxyUses::select("id","proxy","cred","port","auth",DB::connection('mysql_celebgramme')->raw("sum(count_proxy) as countP"))
+												->groupBy("id","proxy","cred","port","auth")
+												->orderBy("countP","asc")
+												->having('countP', '<', 1)
+												->get();
+			$arrAvailableProxy = array();
+			foreach($availableProxy as $data) {
+				$dataNew = array();
+				$dataNew["id"] = $data->id;
+				$arrAvailableProxy[] = $dataNew;	
+			}
+			if (count($arrAvailableProxy)>0) {
+				$proxy_id = $arrAvailableProxy[array_rand($arrAvailableProxy)]["id"];
+			} else {
+				$availableProxy = ViewProxyUses::select("id","proxy","cred","port","auth",DB::connection('mysql_celebgramme')->raw("sum(count_proxy) as countP"))
+													->groupBy("id","proxy","cred","port","auth")
+													->orderBy("countP","asc")
+													->first();
+				if (!is_null($availableProxy)) {
+					$proxy_id = $availableProxy->id;
+				}
+			}
+			$proxy = Proxies::find($proxy_id);
+			
+			$update_account = Account::find($account->id);
+			$update_account->proxy_id = $proxy_id;
+			$update_account->is_refresh = 1;
+			$update_account->save();
+			
+			// if ($account->is_on_celebgramme) {
+				$setting = Setting::where("type","=","temp")
+										->where("insta_username","=",$account->username)
+										->first();
+				if (!is_null($setting)) {
+					$setting_helper = SettingHelper::find($setting->id);
+					if (!is_null($setting_helper)) {
+						$setting_helper->proxy_id = $proxy_id;
+						$setting_helper->is_refresh = 1;
+						$setting_helper->cookies = "";
+						$setting_helper->save();
+						
+					}
+				}
+			// }
+		}
 		return "";
 	}
 

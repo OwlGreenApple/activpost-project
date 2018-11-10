@@ -4,6 +4,8 @@ namespace Celebpost\Http\Controllers\Auth;
 
 use Celebpost\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -54,6 +56,28 @@ class LoginController extends Controller
 	*
 	* @return view
 	*/
+
+  protected function authenticated()
+  {
+    if(env('APP_PROJECT')=='Celebgramme'){
+      if (auth()->user()->is_member_rico==1 && auth()->user()->is_admin==0) {
+        auth()->logout();
+
+        if(env('APP_ENV')=='local'){
+          return redirect('/login')->with(array("error"=>"Anda terdaftar sebagai user Amelia. Silahkan masuk melalui Login User Amelia"));
+        } else {
+          return redirect('https://activpost.net/amelia/login')->with(array("error"=>"Anda terdaftar sebagai user Amelia. Silahkan masuk melalui Login User Amelia"));
+        }
+        
+      } 
+    } else {
+      if (auth()->user()->is_member_rico==0 && auth()->user()->is_admin==0) {
+        auth()->logout();
+        return redirect('/login')->with(array("error"=>"Anda tidak terdaftar sebagai member amelia"));
+      } 
+    }
+  }
+
 	public function test()
 	{
 		$url = '../vp/uploads/asd.jpg';
@@ -64,5 +88,15 @@ class LoginController extends Controller
 			'url'=>$url,
 		));		
 	}
-		
+	
+  public function showLoginForm()
+  {
+    if(env('APP_PROJECT')=='Celebgramme'){
+      return view('auth.login');
+    } else {
+      return view('amelia.login');
+    }
+  }
+
+
 }

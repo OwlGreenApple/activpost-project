@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Celebpost\Models\OrderMeta;
 use Celebpost\Models\Users;
 use Celebpost\Models\PackageAffiliate;
+use Celebpost\Models\CouponAffiliate;
 use GeneralHelper,Carbon,Mail;
 
 class OrderCLB extends Model
@@ -16,7 +17,7 @@ class OrderCLB extends Model
     protected function createOrder($cdata,$flag)
     {
         $dt = Carbon::now();
-        
+
         //unique code 
         $unique_code = mt_rand(1, 1000);
         $order = new OrderCLB;
@@ -27,10 +28,14 @@ class OrderCLB extends Model
         $order->order_type = $cdata["order_type"];
         $order->order_status = $cdata["order_status"];
         $order->user_id = $cdata["user_idclb"];
-        $order->total = $cdata["order_total"] + $unique_code;
+        $order->total = $cdata["base_price"] + $unique_code;
         $order->discount = 0;
         $order->package_id = 0;
-        $order->coupon_id = 0;
+
+        if($cdata["type"]!='max-account' && !is_null($cdata["coupon"])){
+          $order->coupon_id = $cdata["coupon"]->id;
+          $order->discount = $cdata["base_price"] * $cdata["coupon"]->diskon/100;
+        }
         
         $order->type = $cdata["type"];
         $order->is_remind_email = 0;
@@ -48,7 +53,7 @@ class OrderCLB extends Model
         }
         $order->save();
         
-        OrderMeta::createMeta("logs","create order by ".$cdata["logs"],$order->id);
+        //OrderMeta::createMeta("logs","create order by ".$cdata["logs"],$order->id);
 
         $user = Users::find($cdata["user_id"]);
         
@@ -82,8 +87,8 @@ class OrderCLB extends Model
         Mail::send('emails.info-order-admin', $emaildata, function ($message) use ($type_message) {
           $message->from('no-reply@activpost.net', 'activpost');
           $message->to(array(
-            "michaelsugih@gmail.com",
-            "celebgramme.dev@gmail.com",
+            "activfans@gmail.com",
+            // "celebgramme.dev@gmail.com",
           ));
           $message->subject($type_message);
         });

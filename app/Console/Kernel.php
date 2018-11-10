@@ -34,7 +34,8 @@ class Kernel extends ConsoleKernel
 			// $schedule->command('send:instagram')->withoutOverlapping()->timezone(''.env('IG_TIMEZONE').'');
       $schedule->command('send:instagram')->timezone(''.env('IG_TIMEZONE').'');
       // $schedule->command('count:userstime')->everyFiveMinutes()->withoutOverlapping();
-      $schedule->command('count:userstime')->everyThirtyMinutes()->withoutOverlapping();
+      // $schedule->command('count:userstime')->everyThirtyMinutes()->withoutOverlapping();
+      $schedule->command('count:userstime')->hourly()->withoutOverlapping();
       // $schedule->command('delete:post')->withoutOverlapping();
       $schedule->command('delete:post');
       $schedule->command('synchron:affiliate')->withoutOverlapping();

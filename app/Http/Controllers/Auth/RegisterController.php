@@ -282,7 +282,7 @@ class RegisterController extends Controller
 			"max_account" => $request->max_account,
 			"days" => $request->days,
 		);
-		
+	  
 		$request->session()->put('checkout_data', $arr);
 
 		return view('auth.register');
