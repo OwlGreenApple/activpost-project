@@ -185,7 +185,9 @@
         // preview.src = reader.result;
         console.log(file.type);
 
+				//MP4 WebM Ogg 
         if(file.type.match("^video")){
+					console.log("a");
           var videoId = "videoMain";
           var $videoEl = $('<video id="' + videoId + '"></video>');
           $videoEl.attr('src', reader.result);
@@ -194,8 +196,8 @@
             $('#width_video').val(videoTagRef.videoWidth);
             $('#height_video').val(videoTagRef.videoHeight);
             $('#duration_video').val(videoTagRef.duration);
-            
-            load_image(reader.result);
+						
+						load_image(reader.result);
           });
         } else {
           $(window).scrollTop(0);
@@ -207,7 +209,7 @@
       if (file) {
         reader.readAsDataURL(file);
       }
-  
+			// load_image(document.querySelector('input[type=file]').files[0]);
     }).click(function(){
         $(this).val("")
     });   
@@ -300,7 +302,7 @@
 		<div class="col-md-6 col-xs-12">
 			<h1>
 				Schedules Video
-				<span class="h-icon glyphicon glyphicon-question-sign hint-button tooltipPlugin" title="<div class='panel-heading'>Schedules</div><div class='panel-content'>Schedule Post maksimum 3 Post tiap jamnya</div>">
+				<span class="h-icon glyphicon glyphicon-question-sign hint-button tooltipPlugin" title="<div class='panel-heading'>Schedule Video</div><div class='panel-content'>Schedule Maksimum 10 Video yang bisa dishare(schedule story dan schedule post video) <br>File harus berupa MP4</div>">
 				</span>
 			</h1>
 		</div>

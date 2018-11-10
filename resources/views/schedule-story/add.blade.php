@@ -287,7 +287,7 @@
 		<div class="col-md-6 col-xs-12">
 			<h1>
 				Schedules Story
-				<span class="h-icon glyphicon glyphicon-question-sign hint-button tooltipPlugin" title="<div class='panel-heading'>Schedules</div><div class='panel-content'>Schedule Post maksimum 3 Post tiap jamnya</div>">
+				<span class="h-icon glyphicon glyphicon-question-sign hint-button tooltipPlugin" title="<div class='panel-heading'>Schedule Story</div><div class='panel-content'>Schedule Story Dapat berupa photo atau video <br>Maksimum 10 Video yang bisa dishare(schedule story dan schedule post video) <br>File harus berupa JPG, PNG, MP4</div>">
 				</span>
 			</h1>
 		</div>

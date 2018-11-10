@@ -35,7 +35,7 @@ class APIController extends Controller
 			if (!is_null($account->last_post)) {
 				$dt = Carbon::now();
 				$last_post = Carbon::parse($account->last_post);
-				if ($last_post->diffInSeconds($dt) <= 120 ) {
+				if ( ($last_post->diffInSeconds($dt) <= 120 ) && (strpos($sc->slug, 'StoryFile')<>0) ) {
 					return "last post below 120 second";
 				}
 			}

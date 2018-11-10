@@ -34,9 +34,17 @@
           }
         ?>
           <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$img}}" class="img-responsive" width="65" height="65" >
-        <?php } else { ?>
-          <video src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$arr->slug}}" width="65" height="65"></video>
-        <?php } ?>
+        <?php 
+				} 
+				else {
+						if ($arr->status >= 2 ){
+				?>
+							<div class="video-remove"><i class="glyphicon glyphicon-play-circle"></i></div>
+        <?php }
+						else {
+				?>
+							<video src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$arr->slug}}" width="65" height="65"></video>
+        <?php }} ?>
       </td>
       <td align="center">
 				<?php 
@@ -56,7 +64,7 @@
 						} else if ($scheduleAccount->status==5) {
 							$str_description = '<span style="color:#a94442;">(Need Reschedule)</span>';
 						}
-						echo $scheduleAccount->username." ".$str_description."<br>";
+						echo "<a href='http://instagram.com/".$scheduleAccount->username."' target='blank'>".$scheduleAccount->username."</a> ".$str_description."<br>";
 					}
 					// foreach ($arr_shadow_schedule_accounts as $arr_shadow_schedule_account) {
 						// if ((string) $arr_shadow_schedule_account->schedule_id== (string)$arr->id) {
