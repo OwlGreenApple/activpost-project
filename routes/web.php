@@ -13,6 +13,7 @@
 Route::get('upload','TesController@tesvideo');
 Route::get('verifyemail/{cryptedcode}', 'LandingPageController@verifyEmail');
 Route::get('resend-email-activation', 'LandingPageController@resendEmailActivation');
+//Route::get('tes-email','User\HomeController@tes_email');
 
 if(env('APP_PROJECT')=='Celebgramme'){
   Route::get('prices', 'Auth\RegisterController@ordersg');

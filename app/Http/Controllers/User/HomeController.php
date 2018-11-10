@@ -115,4 +115,14 @@ class HomeController extends Controller
 			'imageM'=>$imageM,
 		));
   }
+
+  public function tes_email(){
+    $emaildata = [];
+
+    Mail::send('emails.tes-email', $emaildata, function ($message) {
+      $message->from('no-reply@activpost.net', 'Activpost');
+      $message->to('puspita.celebgramme@gmail.com');
+      $message->subject('[Activpost] Please Check your Account on Dashboard');
+    });
+  }
 }

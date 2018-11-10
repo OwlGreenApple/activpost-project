@@ -134,7 +134,7 @@ class FillProxy extends Command
 						'msg' => $msg,
 						'account_username' => $account->username,
 				];
-				Mail::queue('emails.notify-user', $emaildata, function ($message) use ($user) {
+				Mail::send('emails.notify-user', $emaildata, function ($message) use ($user) {
 					$message->from('no-reply@activpost.net', 'Activpost');
 					$message->to($user->email);
 					$message->bcc("celebgramme.dev@gmail.com");

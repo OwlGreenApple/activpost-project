@@ -176,7 +176,7 @@ class PostInstagram extends Command
 										"account_username" => $username,
 										"error_message" => $e->getMessage(),
 									];
-									Mail::queue('emails.notify-user-error', $emaildata, function ($message) use ($subject_message,$user) {
+									Mail::send('emails.notify-user-error', $emaildata, function ($message) use ($subject_message,$user) {
 										$message->from('no-reply@activpost.net', 'Activpost');
 										$message->to($user->email);
 										$message->bcc("celebgramme.dev@gmail.com");
@@ -205,7 +205,7 @@ class PostInstagram extends Command
 										$emaildata = [
 											"smsg" => $smsg,
 										];
-										Mail::queue('emails.notify-developer', $emaildata, function ($message) use ($subject_message) {
+										Mail::send('emails.notify-developer', $emaildata, function ($message) use ($subject_message) {
 											$message->from('no-reply@activpost.net', 'Activpost');
 											$message->to("celebgramme.dev@gmail.com");
 											$message->subject($subject_message);
@@ -274,7 +274,7 @@ class PostInstagram extends Command
 									$emaildata = [
 										"smsg" => $smsg,
 									];
-									Mail::queue('emails.notify-developer', $emaildata, function ($message) use ($subject_message) {
+									Mail::send('emails.notify-developer', $emaildata, function ($message) use ($subject_message) {
 										$message->from('no-reply@activpost.net', 'Activpost');
 										$message->to("celebgramme.dev@gmail.com");
 										$message->subject($subject_message);
@@ -288,7 +288,7 @@ class PostInstagram extends Command
 										"account_username" => $username,
 										"error_message" => $e->getMessage(),
 									];
-									Mail::queue('emails.notify-user-error', $emaildata, function ($message) use ($subject_message,$user) {
+									Mail::send('emails.notify-user-error', $emaildata, function ($message) use ($subject_message,$user) {
 										$message->from('no-reply@activpost.net', 'Activpost');
 										$message->to($user->email);
 										$message->bcc("celebgramme.dev@gmail.com");
@@ -338,7 +338,7 @@ class PostInstagram extends Command
 										$emaildata = [
 											"smsg" => $smsg,
 										];
-										Mail::queue('emails.notify-developer', $emaildata, function ($message) use ($subject_message) {
+										Mail::send('emails.notify-developer', $emaildata, function ($message) use ($subject_message) {
 											$message->from('no-reply@activpost.net', 'Activpost');
 											$message->to("celebgramme.dev@gmail.com");
 											$message->subject($subject_message);
@@ -394,7 +394,7 @@ class PostInstagram extends Command
 									$emaildata = [
 										"smsg" => $smsg,
 									];
-									Mail::queue('emails.notify-developer', $emaildata, function ($message) use ($subject_message) {
+									Mail::send('emails.notify-developer', $emaildata, function ($message) use ($subject_message) {
 										$message->from('no-reply@activpost.net', 'Activpost');
 										$message->to("celebgramme.dev@gmail.com");
 										$message->subject($subject_message);
@@ -407,7 +407,7 @@ class PostInstagram extends Command
 										"account_username" => $username,
 										"error_message" => $e->getMessage(),
 									];
-									Mail::queue('emails.notify-user-error', $emaildata, function ($message) use ($subject_message,$user) {
+									Mail::send('emails.notify-user-error', $emaildata, function ($message) use ($subject_message,$user) {
 										$message->from('no-reply@activpost.net', 'Activpost');
 										$message->to($user->email);
 										$message->bcc("celebgramme.dev@gmail.com");
