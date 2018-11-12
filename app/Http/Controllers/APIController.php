@@ -39,7 +39,7 @@ class APIController extends Controller
 					return "last post below 120 second";
 				}
 				if ( ($last_post->diffInSeconds($dt) <= 30 ) && (strpos($sc->slug, 'StoryFile')===0) ) {
-					continue;
+					return "last post for story below 30 second";
 				}
 			}
 			if ($account->is_error) {
