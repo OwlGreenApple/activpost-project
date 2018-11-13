@@ -61,6 +61,12 @@
 
               $("#imguri").val(temp_file);
               $("#video-preview").attr('src',temp_file);
+
+              <?php if($sid==0) { ?>
+                $("#video-preview").hide();
+                $(".div-thumbnail").hide();
+              <?php } ?>
+
               $("#file-upload").val(null);
 						}
 				}
