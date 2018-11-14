@@ -8,12 +8,12 @@ $user = Auth::user();
 			@if (!empty($schedule->image))
 				<!--<img src="{{$schedule->image}}" class="img-responsive schedule-image" data-zoom-image="{{$schedule->image}}" >-->
         <?php 
-				
+				$file = $arr->slug;
 				if($schedule->media_type=='photo') {
 					//check jika diawali 
-					if(strpos($arr->slug, 'PublishFile')===0){ 
+					if(strpos($arr->slug, 'PublishFile')===0){
 						$file = $file.'.jpg';
-					}				
+					}
         ?>
 				  <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" class="img-responsive schedule-image" data-zoom-image="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" style="max-height:240px;">
         <?php 

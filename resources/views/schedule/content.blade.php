@@ -31,9 +31,9 @@
 				$file = $arr->slug;
 				if($arr->media_type=='photo') {
 					//check jika diawali 
-					if(strpos($arr->slug, 'PublishFile')===0){ 
+					if(strpos($arr->slug, 'PublishFile')===0){
 						$file = $file.'.jpg';
-					}				
+					}
 					?>
           <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" class="img-responsive" width="65" height="65" >
         <?php 
