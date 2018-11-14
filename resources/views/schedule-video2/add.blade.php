@@ -196,7 +196,7 @@
           $("#alert").html("File yang diupload harus dalam format video");
 				}
 				//MP4 WebM Ogg 
-        if( (file.type.match("^mp4")) || (file.type.match("^webm")) || (file.type.match("^ogg")) ){
+        if( (file.type.contains("mp4")) || (file.type.contains("webm")) || (file.type.contains("ogg")) ){
           var videoId = "videoMain";
           var $videoEl = $('<video id="' + videoId + '"></video>');
           $videoEl.attr('src', reader.result);
@@ -212,7 +212,7 @@
 				else {
           $(window).scrollTop(0);
           $("#alert").show();
-          $("#alert").html("File yang diupload harus dalam format MP4, WebM, ogg");
+          $("#alert").html("File yang diupload harus dalam format mp4, webm, ogg");
         }
       }, false);
 
