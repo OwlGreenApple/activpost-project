@@ -15,7 +15,7 @@ $user = Auth::user();
 				
 				if($schedule->media_type=='photo') {
         ?>
-				  <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$img}}" class="img-responsive schedule-image" data-zoom-image="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" style="max-height:240px;">
+				  <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" class="img-responsive schedule-image" data-zoom-image="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" style="max-height:240px;">
         <?php 
 				} else { ?>
           <video src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" width="260" height="240" controls></video>
