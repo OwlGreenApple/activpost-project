@@ -189,7 +189,7 @@
 
       reader.addEventListener("load", function () {
         // preview.src = reader.result;
-
+				console.log(file.type);
         if(!file.type.match("^video")){
           $(window).scrollTop(0);
           $("#alert").show();
