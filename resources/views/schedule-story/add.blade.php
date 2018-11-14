@@ -177,17 +177,29 @@
         if(file.type.match("^image")){
           load_image(reader.result);
         } else {
-          var videoId = "videoMain";
-          var $videoEl = $('<video id="' + videoId + '"></video>');
-          $videoEl.attr('src', reader.result);
-          var videoTagRef = $videoEl[0];
-          videoTagRef.addEventListener('loadedmetadata', function(e){
-            $('#width_video').val(videoTagRef.videoWidth);
-            $('#height_video').val(videoTagRef.videoHeight);
-            $('#duration_video').val(videoTagRef.duration);
-            
-            load_image(reader.result);
-          });
+					if(!file.type.match("^video")){
+						$(window).scrollTop(0);
+						$("#alert").show();
+						$("#alert").html("File yang diupload harus dalam format video");
+					}
+					if( (file.type.match("^mp4")) || (file.type.match("^webm")) || (file.type.match("^ogg")) ){
+						var videoId = "videoMain";
+						var $videoEl = $('<video id="' + videoId + '"></video>');
+						$videoEl.attr('src', reader.result);
+						var videoTagRef = $videoEl[0];
+						videoTagRef.addEventListener('loadedmetadata', function(e){
+							$('#width_video').val(videoTagRef.videoWidth);
+							$('#height_video').val(videoTagRef.videoHeight);
+							$('#duration_video').val(videoTagRef.duration);
+							
+							load_image(reader.result);
+						});
+					}
+					else {
+						$(window).scrollTop(0);
+						$("#alert").show();
+						$("#alert").html("File yang diupload harus dalam format MP4, WebM, ogg");
+					}
         }
 
       }, false);
