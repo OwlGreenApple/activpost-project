@@ -23,6 +23,19 @@ $user = Auth::user();
 			@endif
 		</div>
 		<div class="col-md-3 schedule-div col-xs-6 col-sm-6">
+			<p>
+				<strong> 
+					<?php 
+					if(strpos($schedule->slug, 'StoryFile')===0){
+						echo "Schedule Story";
+					} else if($schedule->media_type=='photo'){
+						echo "Schedule Photo";
+					} else { 
+						echo "Schedule Video";
+					}
+					?>
+				</strong>
+			</p>
 			<?php if ( $schedule->description <> "" ) { ?>
 			<p>
 				{{ str_limit($schedule->description, 30) }} 
