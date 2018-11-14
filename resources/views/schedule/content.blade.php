@@ -27,24 +27,25 @@
       <td align="center">
 				<!--<img src="{{$arr->image}}" class="img-responsive" width="65" height="65">-->
 				<!--<img src="{{'images/uploads/'.$user->username.'-'.$user->id.'/'.$arr->slug.'.jpg'}}" class="img-responsive" width="65" height="65">-->
-        <?php if($arr->media_type=='photo') { 
-          $img = $arr->slug;
-          if(strpos($arr->slug, 'PublishFile')===0){ //check jika diawali 
-            $img = $img.'.jpg';
-          }
-        ?>
-          <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$img}}" class="img-responsive" width="65" height="65" >
+        <?php 
+				$file = $arr->slug;
+				//check jika diawali 
+				if(strpos($arr->slug, 'PublishFile')===0){ 
+					$file = $file.'.jpg';
+				}				
+				
+				if($arr->media_type=='photo') {?>
+          <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" class="img-responsive" width="65" height="65" >
         <?php 
 				} 
 				else {
-						if ($arr->status >= 2 ){
-				?>
+						if ($arr->status >= 2 ){?>
 							<div class="video-remove"><i class="glyphicon glyphicon-play-circle"></i></div>
         <?php }
-						else {
-				?>
-							<video src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$arr->slug}}" width="65" height="65"></video>
-        <?php }} ?>
+						else {?>
+							<video src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" width="65" height="65"></video>
+        <?php }
+				} ?>
       </td>
       <td align="center">
 				<?php 
