@@ -15,7 +15,7 @@ $user = Auth::user();
 						$file = $file.'.jpg';
 					}
         ?>
-				  <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" class="img-responsive schedule-image" data-zoom-image="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}">
+				  <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" class="img-responsive schedule-image" data-zoom-image="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" style="max-height:240px;">
         <?php 
 				} else { ?>
           <video src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" width="260" height="240" controls></video>
