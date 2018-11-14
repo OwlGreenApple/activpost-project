@@ -487,6 +487,7 @@ use Celebpost\Models\Account;
 					<thead>
 							<th style="vertical-align: top">No.</th>
 							<th style="vertical-align: top">Image</th>
+							<th style="vertical-align: top">Type</th>
 							<th style="vertical-align: top">Accounts</th>
 							<th style="vertical-align: top">Description</th>
 							<th style="vertical-align: top">Created</th>

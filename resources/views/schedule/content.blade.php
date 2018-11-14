@@ -49,6 +49,17 @@
       </td>
       <td align="center">
 				<?php 
+				if(strpos($arr->slug, 'StoryFile')===0){
+					echo "Schedule Story";
+				} else if($arr->media_type=='photo'){
+					echo "Schedule Photo";
+				} else { 
+					echo "Schedule Video";
+				}
+				?>
+      </td>
+      <td align="center">
+				<?php 
 					$scheduleAccounts = ScheduleAccount::select("accounts.username","schedule_account.status")
 															->join("accounts","accounts.id","=","schedule_account.account_id")
 															->where("schedule_id","=",$arr->id)
