@@ -182,7 +182,7 @@
 						$("#alert").show();
 						$("#alert").html("File yang diupload harus dalam format video");
 					}
-					if( (file.type.contains("mp4")) || (file.type.contains("webm")) || (file.type.contains("ogg")) ){
+					if( (file.type.match("\bmp4\b")) || (file.type.match("\bwebm\b")) || (file.type.match("\bogg\b")) ){
 						var videoId = "videoMain";
 						var $videoEl = $('<video id="' + videoId + '"></video>');
 						$videoEl.attr('src', reader.result);
