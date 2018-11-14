@@ -7,15 +7,18 @@ $user = Auth::user();
 		<div class="col-md-3 schedule-div col-xs-6 col-sm-6">
 			@if (!empty($schedule->image))
 				<!--<img src="{{$schedule->image}}" class="img-responsive schedule-image" data-zoom-image="{{$schedule->image}}" >-->
-        <?php if($schedule->media_type=='photo') { 
-          $img = $schedule->slug;
-          if(strpos($schedule->slug, 'PublishFile')===0){ //check jika diawali 
-            $img = $img.'.jpg';
-          }
+        <?php 
+				//check jika diawali 
+				if(strpos($arr->slug, 'PublishFile')===0){ 
+					$file = $file.'.jpg';
+				}				
+				
+				if($schedule->media_type=='photo') {
         ?>
-				  <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$img}}" class="img-responsive schedule-image" data-zoom-image="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$img}}" >
-        <?php } else { ?>
-          <video src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$schedule->slug}}" width="260" height="240" controls></video>
+				  <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$img}}" class="img-responsive schedule-image" data-zoom-image="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$img}}" style="max-height:240px;">
+        <?php 
+				} else { ?>
+          <video src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" width="260" height="240" controls></video>
         <?php } ?>
 			@endif
 		</div>
