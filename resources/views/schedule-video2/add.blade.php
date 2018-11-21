@@ -189,14 +189,11 @@
 
       reader.addEventListener("load", function () {
         // preview.src = reader.result;
-				console.log(file.type);
-        if(!file.type.match("^video")){
-          $(window).scrollTop(0);
-          $("#alert").show();
-          $("#alert").html("File yang diupload harus dalam format video");
-				}
+        console.log(file.type);
+
 				//MP4 WebM Ogg 
-        if( (file.type.match("mp4*")) || (file.type.match("webm*")) || (file.type.match("ogg*")) ){
+        if(file.type.match("^video")){
+					console.log("a");
           var videoId = "videoMain";
           var $videoEl = $('<video id="' + videoId + '"></video>');
           $videoEl.attr('src', reader.result);
@@ -206,16 +203,12 @@
             $('#height_video').val(videoTagRef.videoHeight);
             $('#duration_video').val(videoTagRef.duration);
 						
-						//load_image(reader.result);
-            $("#video-preview").show();
-            $("#video-preview").attr('src',reader.result);
-            $('.div-thumbnail').show();
+						load_image(reader.result);
           });
-        } 
-				else {
+        } else {
           $(window).scrollTop(0);
           $("#alert").show();
-          $("#alert").html("File yang diupload harus dalam format mp4, webm, ogg");
+          $("#alert").html("File yang diupload harus dalam format video");
         }
       }, false);
 
