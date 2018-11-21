@@ -7,19 +7,35 @@ $user = Auth::user();
 		<div class="col-md-3 schedule-div col-xs-6 col-sm-6">
 			@if (!empty($schedule->image))
 				<!--<img src="{{$schedule->image}}" class="img-responsive schedule-image" data-zoom-image="{{$schedule->image}}" >-->
-        <?php if($schedule->media_type=='photo') { 
-          $img = $schedule->slug;
-          if(strpos($schedule->slug, 'PublishFile')===0){ //check jika diawali 
-            $img = $img.'.jpg';
-          }
+        <?php 
+				$file = $schedule->slug;
+				if($schedule->media_type=='photo') {
+					//check jika diawali 
+					if(strpos($schedule->slug, 'PublishFile')===0){
+						$file = $file.'.jpg';
+					}
         ?>
-				  <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$img}}" class="img-responsive schedule-image" data-zoom-image="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$img}}" >
-        <?php } else { ?>
-          <video src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$schedule->slug}}" width="260" height="240" controls></video>
+				  <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" class="img-responsive schedule-image" data-zoom-image="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" style="max-height:240px;margin:0 auto;">
+        <?php 
+				} else { ?>
+          <video src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" width="260" height="240" controls></video>
         <?php } ?>
 			@endif
 		</div>
 		<div class="col-md-3 schedule-div col-xs-6 col-sm-6">
+			<p>
+				<strong> 
+					<?php 
+					if(strpos($schedule->slug, 'StoryFile')===0){
+						echo "Schedule Story";
+					} else if($schedule->media_type=='photo'){
+						echo "Schedule Photo";
+					} else { 
+						echo "Schedule Video";
+					}
+					?>
+				</strong>
+			</p>
 			<?php if ( $schedule->description <> "" ) { ?>
 			<p>
 				{{ str_limit($schedule->description, 30) }} 
