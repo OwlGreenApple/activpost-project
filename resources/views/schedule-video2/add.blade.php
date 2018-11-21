@@ -203,7 +203,10 @@
             $('#height_video').val(videoTagRef.videoHeight);
             $('#duration_video').val(videoTagRef.duration);
 						
-						load_image(reader.result);
+						//load_image(reader.result);
+            $("#video-preview").show();
+            $("#video-preview").attr('src',reader.result);
+            $('.div-thumbnail').show();
           });
         } else {
           $(window).scrollTop(0);
