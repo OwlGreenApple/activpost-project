@@ -356,7 +356,7 @@
 											<input type="hidden" id="image-id" name="image_id" value="">
 											<input type="hidden" id="slug" name="slug" value="<?php if ($sid<>0) { echo $schedule->slug; } ?>">
 
-											<div class="form-group">
+											<div class="form-group row">
 												<div class="col-md-6 col-xs-12 col-sm-12">
 													<video id="video-preview" <?php if($sid==0) echo 'style="display: none;"' ?> src="<?php 
 													if ($sid<>0) { echo $schedule->image; } 
