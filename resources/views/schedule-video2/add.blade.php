@@ -23,7 +23,7 @@
     alert('Thumbnail berhasil di set');
   }
 
-	function load_image(imgData){
+	function load_image(imgData,fileType){
     var form = $('#form-publish')[0];
     var formData = new FormData(form);
   
@@ -52,7 +52,7 @@
 							$("#image-id").val(0);
 							$("#video-preview").show();
 							if( isChrome ) {
-								$("#video-preview").replaceWith($('<video id="video-preview" width="100%" autoplay loop><source src="'+imgData+'" type="video/mp4"></video>'));
+								$("#video-preview").replaceWith($('<video id="video-preview" width="100%"><source src="'+imgData+'" type="'+fileType+'"></video>'));
 							}
 							else {
 								$("#video-preview").attr('src',imgData);
@@ -210,7 +210,7 @@
             $('#height_video').val(videoTagRef.videoHeight);
             $('#duration_video').val(videoTagRef.duration);
 						
-						load_image(reader.result);
+						load_image(reader.result,file.type);
           });
         } else {
           $(window).scrollTop(0);
