@@ -52,7 +52,7 @@
 							$("#image-id").val(0);
 							$("#video-preview").show();
 							if( isChrome ) {
-								$("#video-preview").replaceWith($('<video id="video-preview" width="100%"><source src="'+imgData+'" type="'+fileType+'"></video>'));
+								$("#video-preview").replaceWith($('<video id="video-preview" width="100%"><source src="'+imgData+'" type="video/webm"></video>'));
 							}
 							else {
 								$("#video-preview").attr('src',imgData);
