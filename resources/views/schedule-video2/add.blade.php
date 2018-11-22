@@ -24,8 +24,8 @@
   }
 
 	function load_image(imgData,fileType){
-    var form = $('#form-publish')[0];
-    var formData = new FormData(form);
+    // var form = $('#form-publish')[0];
+    // var formData = new FormData(form);
   
 		$.ajax({
 				headers: {
@@ -33,11 +33,14 @@
 				},
 				type: 'POST',
 				url: "<?php echo url('schedule/save-video'); ?>",
-        data: formData, 
+        // data: formData, 
+        data: {
+					duration_video : $('#duration_video').val()
+				}, 
 				dataType: 'text',
-        cache: false,
-        contentType: false,
-        processData: false,
+        // cache: false,
+        // contentType: false,
+        // processData: false,
 				beforeSend: function()
 				{
 					$("#div-loading").show();
@@ -51,13 +54,13 @@
 							$("#imguri").val(dataR.url);
 							$("#image-id").val(0);
 							$("#video-preview").show();
-							if( isChrome ) {
-								$("#video-preview").replaceWith($('<video id="video-preview" autoplay="autoplay" controls="controls" width="100%"><source src="'+imgData+'" type="'+fileType+'"></video>'));
+							// if( isChrome ) {
+								// $("#video-preview").replaceWith($('<video id="video-preview" autoplay="autoplay" controls="controls" width="100%"><source src="'+imgData+'" type="'+fileType+'"></video>'));
 								// $("#video-preview").replaceWith($('<video id="video-preview" src="'+imgData+'" width="100%"></video>'));
-							}
-							else {
+							// }
+							// else {
 								$("#video-preview").attr('src',imgData);
-							}
+							// }
               $('.div-thumbnail').show();
 						}
 						else if(dataR.type=='error')
