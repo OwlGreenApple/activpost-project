@@ -14,6 +14,7 @@
                          if ($sid<>0) { echo $schedule->image; } 
                     ?>";
 
+	var global_imgData;
   function set_thumbnail(){
     var vid = document.getElementById("video-preview");
     $('#thumbnail').val(vid.currentTime);
@@ -49,7 +50,8 @@
 							$("#imguri").val(dataR.url);
 							$("#image-id").val(0);
 							$("#video-preview").show();
-              $("#video-preview").attr('src',imgData);
+              // $("#video-preview").attr('src',imgData);
+              $("#video-preview").attr('src',global_imgData);
               $('.div-thumbnail').show();
 							console.log(imgData);
 						}
@@ -205,7 +207,8 @@
             $('#duration_video').val(videoTagRef.duration);
 						
 						console.log(reader.result);
-						load_image(reader.result);
+						global_imgData = reader.result;
+						load_image(global_imgData);
           });
         } else {
           $(window).scrollTop(0);
