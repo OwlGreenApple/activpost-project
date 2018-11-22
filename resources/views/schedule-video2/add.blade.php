@@ -51,6 +51,7 @@
 							$("#video-preview").show();
               $("#video-preview").attr('src',imgData);
               $('.div-thumbnail').show();
+							console.log(imgData);
 						}
 						else if(dataR.type=='error')
 						{
@@ -203,6 +204,7 @@
             $('#height_video').val(videoTagRef.videoHeight);
             $('#duration_video').val(videoTagRef.duration);
 						
+						console.log(reader.result);
 						load_image(reader.result);
           });
         } else {
