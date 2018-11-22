@@ -356,10 +356,14 @@
 											<input type="hidden" id="image-id" name="image_id" value="">
 											<input type="hidden" id="slug" name="slug" value="<?php if ($sid<>0) { echo $schedule->slug; } ?>">
 
-                      <video id="video-preview" <?php if($sid==0) echo 'style="display: none;"' ?> src="<?php 
-                      if ($sid<>0) { echo $schedule->image; } 
-                      else if (!is_null($arr_repost)){ echo $arr_repost['url'];}
-                      ?>" width="320" height="240" controls></video>
+											<div class="form-group">
+												<div class="col-md-6 col-xs-12 col-sm-12">
+													<video id="video-preview" <?php if($sid==0) echo 'style="display: none;"' ?> src="<?php 
+													if ($sid<>0) { echo $schedule->image; } 
+													else if (!is_null($arr_repost)){ echo $arr_repost['url'];}
+													?>" width="320" height="240" controls></video>
+												</div>
+											</div>
 
                       <div class="div-thumbnail" <?php if($sid==0) echo 'style="display: none;"' ?>>
                         <span style="font-size: 12px">Silahkan play video, kemudian pause dan klik Set Thumbnail untuk mengeset thumbnail video</span> <br>
