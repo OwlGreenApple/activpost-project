@@ -13,8 +13,9 @@
   var temp_file = "<?php if (!is_null($arr_repost)){ echo $arr_repost['url'];} 
                          if ($sid<>0) { echo $schedule->image; } 
                     ?>";
+	var isChrome = !!window.chrome; 
+	var isIE = /*@cc_on!@*/false;
 
-	var global_imgData;
   function set_thumbnail(){
     var vid = document.getElementById("video-preview");
     $('#thumbnail').val(vid.currentTime);
@@ -50,10 +51,13 @@
 							$("#imguri").val(dataR.url);
 							$("#image-id").val(0);
 							$("#video-preview").show();
-              // $("#video-preview").attr('src',imgData);
-              $("#video-preview").attr('src',global_imgData);
+							if( isChrome ) {
+								$("#video-preview").replaceWith($('<video id="video-preview" autoplay loop><source src="'+imgData+'" type="video/webm"></video>'));
+							}
+							else {
+								$("#video-preview").attr('src',imgData);
+							}
               $('.div-thumbnail').show();
-							console.log(imgData);
 						}
 						else if(dataR.type=='error')
 						{
@@ -206,9 +210,7 @@
             $('#height_video').val(videoTagRef.videoHeight);
             $('#duration_video').val(videoTagRef.duration);
 						
-						console.log(reader.result);
-						global_imgData = reader.result;
-						load_image(global_imgData);
+						load_image(reader.result);
           });
         } else {
           $(window).scrollTop(0);
