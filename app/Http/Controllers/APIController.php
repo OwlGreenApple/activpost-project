@@ -114,7 +114,7 @@ class APIController extends Controller
 							"account_username" => $username,
 							"error_message" => $e->getMessage(),
 						];
-						Mail::queue('emails.notify-user-error', $emaildata, function ($message) use ($subject_message,$user) {
+						Mail::send('emails.notify-user-error', $emaildata, function ($message) use ($subject_message,$user) {
 							$message->from('no-reply@activpost.net', 'Activpost');
 							$message->to($user->email);
 							$message->bcc("celebgramme.dev@gmail.com");
@@ -184,7 +184,7 @@ class APIController extends Controller
 							"account_username" => $username,
 							"error_message" => $e->getMessage(),
 						];
-						Mail::queue('emails.notify-user-error', $emaildata, function ($message) use ($subject_message,$user) {
+						Mail::send('emails.notify-user-error', $emaildata, function ($message) use ($subject_message,$user) {
 							$message->from('no-reply@activpost.net', 'Activpost');
 							$message->to($user->email);
 							$message->bcc("celebgramme.dev@gmail.com");
@@ -305,7 +305,7 @@ class APIController extends Controller
 							"account_username" => $username,
 							"error_message" => $e->getMessage(),
 						];
-						Mail::queue('emails.notify-user-error', $emaildata, function ($message) use ($subject_message,$user) {
+						Mail::send('emails.notify-user-error', $emaildata, function ($message) use ($subject_message,$user) {
 							$message->from('no-reply@activpost.net', 'Activpost');
 							$message->to($user->email);
 							$message->bcc("celebgramme.dev@gmail.com");
