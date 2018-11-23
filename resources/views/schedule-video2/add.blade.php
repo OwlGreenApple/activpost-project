@@ -35,7 +35,9 @@
 				url: "<?php echo url('schedule/save-video'); ?>",
         // data: formData, 
         data: {
-					duration_video : $('#duration_video').val()
+					duration_video : $('#duration_video').val(),
+					width : $('#width_video').val(),
+					height : $('#height_video').val()
 				}, 
 				dataType: 'text',
         // cache: false,

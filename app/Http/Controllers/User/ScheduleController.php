@@ -916,24 +916,35 @@ $offset = ($page * $perPage) - $perPage;
   public function save_video_schedule(req $request)
   {
     $user = Auth::user();
-    /*$uploadedFile = $request->file('imgData');   
-
-    $filename = "temp.".$uploadedFile->getClientOriginalExtension();
-
-    $dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
-    if (!file_exists($dir)) {
-      mkdir($dir,0741,true);
-    }
-    
-    if($request->hasFile('imgData')){
-      $upload_success = $uploadedFile->move($dir, $filename);   
-    }*/
+		
     if($request->duration_video>60){
       $arr["type"] = "error";
       $arr["message"] = "Durasi video untuk upload post maksimal 1 menit";  
       return $arr;
     }
     
+		/*if ( ( ($request->width>1090) && ($request->height>1090) ) || ( ($request->width>1300) && ($request->height>800) ) || ( ($request->width>800) && ($request->height>1300) ) ) {
+			$arr["type"] = "error";
+			$arr["message"] = "Ukuran maximum width = 1080px & height = 1080px";
+			return $arr;
+		}
+		if ( ($request->width<640) || ($request->height<640) ) {
+			$arr["type"] = "error";
+			$arr["message"] = "Ukuran file Minimum 640px X 640px";
+			return $arr;
+		}
+		if ( ($request->width>1080) || ($request->height>1350) ) {
+			$arr["type"] = "error";
+			$arr["message"] = "Ukuran maximum width = 1080px & height = 1350px";
+			return $arr;
+		}*/
+		$ratio_img = $request->width / $request->height;
+		if ( ($ratio_img < 0.8) || ($ratio_img>1.91) ) {
+			$arr["type"] = "error";
+			$arr["message"] = "Ratio video (Width / Height) Harus berkisar antara 0.8 sampai 1.91. Ratio image anda ".$ratio_img;
+			return $arr;
+		}
+		
     $arr["type"] = "success";
     $arr["message"] = "Data berhasil disimpan";
     //$arr["url"] = asset('../vp/uploads/'.$user->username.'-'.$user->id."/".$filename);
