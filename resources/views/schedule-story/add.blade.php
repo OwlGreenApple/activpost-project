@@ -11,8 +11,8 @@
 ?>
 <script>
 	function load_image(imgData){
-    var form = $('#form-publish')[0];
-    var formData = new FormData(form);
+    // var form = $('#form-publish')[0];
+    // var formData = new FormData(form);
 
 		$.ajax({
 				headers: {
@@ -20,11 +20,16 @@
 				},
 				type: 'POST',
 				url: "<?php echo url('schedule/save-story'); ?>",
-        data: formData, 
+        // data: formData, 
+        data: {
+					duration_video : $('#duration_video').val(),
+					width : $('#width_video').val(),
+					height : $('#height_video').val()
+				}, 
 				dataType: 'text',
-        cache: false,
-        contentType: false,
-        processData: false,
+        // cache: false,
+        // contentType: false,
+        // processData: false,
 				beforeSend: function()
 				{
 					$("#div-loading").show();
@@ -38,11 +43,13 @@
 							$("#imguri").val(dataR.url);
 							$("#image-id").val(0);
 
-              if(dataR.jenisfile=='image'){
-                $("#canvas-image").show();
-                $("#video-preview").hide();
-                $("#canvas-image").attr('src',imgData);
-              } else {
+              // if(dataR.jenisfile=='image'){
+                // $("#canvas-image").show();
+                // $("#video-preview").hide();
+                // $("#canvas-image").attr('src',imgData);
+              // } 
+							// else {
+              if(dataR.jenisfile=='video'){
                 $("#video-preview").show();
                 $("#canvas-image").hide();
                 $("#video-preview").attr('src',imgData);
@@ -175,6 +182,21 @@
       reader.addEventListener("load", function () {
         // preview.src = reader.result;
         if(file.type.match("^image")){
+					var image = new Image();
+					image.src = theFile.target.result;
+
+					image.onload = function() {
+						$('#width_video').val(this.width);
+						$('#height_video').val(this.height);
+						$('#duration_video').val(0);
+
+						$("#canvas-image").show();
+						$("#video-preview").hide();
+						$("#canvas-image").attr('src',this.src);
+					};
+					
+					
+					
           load_image(reader.result);
         } else {
 					if(!file.type.match("^video")){

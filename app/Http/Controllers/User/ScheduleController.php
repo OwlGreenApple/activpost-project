@@ -1242,21 +1242,19 @@ $offset = ($page * $perPage) - $perPage;
       $upload_success = $uploadedFile->move($dir, $filename);   
     }*/
     
-    $uploadedFile = $request->file('imgData');
-    $extFile = $uploadedFile->getClientOriginalExtension();   
     $image =  array("jpg", "png", "gif", "bmp", "jpeg","tiff","JPG","PNG","GIF","BMP","JPEG","TIFF");
 
     if(in_array($extFile,$image) ) {
       $arr['jenisfile'] = 'image';
 
-      $arr_size = getimagesize($uploadedFile);
-      $ratio = $arr_size[0]/$arr_size[1];
+			$ratio = $request->width / $request->height;
       if($ratio<0.56 || $ratio>0.67){
         $arr['type'] = 'error';
         $arr['message'] = 'Image harus memiliki aspect ratio 9:16';
         return $arr;
       }
-    } else {
+    } 
+		else {
       $arr['jenisfile'] = 'video';
 
       /*$ffprobe = FFMpeg\FFProbe::create();
@@ -1270,7 +1268,7 @@ $offset = ($page * $perPage) - $perPage;
       $ratio = $width/$height;
       $duration = $ffprobe->format( $uploadedFile )->get('duration');*/
 
-      $ratio = $request->width_video / $request->height_video;
+			$ratio = $request->width / $request->height;
       if($ratio<0.56 || $ratio>0.67){
         $arr['type'] = 'error';
         $arr['message'] = 'Video harus memiliki aspect ratio 9:16';

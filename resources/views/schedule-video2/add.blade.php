@@ -13,8 +13,8 @@
   var temp_file = "<?php if (!is_null($arr_repost)){ echo $arr_repost['url'];} 
                          if ($sid<>0) { echo $schedule->image; } 
                     ?>";
-	var isChrome = !!window.chrome; 
-	var isIE = /*@cc_on!@*/false;
+	// var isChrome = !!window.chrome; 
+	// var isIE = /*@cc_on!@*/false;
 
   function set_thumbnail(){
     var vid = document.getElementById("video-preview");
@@ -23,7 +23,7 @@
     alert('Thumbnail berhasil di set');
   }
 
-	function load_image(imgData,fileType){
+	function load_image(imgData){
     // var form = $('#form-publish')[0];
     // var formData = new FormData(form);
   
@@ -56,13 +56,7 @@
 							$("#imguri").val(dataR.url);
 							$("#image-id").val(0);
 							$("#video-preview").show();
-							// if( isChrome ) {
-								// $("#video-preview").replaceWith($('<video id="video-preview" autoplay="autoplay" controls="controls" width="100%"><source src="'+imgData+'" type="'+fileType+'"></video>'));
-								// $("#video-preview").replaceWith($('<video id="video-preview" src="'+imgData+'" width="100%"></video>'));
-							// }
-							// else {
-								$("#video-preview").attr('src',imgData);
-							// }
+							$("#video-preview").attr('src',imgData);
               $('.div-thumbnail').show();
 						}
 						else if(dataR.type=='error')
@@ -216,7 +210,7 @@
             $('#height_video').val(videoTagRef.videoHeight);
             $('#duration_video').val(videoTagRef.duration);
 						
-						load_image(reader.result,file.type);
+						load_image(reader.result);
           });
         } else {
           $(window).scrollTop(0);
