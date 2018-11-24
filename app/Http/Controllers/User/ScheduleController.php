@@ -1250,7 +1250,7 @@ $offset = ($page * $perPage) - $perPage;
 			$ratio = $request->width / $request->height;
       if($ratio<0.56 || $ratio>0.67){
         $arr['type'] = 'error';
-        $arr['message'] = 'Image harus memiliki aspect ratio 9:16';
+        $arr['message'] = 'Image harus memiliki aspect ratio 9:16 ratio file anda : '.$ratio;
         return $arr;
       }
     } 
@@ -1271,7 +1271,7 @@ $offset = ($page * $perPage) - $perPage;
 			$ratio = $request->width / $request->height;
       if($ratio<0.56 || $ratio>0.67){
         $arr['type'] = 'error';
-        $arr['message'] = 'Video harus memiliki aspect ratio 9:16';
+        $arr['message'] = 'Video harus memiliki aspect ratio 9:16 ratio file anda : '.$ratio;
         return $arr;
       } else if ($request->duration_video>15) {
         $arr['type'] = 'error';
