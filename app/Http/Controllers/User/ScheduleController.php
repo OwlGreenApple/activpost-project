@@ -1244,7 +1244,7 @@ $offset = ($page * $perPage) - $perPage;
     
     $image =  array("jpg", "png", "gif", "bmp", "jpeg","tiff","JPG","PNG","GIF","BMP","JPEG","TIFF");
 
-    if(in_array($extFile,$image) ) {
+    if(in_array($request->extFile,$image) ) {
       $arr['jenisfile'] = 'image';
 
 			$ratio = $request->width / $request->height;

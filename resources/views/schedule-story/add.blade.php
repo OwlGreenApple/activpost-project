@@ -14,6 +14,7 @@
     // var form = $('#form-publish')[0];
     // var formData = new FormData(form);
 
+		var extension;
 		$.ajax({
 				headers: {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -24,7 +25,8 @@
         data: {
 					duration_video : $('#duration_video').val(),
 					width : $('#width_video').val(),
-					height : $('#height_video').val()
+					height : $('#height_video').val(),
+					extFile : extension
 				}, 
 				dataType: 'text',
         // cache: false,
@@ -189,6 +191,7 @@
 						$('#width_video').val(this.width);
 						$('#height_video').val(this.height);
 						$('#duration_video').val(0);
+						extension = file.name.split('.').pop().toLowerCase();
 
 						$("#canvas-image").show();
 						$("#video-preview").hide();
