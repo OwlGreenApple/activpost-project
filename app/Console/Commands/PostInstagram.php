@@ -185,7 +185,7 @@ class PostInstagram extends Command
 								}
 								catch (Exception $e) {
 									$dt = Carbon::now();
-									$dir = base_path().'/storage/error-log/'.$username; 
+									/*$dir = base_path().'/storage/error-log/'.$username; 
 									if (!file_exists($dir)) {
 										mkdir($dir,0755,true);
 									}
@@ -196,7 +196,7 @@ class PostInstagram extends Command
 										$str = file_get_contents($file);
 									}
 									$str .= $photo."|".$e->getMessage()."|".$e->getResponse()->printJson()."|".$dt->toDateTimeString().";";
-									file_put_contents($file, $str);
+									file_put_contents($file, $str);*/
 									
 									$is_error = 1 ;
 									$smsg = $e->getMessage();
@@ -320,7 +320,7 @@ class PostInstagram extends Command
 								catch (Exception $e) {
 									$smsg = $e->getMessage();
 									$dt = Carbon::now();
-									$dir = base_path().'/storage/error-log/'.$username; 
+									/*$dir = base_path().'/storage/error-log/'.$username; 
 									if (!file_exists($dir)) {
 										mkdir($dir,0755,true);
 									}
@@ -331,7 +331,7 @@ class PostInstagram extends Command
 										$str = file_get_contents($file);
 									}
 									$str .= $e->getMessage()."|".$e->getResponse()->printJson()."|".$dt->toDateTimeString().";";
-									file_put_contents($file, $str);
+									file_put_contents($file, $str);*/
 										
 									if ( (strpos($e->getMessage(), 'Network: CURL error') !== false) || (strpos($e->getMessage(), 'No response from server') !== false) || (strpos($e->getMessage(), 'BootstrapUsersResponse') !== false) ) {
 										/*$subject_message = "[Celebpost] Error CURL, Account=".$username." schedule id = ".$sc->id;
