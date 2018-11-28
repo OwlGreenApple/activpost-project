@@ -185,7 +185,7 @@
         // preview.src = reader.result;
         if(file.type.match("^image")){
 					var image = new Image();
-					image.src = theFile.target.result;
+					image.src = file.target.result;
 
 					image.onload = function() {
 						$('#width_video').val(this.width);

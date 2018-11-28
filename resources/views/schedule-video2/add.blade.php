@@ -209,7 +209,7 @@
             $('#width_video').val(videoTagRef.videoWidth);
             $('#height_video').val(videoTagRef.videoHeight);
             $('#duration_video').val(videoTagRef.duration);
-						console.log(videoTagRef.duration);
+						
 						load_image(reader.result);
           });
         } else {
