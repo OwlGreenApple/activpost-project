@@ -917,7 +917,7 @@ $offset = ($page * $perPage) - $perPage;
   {
     $user = Auth::user();
 		
-    if($request->duration_video>60){
+    if($request->duration_video>=61){
       $arr["type"] = "error";
       $arr["message"] = "Durasi video untuk upload post maksimal 1 menit";  
       return $arr;
@@ -1273,7 +1273,7 @@ $offset = ($page * $perPage) - $perPage;
         $arr['type'] = 'error';
         $arr['message'] = 'Video harus memiliki aspect ratio 9:16 ratio file anda : '.$ratio;
         return $arr;
-      } else if ($request->duration_video>15) {
+      } else if ($request->duration_video>=16) {
         $arr['type'] = 'error';
         $arr['message'] = 'Durasi video untuk upload story maksimal 15 detik';
         return $arr;
