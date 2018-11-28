@@ -26,7 +26,7 @@
 					duration_video : $('#duration_video').val(),
 					widthFile : $('#width_video').val(),
 					heightFile : $('#height_video').val(),
-					extFile : extension
+					extFile : extension,
 				}, 
 				dataType: 'text',
         // cache: false,
