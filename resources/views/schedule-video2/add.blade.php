@@ -36,8 +36,8 @@
         // data: formData, 
         data: {
 					duration_video : $('#duration_video').val(),
-					width : $('#width_video').val(),
-					height : $('#height_video').val()
+					widthFile : $('#width_video').val(),
+					heightFile : $('#height_video').val()
 				}, 
 				dataType: 'text',
         // cache: false,

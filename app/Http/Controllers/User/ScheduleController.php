@@ -938,7 +938,7 @@ $offset = ($page * $perPage) - $perPage;
 			$arr["message"] = "Ukuran maximum width = 1080px & height = 1350px";
 			return $arr;
 		}*/
-		$ratio_img = $request->width / $request->height;
+		$ratio_img = $request->widthFile/$request->heightFile;
 		if ( ($ratio_img < 0.8) || ($ratio_img>1.91) ) {
 			$arr["type"] = "error";
 			$arr["message"] = "Ratio video (Width / Height) Harus berkisar antara 0.8 sampai 1.91. Ratio image anda ".$ratio_img;
@@ -1247,14 +1247,14 @@ $offset = ($page * $perPage) - $perPage;
     if(in_array($request->extFile,$image) ) {
       $arr['jenisfile'] = 'image';
 
-			$ratio = $request->width / $request->height;
+			$ratio = $request->widthFile/ $request->heightFile;
       if($ratio<0.56 || $ratio>0.67){
         $arr['type'] = 'error';
         $arr['message'] = 'Image harus memiliki aspect ratio 9:16 ratio file anda : '.$ratio;
         return $arr;
       }
     } 
-		else {
+    else {
       $arr['jenisfile'] = 'video';
 
       /*$ffprobe = FFMpeg\FFProbe::create();
@@ -1268,7 +1268,7 @@ $offset = ($page * $perPage) - $perPage;
       $ratio = $width/$height;
       $duration = $ffprobe->format( $uploadedFile )->get('duration');*/
 
-			$ratio = $request->width / $request->height;
+			$ratio = $request->widthFile/ $request->heightFile;
       if($ratio<0.56 || $ratio>0.67){
         $arr['type'] = 'error';
         $arr['message'] = 'Video harus memiliki aspect ratio 9:16 ratio file anda : '.$ratio;
