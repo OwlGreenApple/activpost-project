@@ -196,11 +196,8 @@
 						$("#canvas-image").show();
 						$("#video-preview").hide();
 						$("#canvas-image").attr('src',this.src);
+            load_image(reader.result);
 					};
-					
-					
-					
-          load_image(reader.result);
         } else {
 					if(!file.type.match("^video")){
 						$(window).scrollTop(0);
