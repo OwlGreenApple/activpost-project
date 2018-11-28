@@ -195,6 +195,7 @@
             load_image(reader.result);
 					};
         } else {
+          extension = "video";
 					if(!file.type.match("^video")){
 						$(window).scrollTop(0);
 						$("#alert").show();
