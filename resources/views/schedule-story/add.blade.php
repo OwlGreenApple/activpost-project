@@ -45,13 +45,12 @@
 							$("#imguri").val(dataR.url);
 							$("#image-id").val(0);
 
-              // if(dataR.jenisfile=='image'){
-                // $("#canvas-image").show();
-                // $("#video-preview").hide();
-                // $("#canvas-image").attr('src',imgData);
-              // } 
-							// else {
-              if(dataR.jenisfile=='video'){
+              if(dataR.jenisfile=='image'){
+                $("#canvas-image").show();
+                $("#video-preview").hide();
+                $("#canvas-image").attr('src',imgData);
+              } 
+							else if(dataR.jenisfile=='video'){
                 $("#video-preview").show();
                 $("#canvas-image").hide();
                 $("#video-preview").attr('src',imgData);
@@ -193,9 +192,6 @@
 						$('#duration_video').val(0);
 						extension = file.name.split('.').pop().toLowerCase();
 
-						$("#canvas-image").show();
-						$("#video-preview").hide();
-						$("#canvas-image").attr('src',this.src);
             load_image(reader.result);
 					};
         } else {
