@@ -10,11 +10,11 @@
 
 ?>
 <script>
+  var extension;
 	function load_image(imgData){
     // var form = $('#form-publish')[0];
     // var formData = new FormData(form);
 
-		var extension;
 		$.ajax({
 				headers: {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
