@@ -315,7 +315,7 @@
 		<div class="col-md-6 col-xs-12">
 			<h1>
 				Schedules Video
-				<span class="h-icon glyphicon glyphicon-question-sign hint-button tooltipPlugin" title="<div class='panel-heading'>Schedule Video</div><div class='panel-content'>Schedule Maksimum 10 Video yang bisa dishare(schedule story dan schedule post video) <br>File harus berupa MP4</div>">
+				<span class="h-icon glyphicon glyphicon-question-sign hint-button tooltipPlugin" title="<div class='panel-heading'>Schedule Video</div><div class='panel-content'>Khusus untuk Video (Feed dan Stories) hanya bisa mengschedule 10 antrian saja (bisa schedule kembali jika antrian sudah terpublish) <br>File harus berupa MP4</div>">
 				</span>
 			</h1>
 		</div>
