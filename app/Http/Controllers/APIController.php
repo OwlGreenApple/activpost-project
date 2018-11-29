@@ -22,6 +22,7 @@ class APIController extends Controller
 	API for help automation to do post task 
 	*/
 	public function post_ig(req $request){
+    ini_set('memory_limit', '-1');
 		//init 
 		$check_sa = ScheduleAccount::find($request->schedule_account_id);
 		$account = Account::find($request->account_id);
