@@ -243,7 +243,7 @@ class ImageController extends Controller
 		return $arr;
 	}		
 
-	public function multiple_upload	()
+	public function multiple_upload()
 	{
 		$user = Auth::user();
     // getting all of the post data

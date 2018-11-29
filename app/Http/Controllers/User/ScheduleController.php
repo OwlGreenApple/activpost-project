@@ -956,7 +956,7 @@ $offset = ($page * $perPage) - $perPage;
   public function publish_video_schedule(req $request)
   {
     $user = Auth::user();
- 
+
     //check before publish
     if (!$request->has('accounts')) {
       $arr["type"]="error";
