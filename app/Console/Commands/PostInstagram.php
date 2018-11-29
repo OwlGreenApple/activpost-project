@@ -355,9 +355,9 @@ class PostInstagram extends Command
 									}
 									$smsg .= " Line: ".$e->getTraceAsString(); // this prints the line where the error occurs
 									
-                  ob_start();
-                  // var_dump($e);
-                  $result = ob_get_clean();    
+                                                  ob_start();
+                                                  // var_dump($e);
+                                                  $result = ob_get_clean();    
 									$smsg .= " ".$result;
                   
 									//new
