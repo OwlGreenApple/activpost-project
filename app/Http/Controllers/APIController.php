@@ -203,7 +203,8 @@ class APIController extends Controller
 								// $logs = $sc->slug.'-'.$sc->media_type.", Pra posting story foto\n";
 								// fwrite($myfile, $logs);
 
-								$instagram = $i->story->uploadPhoto($photo, ['caption' => $caption]);
+                $photoVar = new \InstagramAPI\Media\Photo\InstagramPhoto($photo, ['targetFeed' => \InstagramAPI\Constants::FEED_STORY]);
+								$instagram = $i->story->uploadPhoto($photoVar->getFile(), ['caption' => $caption]);
 
 								// $logs = $sc->slug.'-'.$sc->media_type.", Posting Story foto\n";
 								// fwrite($myfile, $logs);
@@ -211,7 +212,8 @@ class APIController extends Controller
 								// $logs = $sc->slug.'-'.$sc->media_type.", Pra posting\n";
 								// fwrite($myfile, $logs);
 
-								$instagram = $i->timeline->uploadPhoto($photo, ['caption' => $caption]);  
+                $photoVar = new \InstagramAPI\Media\Photo\InstagramPhoto($photo, ['targetFeed' => \InstagramAPI\Constants::FEED_TIMELINE]);
+								$instagram = $i->timeline->uploadPhoto($photoVar->getFile(), ['caption' => $caption]);  
 
 								// $logs = $sc->slug.'-'.$sc->media_type.", Posting foto\n";
 								// fwrite($myfile, $logs);
