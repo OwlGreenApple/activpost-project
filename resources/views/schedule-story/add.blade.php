@@ -343,7 +343,7 @@
 
 									<form role="form" id="form-publish" enctype="multipart/form-data">
 											{{ csrf_field() }}
-                      <input type="hidden" name="type" id="type-file">
+                      <input type="hidden" name="type" id="type-file" value="<?php if($sid==0 || $schedule->media_type=='photo') {echo 'image';} else{echo"video";} ?>">
                       <input type="hidden" name="width_video" id="width_video">
                       <input type="hidden" name="height_video" id="height_video">
                       <input type="hidden" name="duration_video" id="duration_video">
