@@ -39,7 +39,7 @@ class Kernel extends ConsoleKernel
       // $schedule->command('delete:post')->withoutOverlapping();
       $schedule->command('delete:post');
       $schedule->command('synchron:affiliate')->withoutOverlapping();
-      $schedule->command('fill:proxy')->everyThirtyMinutes()->withoutOverlapping();
+      //$schedule->command('fill:proxy')->everyThirtyMinutes()->withoutOverlapping();
       $schedule->command('count:timelog')->daily();
       // $schedule->command('update:publishschedule')->daily();  // ga dipake, cuman panggil link dari cron biasa, karena ga bs baca public_path
 			*/
