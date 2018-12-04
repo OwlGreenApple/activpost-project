@@ -27,7 +27,36 @@
       <td align="center">
 				<!--<img src="{{$arr->image}}" class="img-responsive" width="65" height="65">-->
 				<!--<img src="{{'images/uploads/'.$user->username.'-'.$user->id.'/'.$arr->slug.'.jpg'}}" class="img-responsive" width="65" height="65">-->
-				<img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$arr->slug.'.jpg'}}" class="img-responsive" width="65" height="65">
+        <?php 
+				$file = $arr->slug;
+				if($arr->media_type=='photo') {
+					//check jika diawali 
+					if(strpos($arr->slug, 'PublishFile')===0){
+						$file = $file.'.jpg';
+					}
+					?>
+          <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" class="img-responsive" width="65" height="65" >
+        <?php 
+				} 
+				else {
+						if ($arr->status >= 2 ){?>
+							<div class="video-remove"><i class="glyphicon glyphicon-play-circle"></i></div>
+        <?php }
+						else {?>
+							<video src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" width="65" height="65"></video>
+        <?php }
+				} ?>
+      </td>
+      <td align="center">
+				<?php 
+				if(strpos($arr->slug, 'StoryFile')===0){
+					echo "Schedule Story";
+				} else if($arr->media_type=='photo'){
+					echo "Schedule Photo";
+				} else { 
+					echo "Schedule Video";
+				}
+				?>
       </td>
       <td align="center">
 				<?php 
@@ -47,7 +76,7 @@
 						} else if ($scheduleAccount->status==5) {
 							$str_description = '<span style="color:#a94442;">(Need Reschedule)</span>';
 						}
-						echo $scheduleAccount->username." ".$str_description."<br>";
+						echo "<a href='http://instagram.com/".$scheduleAccount->username."' target='blank'>".$scheduleAccount->username."</a> ".$str_description."<br>";
 					}
 					// foreach ($arr_shadow_schedule_accounts as $arr_shadow_schedule_account) {
 						// if ((string) $arr_shadow_schedule_account->schedule_id== (string)$arr->id) {

@@ -30,7 +30,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-      // $schedule->command('send:instagram')->withoutOverlapping()->timezone(''.env('IG_TIMEZONE').'');
+      /*
+			// $schedule->command('send:instagram')->withoutOverlapping()->timezone(''.env('IG_TIMEZONE').'');
       $schedule->command('send:instagram')->timezone(''.env('IG_TIMEZONE').'');
       // $schedule->command('count:userstime')->everyFiveMinutes()->withoutOverlapping();
       // $schedule->command('count:userstime')->everyThirtyMinutes()->withoutOverlapping();
@@ -41,6 +42,7 @@ class Kernel extends ConsoleKernel
       $schedule->command('fill:proxy')->everyThirtyMinutes()->withoutOverlapping();
       $schedule->command('count:timelog')->daily();
       // $schedule->command('update:publishschedule')->daily();  // ga dipake, cuman panggil link dari cron biasa, karena ga bs baca public_path
+			*/
     }
 
     /**
