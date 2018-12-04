@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePasswordResetsTable extends Migration
+class CreateProxiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,14 @@ class CreatePasswordResetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('password_resets', function (Blueprint $table) {
-            $table->string('email')->index();
-            $table->string('token')->index();
-            $table->timestamp('created_at')->nullable();
-        });
+			Schema::create('proxies', function (Blueprint $table) {
+					$table->increments('id');
+					$table->string('proxy',100);
+					$table->string('cred',100);
+					$table->string('port',100);
+					$table->boolean('auth');
+					$table->dateTime('created');
+			});    
     }
 
     /**
@@ -27,6 +30,6 @@ class CreatePasswordResetsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('password_resets');
+        Schema::drop('proxies');
     }
 }
