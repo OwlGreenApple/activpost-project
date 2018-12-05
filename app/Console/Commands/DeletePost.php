@@ -132,7 +132,7 @@ class DeletePost extends Command
 									$emaildata = [
 										"smsg" => $smsg,
 									];
-									Mail::queue('emails.notify-developer', $emaildata, function ($message) use ($subject_message) {
+									Mail::send('emails.notify-developer', $emaildata, function ($message) use ($subject_message) {
 										$message->from('no-reply@activpost.net', 'Celebpost');
 										$message->to("celebgramme.dev@gmail.com");
 										$message->subject($subject_message);
@@ -159,7 +159,7 @@ class DeletePost extends Command
 								$emaildata = [
 									"smsg" => $smsg,
 								];
-								Mail::queue('emails.notify-developer', $emaildata, function ($message) use ($subject_message) {
+								Mail::send('emails.notify-developer', $emaildata, function ($message) use ($subject_message) {
 									$message->from('no-reply@activpost.net', 'Celebpost');
 									$message->to("celebgramme.dev@gmail.com");
 									$message->subject($subject_message);
@@ -192,7 +192,7 @@ class DeletePost extends Command
 									$emaildata = [
 										"smsg" => $smsg,
 									];
-									Mail::queue('emails.notify-developer', $emaildata, function ($message) use ($subject_message) {
+									Mail::send('emails.notify-developer', $emaildata, function ($message) use ($subject_message) {
 										$message->from('no-reply@activpost.net', 'Celebpost');
 										$message->to("celebgramme.dev@gmail.com");
 										$message->subject($subject_message);
@@ -224,7 +224,7 @@ class DeletePost extends Command
 								$emaildata = [
 									"smsg" => $smsg,
 								];
-								Mail::queue('emails.notify-developer', $emaildata, function ($message) use ($subject_message) {
+								Mail::send('emails.notify-developer', $emaildata, function ($message) use ($subject_message) {
 									$message->from('no-reply@activpost.net', 'Celebpost');
 									$message->to("celebgramme.dev@gmail.com");
 									$message->subject($subject_message);

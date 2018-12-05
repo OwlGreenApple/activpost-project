@@ -32,7 +32,7 @@
     @if (Request::is('order') || Request::is('confir-payment') || Request::is('list-order') || Request::is('search-orders') || Request::is('orders') || Request::is('confirm-payment') || Request::is('prices'))
         <script src="{{ asset('/js/orderbuymore.js') }}"></script>
     @endif
-    @if (Request::is('schedule') || Request::is('schedule/add') || Request::is('schedule/edit*') ||  Request::is('schedule/repost*') )
+    @if (Request::is('schedule') || Request::is('schedule/add') || Request::is('schedule/edit*') ||  Request::is('schedule/repost*') || Request::is('schedule/video') || Request::is('schedule/story'))
         <script src="{{ asset('/js/realtime.js') }}"></script>
     @endif
 		<script src="{{ asset('/js/jquery-ui.js') }}"></script>
@@ -347,7 +347,8 @@
 																</a>
 															</li>
 															<li @if(Request::is('change-password')) class="active" @endif><a href="{{ url('/change-password') }}">Ubah Password</a></li>
-															<li><a href="https://youtu.be/i7bwoTDmXBU" target="_blank"> <span class="glyphicon glyphicon-film"></span> Tutorial Video</a></li>
+															<li><a href="https://youtu.be/muraXXVnq5Y" target="_blank"> <span class="glyphicon glyphicon-film"></span> Tutorial Video(Basic)</a></li>
+															<li><a href="https://youtu.be/F3WzEJYnrHk" target="_blank"> <span class="glyphicon glyphicon-film"></span> Tutorial Video(Posting Video)</a></li>
 															<li><a href="https://docs.google.com/document/d/1CA7hxRL-3DTQiR8CoEX7yw58mx4LNRmfLKahaHtKFic/edit" target="_blank"><span class="glyphicon glyphicon-list-alt"></span> Tutorial PDF </a></a></li>
 															<li>
 																<a href="{{ url('/logout') }}"

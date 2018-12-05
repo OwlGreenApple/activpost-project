@@ -70,7 +70,7 @@ class UserTimeLog extends Command
 					$emaildata = [
 							'user' => $user,
 					];
-					Mail::queue('emails.notif-5days', $emaildata, function ($message) use ($user) {
+					Mail::send('emails.notif-5days', $emaildata, function ($message) use ($user) {
 						$message->from('no-reply@activpost.net', 'Activpost');
 						$message->to($user->email);
 						$message->subject('[Activpost] 5 hari lagi nih, nggak berasa yah');
@@ -103,7 +103,7 @@ class UserTimeLog extends Command
 						'days_coupon' => 7,
 						'percent_coupon' => 10,
 					];
-					Mail::queue('emails.notif-expired', $emaildata, function ($message) use ($user) {
+					Mail::send('emails.notif-expired', $emaildata, function ($message) use ($user) {
 						$message->from('no-reply@activpost.net', 'Activpost');
 						$message->to($user->email);
 						$message->subject('[Activpost] Service Activpost.net akan berakhir');
@@ -129,7 +129,7 @@ class UserTimeLog extends Command
 						'user' => $user,
 						'code_coupon' => $coupon->coupon_code,
 					];
-					Mail::queue('emails.notif-coupon-expired', $emaildata, function ($message) use ($user) {
+					Mail::send('emails.notif-coupon-expired', $emaildata, function ($message) use ($user) {
 						$message->from('no-reply@activpost.net', 'Activpost');
 						$message->to($user->email);
 						// $message->bcc("celebgramme.dev@gmail.com");

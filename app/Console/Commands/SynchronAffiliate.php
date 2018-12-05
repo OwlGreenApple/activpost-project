@@ -168,7 +168,7 @@ class SynchronAffiliate extends Command
 							'user' => $user,
 							'password' => $string,
 					];
-					Mail::queue('emails.cron.create-user', $emaildata, function ($message) use ($user) {
+					Mail::send('emails.cron.create-user', $emaildata, function ($message) use ($user) {
 						$message->from('no-reply@activpost.net', 'Activpost');
 						$message->to($user->email);
 						$message->subject('[Activpost] Welcome to activpost.net (Info Login & Password)');
@@ -209,7 +209,7 @@ class SynchronAffiliate extends Command
 					$emaildata = [
 							'user' => $user,
 					];
-					Mail::queue('emails.cron.adding-time-user', $emaildata, function ($message) use ($user) {
+					Mail::send('emails.cron.adding-time-user', $emaildata, function ($message) use ($user) {
 						$message->from('no-reply@activpost.net', 'Activpost');
 						$message->to($user->email);
 						$message->subject('[Activpost] Congratulation Pembelian Sukses, & Kredit waktu sudah ditambahkan');

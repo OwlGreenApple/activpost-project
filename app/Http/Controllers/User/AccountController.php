@@ -345,7 +345,8 @@ class AccountController extends Controller
 			catch (\InstagramAPI\Exception\ThrottledException $e) {
 				return response()->json([
 						'login_status' => 403,
-						'msg' => "Code:399 Network busy, silahkan coba lagi",
+						// 'msg' => "Code:399 Network busy, silahkan coba lagi",
+						'msg' => $e->getMessage(),
 						'proxy_id' => $proxy_id
 				]);
 			}
@@ -360,7 +361,8 @@ class AccountController extends Controller
 				if ( (strpos($error_message, 'Network: CURL error') !== false) || (strpos($error_message, 'No response from server') !== false) ) {
 					return response()->json([
 							'login_status' => 403,
-							'msg' => "Code:399 Network busy, silahkan coba lagi",
+							// 'msg' => "Code:399 Network busy, silahkan coba lagi",
+							'msg' => $e->getMessage(),
 							'proxy_id' => $proxy_id
 					]);
 				}

@@ -120,6 +120,7 @@
 	}
 
 	$(document).ready(function() {
+		$(".h-icon").css("font-size","26px");
 		$('#start-user').on('hidden.bs.modal', function () {
 			//window.location.href = "<?php echo url('schedule'); ?>";
 		});		
@@ -298,12 +299,19 @@
 
 
 
-	<h1>
-		Schedules
-		<span class="glyphicon glyphicon-question-sign hint-button tooltipPlugin" title="<div class='panel-heading'>Schedules</div><div class='panel-content'>Schedule Post maksimum 3 Post tiap jamnya</div>">
-		</span>
-	</h1>
-	<h3><div id="dates" style="font-weight: bold;float: left;"></div><div style="float: left;">&nbsp;</div> <div id="clock" style="color: #15b49e;"></div></h3>
+	<div class="row">
+		<div class="col-md-6 col-xs-12">
+			<h1>
+				Schedules Photo
+				<span class="h-icon glyphicon glyphicon-question-sign hint-button tooltipPlugin" title="<div class='panel-heading'>Schedules</div><div class='panel-content'>Schedule Post maksimum 3 Post tiap jamnya</div>">
+				</span>
+			</h1>
+		</div>
+		<div class="col-md-6 col-xs-12" align="right">
+			<h3 class="pull-right"><span id="dates" style="font-weight: bold;float: left;"></span><span style="float: left;">&nbsp;</span> <span id="clock" style="color: #15b49e;"></span></h3>
+		</div>
+	</div>
+	<hr>
 	<div class="row">
 		<div class="col-md-2 col-xs-4 col-sm-4 margin-bottom">
 			<input type="button" value="Image Editor" class="btn btn-home" id="button-upload">
@@ -317,7 +325,7 @@
 		</div>
 	</div>
 	<div class="row margin-bottom">
-			<div class="col-md-8 margin-bottom">
+			<div class="col-md-12 margin-bottom">
 
 									<input type="hidden" name="timezone" value="{{env('IG_TIMEZONE')}}">
 									<input type="hidden" name="rightnow" value="{{ Carbon\Carbon::now(''.env('IG_TIMEZONE').'')->toDateTimeString() }}">
@@ -456,14 +464,16 @@
 															@endforeach
 													</div>
 											</div>
+											<hr>
 											<div class="row">
+											<!--
 											<h3><div id="dates2" style="font-weight: bold;float: left;"></div><div style="float: left;">&nbsp;</div> <div id="clock2" style="color: #15b49e;"></div></h3>
-													<div class="form-group col-md-6 col-sm-12 col-xs-12">
+											-->
+													<div class="form-group col-md-5 col-sm-12 col-xs-12">
 															<label>Schedule At <span class="glyphicon glyphicon-time"></span></label>
-															<div id="clock2"></div>
 															<input type="text" id="publish-at" name="publish_at" class="form-control formatted-date" required="required">
 													</div>
-													<div class="form-group col-md-6 col-sm-12 col-xs-12">
+													<div class="form-group col-md-5 col-sm-12 col-xs-12">
 															<label>Delete At <span class="glyphicon glyphicon-time"></span></label>
 															<input type="checkbox" id="checkbox-delete" name="checkbox_delete" <?php 
 																if ($sid<>0) { if($schedule->is_deleted) { echo "checked"; } }
