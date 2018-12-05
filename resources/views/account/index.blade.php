@@ -750,7 +750,10 @@ use Celebpost\Models\Proxies;
 												<div class="col-sm-12 col-md-12">
 													<label for="terms-add-account9" class="control-label">
                             <input type="checkbox" class="checkbox-term" id="terms-add-account9">
-                            Saya sudah mempelajari  <a href="https://youtu.be/sys-y7F36bk" target="_blank"> Video Tutorial Activpost </a>
+                            Saya sudah mempelajari  
+                            <a href="https://youtu.be/muraXXVnq5Y" target="_blank"> Video Tutorial Activpost 1</a>
+                            <a href="https://youtu.be/F3WzEJYnrHk" target="_blank"> Video Tutorial Activpost 2</a>
+                            <a href="https://youtu.be/DBse29qDnKg" target="_blank"> Video Tutorial Activpost 3</a>
                           </label>
 												</div>
 												<div class="col-sm-12 col-md-12">
