@@ -272,7 +272,7 @@ class ScheduleController extends Controller
 					$arr["type"]="error";
 					$arr["message"] = "Schedule Post maksimum 3 Post tiap jamnya";
 					return $arr;
-				}*/
+				}
 			}
 		*/
 		// cek klo belum distart OLD
