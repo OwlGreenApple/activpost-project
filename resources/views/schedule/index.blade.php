@@ -364,7 +364,10 @@ use Celebpost\Models\Account;
 			<span class='glyphicon glyphicon-stop'></span> Stop All
 		</button>
 		-->
-		<a href="{{ url('schedule/add') }}" class="btn btn-home fl" style="margin-left:15px;margin-top:0px;"><span class="glyphicon glyphicon-time"></span> Add Schedule</a>
+
+		<a href="{{ url('schedule/add') }}" class="btn btn-home fl" style="margin-left:15px;margin-top:0px;"><span class="glyphicon glyphicon-time"></span> Schedule Photo</a>
+    <a href="{{ url('schedule/video') }}" class="btn btn-home fl" style="margin-left:15px;margin-top:0px;"><span class="glyphicon glyphicon-time"></span> Schedule Video</a>
+    <a href="{{ url('schedule/story') }}" class="btn btn-home fl" style="margin-left:15px;margin-top:0px;"><span class="glyphicon glyphicon-time"></span> Schedule Story</a>
 		<!--<a id="button-buy-more" class="btn btn-sm btn-home-light fl" style="margin-left:15px;margin-top:-5px;" href="{{url('/order')}}">Buy More</a>-->
 			
 			<div class="fn"></div>
@@ -484,6 +487,7 @@ use Celebpost\Models\Account;
 					<thead>
 							<th style="vertical-align: top">No.</th>
 							<th style="vertical-align: top">Image</th>
+							<th style="vertical-align: top">Type</th>
 							<th style="vertical-align: top">Accounts</th>
 							<th style="vertical-align: top">Description</th>
 							<th style="vertical-align: top">Created</th>

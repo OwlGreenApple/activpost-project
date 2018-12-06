@@ -205,10 +205,9 @@ class OrderController extends Controller
                     ->where('orders.no_order', '=', $order_number)
                     ->first();
       $conpay = OrderMeta::createMeta('total_hari',$tothari,$torder->id);
-      $metamaxaccount = OrderMeta::createMeta('max_account',$request->max_account,$torder->id);
-
-      
-
+      //$metamaxaccount = OrderMeta::createMeta('max_account',$request->max_account,$torder->id);
+      $metamaxaccount = OrderMeta::createMeta('max_account',$request->added_max_account,$torder->id);
+    
 
       $data = [
                     "no_order" => $torder->no_order,
@@ -533,3 +532,4 @@ class OrderController extends Controller
   }
   
 }
+

@@ -11,6 +11,8 @@
 |
 */
 Route::get('upload','TesController@tesvideo');
+Route::get('upload-story','TesController@tesStory');
+
 Route::get('verifyemail/{cryptedcode}', 'LandingPageController@verifyEmail');
 Route::get('resend-email-activation', 'LandingPageController@resendEmailActivation');
 //Route::get('tes-email','User\HomeController@tes_email');
@@ -138,6 +140,18 @@ Route::group(['middleware' => 'auth'], function () {
   Route::get('pagination-schedule-list', 'User\ScheduleController@pagination_schedule');
   Route::post('schedule/call-action-start-schedule-akun', 'User\ScheduleController@call_action_start_schedule_akun');
   
+  //Schedule video new
+  Route::get('schedule/video', 'User\ScheduleController@schedule_video');
+  Route::post('schedule/save-video', 'User\ScheduleController@save_video_schedule');
+  Route::post('schedule/publish-video', 'User\ScheduleController@publish_video_schedule');
+  Route::get('schedule/edit-video/{sid}', 'User\ScheduleController@schedule_video');
+
+  // Schedule story 
+  Route::get('schedule/story', 'User\ScheduleController@schedule_story');
+  Route::post('schedule/save-story', 'User\ScheduleController@save_story_schedule');
+  Route::post('schedule/publish-story', 'User\ScheduleController@publish_story_schedule');
+  Route::get('schedule/edit-story/{sid}', 'User\ScheduleController@schedule_story');
+
   // Schedule - video
   Route::get('schedule-video', 'User\ScheduleController@index_video');
   Route::post('schedule-video/publish', 'User\ScheduleController@publish_video');
@@ -199,3 +213,11 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => ['web','auth','admin']], function() {
   Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');  
 });
+
+/* Middleware API */
+Route::group(['middleware' => ['APIMiddleware']], function() {
+  Route::get('/post-ig','APIController@post_ig');
+  Route::get('/delete-post-ig','APIController@delete_post_ig');
+});
+
+

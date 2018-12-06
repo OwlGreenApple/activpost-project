@@ -7,10 +7,35 @@ $user = Auth::user();
 		<div class="col-md-3 schedule-div col-xs-6 col-sm-6">
 			@if (!empty($schedule->image))
 				<!--<img src="{{$schedule->image}}" class="img-responsive schedule-image" data-zoom-image="{{$schedule->image}}" >-->
-				<img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$schedule->slug.'.jpg'}}" class="img-responsive schedule-image" data-zoom-image="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$schedule->slug.'.jpg'}}" >
+        <?php 
+				$file = $schedule->slug;
+				if($schedule->media_type=='photo') {
+					//check jika diawali 
+					if(strpos($schedule->slug, 'PublishFile')===0){
+						$file = $file.'.jpg';
+					}
+        ?>
+				  <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" class="img-responsive schedule-image" data-zoom-image="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" style="max-height:240px;margin:0 auto;">
+        <?php 
+				} else { ?>
+          <video src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" width="260" height="240" controls></video>
+        <?php } ?>
 			@endif
 		</div>
 		<div class="col-md-3 schedule-div col-xs-6 col-sm-6">
+			<p>
+				<strong> 
+					<?php 
+					if(strpos($schedule->slug, 'StoryFile')===0){
+						echo "Schedule Story";
+					} else if($schedule->media_type=='photo'){
+						echo "Schedule Photo";
+					} else { 
+						echo "Schedule Video";
+					}
+					?>
+				</strong>
+			</p>
 			<?php if ( $schedule->description <> "" ) { ?>
 			<p>
 				{{ str_limit($schedule->description, 30) }} 
@@ -44,9 +69,19 @@ $user = Auth::user();
 				?>
 			</p>
 
-			<?php if ($schedule->status<2) { ?>
-			<a class="btn btn-sm btn-info" href='{{url("schedule/edit/".$schedule->id)}}'>Edit Schedule</a>
-			<?php } ?>
+			<?php if ($schedule->status<2) { 
+              if(strpos($schedule->slug, 'StoryFile')===0){
+      ?>
+                <a class="btn btn-sm btn-info" href='{{url("schedule/edit-story/".$schedule->id)}}'>Edit Schedule</a>
+      <?php
+              } else if($schedule->media_type=='photo'){
+      ?>
+			          <a class="btn btn-sm btn-info" href='{{url("schedule/edit/".$schedule->id)}}'>Edit Schedule</a>
+			<?php   } else { ?>
+                <a class="btn btn-sm btn-info" href='{{url("schedule/edit-video/".$schedule->id)}}'>Edit Schedule</a>
+      <?php   } 
+            }
+      ?>
 			
 			<?php if ( ($schedule->status<2) || ( ($schedule->status<3) && ($schedule->is_deleted) ) ) { ?>
 			<a class="btn btn-sm btn-danger" data-toggle="modal" href='#del-{{$schedule->id}}'>Delete</a>

@@ -131,7 +131,7 @@
 			</div>
 			
       <div id="jmlig" style="display: none;"></div>
-			<input type="hidden" id="days">
+			<input type="hidden" id="days" value="0">
 
 											<div class="form-group col-md-12 col-sm-12 col-xs-12 pull-right">
 												<div class="col-xs-3 col-sm-3 col-md-3 text-center">
