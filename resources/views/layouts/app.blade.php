@@ -169,7 +169,8 @@
     <nav class="navbar navbar-default navbar-static-top" style="z-index:1;">
         <div class="container">
             <div class="navbar-header">
-
+                <?php 
+                  if(!Request::is('login')) { ?>
                 <!-- Collapsed Menu -->
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
                     <span class="sr-only">Toggle Navigation</span>
@@ -177,6 +178,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+                <?php } ?>
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">

@@ -163,6 +163,7 @@
 				url: '',
 			});
 		});
+    
 		$( "body" ).on( "dblclick", '.same-height', function(e) {
 			$("#canvas-image").attr('src',$(this).attr("data-url"));
 			$("#imguri").val($(this).attr("data-url"));
