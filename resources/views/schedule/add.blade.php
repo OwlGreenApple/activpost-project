@@ -314,14 +314,14 @@
 	</div>
 	<hr>
 	<div class="row">
-		<div class="col-md-2 col-xs-4 col-sm-4 margin-bottom">
+		<div class="col-md-2 col-xs-5 col-sm-4 margin-bottom">
 			<input type="button" value="Image Editor" class="btn btn-home" id="button-upload">
 		</div>
-		<div class="col-md-2 col-xs-4 col-sm-4 margin-bottom">
+		<div class="col-md-2 col-xs-5 col-sm-4 margin-bottom">
 			<input type="button" value="Upload Image" class="btn btn-home" id="button-upload-file">
 			<input type="file" style="display: none" id="file-upload" />
 		</div>
-		<div class="col-md-2 col-xs-4 col-sm-4 margin-bottom">
+		<div class="col-md-2 col-xs-5 col-sm-4 margin-bottom">
 			<input type="button" value="Choose Image" class="btn btn-home" id="button-choose" data-toggle="modal" data-target="#choose-image">
 		</div>
 	</div>

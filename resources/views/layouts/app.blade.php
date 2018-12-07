@@ -89,6 +89,7 @@
     <style type="text/css">
         .navbar-brand {
           padding: 0px;
+          width:260px;
         }
         .navbar-brand>img {
           height: 100%;
