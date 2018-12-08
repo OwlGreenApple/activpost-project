@@ -29,7 +29,11 @@
           <div class="div-logo">
             <a href="https://activfans.com"><div class="logo"></div></a>
           </div>	
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
+
+          <div class="col-md-4 col-sm-3"></div>
+
+          <div class="col-md-4 col-sm-6 col-xs-12 box-login">
+            <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
@@ -63,11 +67,13 @@
                                     Forgot Your Password?
                                 </a>
                         </div>
-												
-												
-												
-												
+                        
+                        
+                        
+                        
                     </form>
+          </div>
+                    
 					
                 <div class="notif-user">
               @if ($errors->has('username'))
