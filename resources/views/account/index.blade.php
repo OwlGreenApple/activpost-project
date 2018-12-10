@@ -416,7 +416,8 @@ use Celebpost\Models\Proxies;
 	
 	<div class="row">
 		<div class="col-sm-12 col-md-12">
-				<h3 <?php if(env('APP_PROJECT')=='Amelia') echo 'style="color:#3a3a3a"' ?>>Total Waktu Berlangganan &nbsp <span class="glyphicon glyphicon-question-sign hint-button tooltipPlugin" title="<div class='panel-heading'>Fitur Start Stop waktu</div><div class='panel-content'>Waktu berlangganan akan terbagi sesuai dengan akun IG yang Start saja <br>contoh: apabila anda mengaktifkan 3 akun sekaligus, maka waktu akan terbagi 3 <br>Jika salah satu akun di Stop maka waktu tersisa akan dibagi rata dengan akun lain <br></div>">
+				<h3 <?php if(env('APP_PROJECT')=='Amelia') echo 'style="color:#3a3a3a"' ?>>Total Waktu Berlangganan &nbsp <span class="glyphicon glyphicon-question-sign hint-button tooltipPlugin" title="<div class='panel-heading'>Fitur Start Stop waktu</div><div class='panel-content'><?php if(env('APP_PROJECT')=='Amelia') {echo 'Perhitungan Waktu Berlangganan<br>Waktu berlangganan akan berjalan otomatis saat pertama kali login di Amelia Post.'; } else {echo 'Waktu berlangganan akan terbagi sesuai dengan akun IG yang Start saja <br>contoh: apabila anda mengaktifkan 3 akun sekaligus, maka waktu akan terbagi 3 <br>Jika salah satu akun di Stop maka waktu tersisa akan dibagi rata dengan akun lain <br>';} ?></div>">
+
 				</span></h3>
 				<div id="clockdiv" class="fl">
 					<div class="fl">
