@@ -89,6 +89,7 @@
     <style type="text/css">
         .navbar-brand {
           padding: 0px;
+          width:260px;
         }
         .navbar-brand>img {
           height: 100%;
@@ -169,7 +170,8 @@
     <nav class="navbar navbar-default navbar-static-top" style="z-index:1;">
         <div class="container">
             <div class="navbar-header">
-
+                <?php 
+                  if(!Request::is('login')) { ?>
                 <!-- Collapsed Menu -->
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
                     <span class="sr-only">Toggle Navigation</span>
@@ -177,6 +179,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+                <?php } ?>
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -349,6 +352,7 @@
 															<li @if(Request::is('change-password')) class="active" @endif><a href="{{ url('/change-password') }}">Ubah Password</a></li>
 															<li><a href="https://youtu.be/muraXXVnq5Y" target="_blank"> <span class="glyphicon glyphicon-film"></span> Tutorial Video(Basic)</a></li>
 															<li><a href="https://youtu.be/F3WzEJYnrHk" target="_blank"> <span class="glyphicon glyphicon-film"></span> Tutorial Video(Posting Video)</a></li>
+															<li><a href="https://youtu.be/DBse29qDnKg" target="_blank"> <span class="glyphicon glyphicon-film"></span> Tutorial Video(Schedule Post)</a></li>
 															<li><a href="https://docs.google.com/document/d/1CA7hxRL-3DTQiR8CoEX7yw58mx4LNRmfLKahaHtKFic/edit" target="_blank"><span class="glyphicon glyphicon-list-alt"></span> Tutorial PDF </a></a></li>
 															<li>
 																<a href="{{ url('/logout') }}"

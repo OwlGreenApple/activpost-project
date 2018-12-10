@@ -365,9 +365,9 @@ use Celebpost\Models\Account;
 		</button>
 		-->
 
-		<a href="{{ url('schedule/add') }}" class="btn btn-home fl" style="margin-left:15px;margin-top:0px;"><span class="glyphicon glyphicon-time"></span> Schedule Photo</a>
-    <a href="{{ url('schedule/video') }}" class="btn btn-home fl" style="margin-left:15px;margin-top:0px;"><span class="glyphicon glyphicon-time"></span> Schedule Video</a>
-    <a href="{{ url('schedule/story') }}" class="btn btn-home fl" style="margin-left:15px;margin-top:0px;"><span class="glyphicon glyphicon-time"></span> Schedule Story</a>
+		<a href="{{ url('schedule/add') }}" class="btn btn-home fl" style="margin-left:15px;margin-top:0px;margin-bottom: 10px;"><span class="glyphicon glyphicon-time"></span> Schedule Photo</a>
+    <a href="{{ url('schedule/video') }}" class="btn btn-home fl" style="margin-left:15px;margin-top:0px;margin-bottom: 10px;"><span class="glyphicon glyphicon-time"></span> Schedule Video</a>
+    <a href="{{ url('schedule/story') }}" class="btn btn-home fl" style="margin-left:15px;margin-top:0px;margin-bottom: 10px;"><span class="glyphicon glyphicon-time"></span> Schedule Story</a>
 		<!--<a id="button-buy-more" class="btn btn-sm btn-home-light fl" style="margin-left:15px;margin-top:-5px;" href="{{url('/order')}}">Buy More</a>-->
 			
 			<div class="fn"></div>
@@ -386,7 +386,7 @@ use Celebpost\Models\Account;
 				<p style="font-size:10px;margin-top: -14px;font-weight:Bold;">*Schedules tidak akan dijalankan jika status Stopped</p>
 			</div>-->
 		
-			<div class="col-md-3 col-xs-6 col-sm6 fr" align="right" style="margin-top:5px;">
+			<div class="col-md-3 col-xs-12 col-sm-6 fr" align="right" style="margin-top:5px;">
 				
 				<label for="ListModeButton" id="label-image">Grid View</label>
 				<button type="button" class="btn btn-mode btn-mode-first btn-mode-selected" id="ListModeButton"></button><button type="button" class="btn btn-mode btn-mode-second" id="GridModeButton"></button>

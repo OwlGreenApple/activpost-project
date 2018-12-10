@@ -19,11 +19,11 @@ Route::get('resend-email-activation', 'LandingPageController@resendEmailActivati
 
 if(env('APP_PROJECT')=='Celebgramme'){
   Route::get('prices', 'Auth\RegisterController@ordersg');
+  Route::post('orderslogin', 'Auth\RegisterController@prologinorder');
+  // Route::get('prices', 'Auth\RegisterController@showPrices');
+  Route::get('checkout', 'Auth\RegisterController@showCheckout');
+  Route::post('checkout', 'Auth\RegisterController@process_checkout');
 }
-Route::post('orderslogin', 'Auth\RegisterController@prologinorder');
-// Route::get('prices', 'Auth\RegisterController@showPrices');
-Route::get('checkout', 'Auth\RegisterController@showCheckout');
-Route::post('checkout', 'Auth\RegisterController@process_checkout');
 Route::get('test', 'Auth\LoginController@test');
 Route::get('image-editor-pixie', 'User\ResearchController@image_editor_index_pixie');
 
@@ -196,13 +196,15 @@ Route::group(['middleware' => 'auth'], function () {
   Route::get('maintenance/optimize', 'User\MaintenanceController@optimize');
   Route::get('maintenance/delsche', 'User\MaintenanceController@delsche');
 
-  Route::get('order', 'User\OrderController@index');
-  Route::post('add-order', 'User\OrderController@addorder');
-  Route::get('confir-payment', 'User\OrderController@confirpay');
-  Route::post('prose-con-pay', 'User\OrderController@proconpay');
-  Route::get('check-no-order', 'User\OrderController@checknoorder');
-  Route::get('confirm-order', 'User\OrderController@listorderuser');
-  Route::get('confirm-payment', 'User\OrderController@index_confirm_payment');
+  if(env('APP_PROJECT')=='Celebgramme'){
+    Route::get('order', 'User\OrderController@index');
+    Route::post('add-order', 'User\OrderController@addorder');
+    Route::get('confir-payment', 'User\OrderController@confirpay');
+    Route::post('prose-con-pay', 'User\OrderController@proconpay');
+    Route::get('check-no-order', 'User\OrderController@checknoorder');
+    Route::get('confirm-order', 'User\OrderController@listorderuser');
+    Route::get('confirm-payment', 'User\OrderController@index_confirm_payment');
+  }
   //Route::get('orders', 'User\OrderController@orderg');
   //Route::post('search-orders','Admin\OrderController@searchorder');
   
