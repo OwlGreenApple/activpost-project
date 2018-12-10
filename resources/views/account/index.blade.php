@@ -755,9 +755,14 @@ use Celebpost\Models\Proxies;
 													<label for="terms-add-account9" class="control-label">
                             <input type="checkbox" class="checkbox-term" id="terms-add-account9">
                             Saya sudah mempelajari  
-                            <a href="https://youtu.be/muraXXVnq5Y" target="_blank"> Video Tutorial Activpost 1</a>
-                            <a href="https://youtu.be/F3WzEJYnrHk" target="_blank"> Video Tutorial Activpost 2</a>
-                            <a href="https://youtu.be/DBse29qDnKg" target="_blank"> Video Tutorial Activpost 3</a>
+                            <?php if(env('APP_PROJECT')=='Celebgramme') { ?>
+                              <a href="https://youtu.be/muraXXVnq5Y" target="_blank"> Video Tutorial Activpost 1</a>
+                              <a href="https://youtu.be/F3WzEJYnrHk" target="_blank"> Video Tutorial Activpost 2</a>
+                              <a href="https://youtu.be/DBse29qDnKg" target="_blank"> Video Tutorial Activpost 3</a>
+                            <?php } if(env('APP_PROJECT')=='Amelia') { ?>
+                              <a href="https://youtu.be/0yI4BvsTZo" target="_blank"> Video Tutorial Activpost 1</a>
+                              <a href="https://youtu.be/jF8LSy7mU7g" target="_blank"> Video Tutorial Activpost 2</a>
+                            <?php } ?>
                           </label>
 												</div>
 												<div class="col-sm-12 col-md-12">
