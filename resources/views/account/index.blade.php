@@ -760,7 +760,7 @@ use Celebpost\Models\Proxies;
                               <a href="https://youtu.be/F3WzEJYnrHk" target="_blank"> Video Tutorial Activpost 2</a>
                               <a href="https://youtu.be/DBse29qDnKg" target="_blank"> Video Tutorial Activpost 3</a>
                             <?php } if(env('APP_PROJECT')=='Amelia') { ?>
-                              <a href="https://youtu.be/0yI4BvsTZo" target="_blank"> Video Tutorial Activpost 1</a>
+                              <a href="https://youtu.be/-0yI4BvsTZo" target="_blank"> Video Tutorial Activpost 1</a>
                               <a href="https://youtu.be/jF8LSy7mU7g" target="_blank"> Video Tutorial Activpost 2</a>
                             <?php } ?>
                           </label>

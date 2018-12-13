@@ -356,7 +356,7 @@
                                 <li><a href="https://youtu.be/F3WzEJYnrHk" target="_blank"> <span class="glyphicon glyphicon-film"></span> Tutorial Video(Posting Video)</a></li>
                                 <li><a href="https://youtu.be/DBse29qDnKg" target="_blank"> <span class="glyphicon glyphicon-film"></span> Tutorial Video(Schedule Post)</a></li>
                               <?php } if(env('APP_PROJECT')=='Amelia') { ?>
-                                <li><a href="https://youtu.be/0yI4BvsTZo" target="_blank"> <span class="glyphicon glyphicon-film"></span> Tutorial Video(Basic)</a></li>
+                                <li><a href="https://youtu.be/-0yI4BvsTZo" target="_blank"> <span class="glyphicon glyphicon-film"></span> Tutorial Video(Basic)</a></li>
                                 <li><a href="https://youtu.be/jF8LSy7mU7g" target="_blank"> <span class="glyphicon glyphicon-film"></span> Tutorial Video(Schedule Post)</a></li>
                               <?php } ?>
 															<li><a href="https://docs.google.com/document/d/1CA7hxRL-3DTQiR8CoEX7yw58mx4LNRmfLKahaHtKFic/edit" target="_blank"><span class="glyphicon glyphicon-list-alt"></span> Tutorial PDF </a></a></li>
