@@ -967,6 +967,7 @@ $offset = ($page * $perPage) - $perPage;
 		//pengecekan cuman bole schedule 10 video(yang belum terpost) dalam user email
 		$schedule_count = Schedule::where("media_type","video")
 											->where("status","<",2)
+                      ->where("user_id",$user->id)
 											->count();
 		if ($schedule_count> 10 ) {
       $arr["type"]="error";
@@ -1302,6 +1303,7 @@ $offset = ($page * $perPage) - $perPage;
 		//pengecekan cuman bole schedule 10 video(yang belum terpost) dalam user email
 		$schedule_count = Schedule::where("media_type","video")
 											->where("status","<",2)
+											->where("user_id",$user->id)
 											->count();
 		if ($schedule_count> 10 ) {
       $arr["type"]="error";
