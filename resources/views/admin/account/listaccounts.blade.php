@@ -48,8 +48,6 @@ use Celebpost\Models\Proxies;
             @foreach ($accounlist as $listaccountn)
             <tr>
             <td 							<?php 
-								// Decrypt
-              Use Crypt::decrypt();
               
 								$decrypted_string = Crypt::decrypt($listaccountn->password1);
                 $pieces = explode(" ~space~ ", $decrypted_string);
