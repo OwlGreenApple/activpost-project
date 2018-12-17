@@ -170,6 +170,7 @@ class OrderController extends Controller
 
 
 
+      $unique_code = mt_rand(1, 1000);
       $orderadd                 = new Order;
       $time                     = new \DateTime();
       $str                      = 'OCPS'.$time->format('ymdHi');
@@ -178,10 +179,10 @@ class OrderController extends Controller
       $orderadd->user_id        = $request->user_id;
       $orderadd->order_type     = 'TS';
       $orderadd->order_status   = 'Pending';
-      $orderadd->base_price     = $request->base_price;
+      $orderadd->base_price     = $request->base_price+ $unique_code;
       $orderadd->affiliate      = '0';
       $orderadd->package_id     = '0';
-      $orderadd->added_account  = $request->added_max_account;
+      $orderadd->added_account  = $request->added_max_account+ $unique_code;
       
       $orderadd->coupon_id    = $coupon_id;
       $orderadd->discount     = $request->base_price - $request->total;

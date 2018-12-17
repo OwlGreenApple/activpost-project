@@ -156,6 +156,7 @@ class RegisterController extends Controller
 			$coupon_id = $coupon->id; 
 		}
 		
+        $unique_code = mt_rand(1, 1000);
 				$orderadd                 = new Order;
 				$time                     = new \DateTime();
 				$str                      = 'OCPS'.$time->format('ymdHi');
@@ -164,10 +165,10 @@ class RegisterController extends Controller
 				$orderadd->user_id        = $user->id;
 				$orderadd->order_type     = 'TS';
 				$orderadd->order_status   = 'Pending';
-				$orderadd->base_price     = (int)$data['base_price'];
+				$orderadd->base_price     = (int)$data['base_price']+ $unique_code;
 				$orderadd->affiliate      = '0';
 				$orderadd->package_id     = '0';
-				$orderadd->total          = (int)$data['total'];
+				$orderadd->total          = (int)$data['total']+ $unique_code;
 				$orderadd->added_account  = 0;
 				
 					// $orderadd->coupon_id    = $data['coupon_code'];
