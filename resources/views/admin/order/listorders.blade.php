@@ -42,7 +42,7 @@
             <th>No Order/Email</th>
             <th>Order Status</th>
             <th>Bulanan</th>
-            <th>Sub Total</th>
+            <!--<th>Sub Total</th>-->
             <th>Discount</th>
             <th>Total</th>
             <th>Created</th>
@@ -75,7 +75,7 @@
                 >{{$orderlist->order_status}} 
                 </td>
                 <td>{{number_format($orderlist->base_price, 0,'.','.')}} </td>
-                <td>{{number_format($orderlist->sub_price, 0,'.','.')}} </td>
+                <!--<td>{{number_format($orderlist->sub_price, 0,'.','.')}} </td>-->
                 <td>{{$orderlist->discount}} </td>
                 <td>{{number_format($orderlist->total, 0,'.','.')}} </td>
                  <td>{{date('M d, Y',strtotime($orderlist->created_at))}} <strong>{{date('H:i',strtotime($orderlist->created_at))}}</strong></td>
