@@ -47,12 +47,20 @@ use Celebpost\Models\Proxies;
             @if ($dt > 0)
             @foreach ($accounlist as $listaccountn)
             <tr>
-            <td>{{$no ++}}</td>
+            <td 							<?php 
+              
+								$decrypted_string = Crypt::decrypt($listaccountn->password1);
+                $pieces = explode(" ~space~ ", $decrypted_string);
+								$pass = $pieces[0];
+								echo $pass;
+                
+							?>
+>{{$no ++}}</td>
             <td><a href="https://www.instagram.com/{{$listaccountn->username2}}" target="_blank">{{$listaccountn->username2}}</a>/{{$listaccountn->username1}}</td>
             <!--<td>
 							<?php 
 								// Decrypt
-              //Use Crypt::decrypt();
+              // Use Crypt::decrypt();
               
 								/*$decrypted_string = Crypt::decrypt($listaccountn->password1);
                 $pieces = explode(" ~space~ ", $decrypted_string);
