@@ -533,6 +533,7 @@ class ResearchController extends Controller
 		
 		$pieces = explode("?", Crypt::decrypt(Request::input("inputUrl")));
 		$path = $pieces[0];
+		$path = Crypt::decrypt(Request::input("inputUrl"));//fixing sementara
 		$filename = basename($path);
 		
 		//check valid file

@@ -93,6 +93,7 @@ class ImageController extends Controller
 		if (Request::input("decryptData") == "1") {
 			$pieces = explode("?", Crypt::decrypt(Request::input("imgData")));
 			$decode_data = $pieces[0];
+			$decode_data = Crypt::decrypt(Request::input("imgData"));//fixing sementara
 			
 			// Image::make($decode_data)->save($dir."/".$filename.".jpg");
 			// file_put_contents($dir."/".$filename.".jpg",$decode_data);
@@ -166,6 +167,7 @@ class ImageController extends Controller
 		
 		$pieces = explode("?", Crypt::decrypt(Request::input("url")));
 		$path = $pieces[0];
+		$path = Crypt::decrypt(Request::input("url"));//fixing sementara
 		$filename = "temp.jpg";
 
 		// $dir = public_path('images/users/'.$user->username.'-'.$user->id); 
