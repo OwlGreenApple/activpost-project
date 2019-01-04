@@ -86,16 +86,17 @@ class PostInstagram extends Command
 
 				$user = Users::find($sc->user_id);
 				if (!is_null($user)) {
-					// if (!$user->is_started) {
-						// continue;
-					// }
+					if (!$user->is_started) {
+						continue;
+					}
 				}
 				
 				// foreach ($sc->accounts as $account) {
 				$account = Account::find($sc->account_id);
 
 				if (!is_null($account)) {
-						if ( (!$account->is_started) || (!$account->is_active) ) {
+						// if ( (!$account->is_started) || (!$account->is_active) ) {
+						if ( ($account->is_error) || (!$account->is_active) ) {
 							continue;
 						}
 						if (!is_null($account->last_post)) {
@@ -104,9 +105,6 @@ class PostInstagram extends Command
 							if ($last_post->diffInSeconds($dt) <= 120 ) {
 								continue;
 							}
-						}
-						if ($account->is_error) {
-							continue;
 						}
 						// if ($account->pivot->status < 2) {
 						// $check_sa = ScheduleAccount::where("account_id","=",$account->id)
