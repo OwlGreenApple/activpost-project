@@ -48,6 +48,8 @@ class UserTime extends Command
      */
     public function handle()
     {
+			/*
+			Old ways
 			$users = Users::where("is_started","=",1)
 								->get();
 			foreach($users as $user){
@@ -67,7 +69,8 @@ class UserTime extends Command
 				}
 				$update_user->save();
 			}
-			/*
+			tambah field is_started, running_time di accounts
+			*/
 			$accounts = Account::where("is_started","=",1)
 								->where("is_active","=",1)
 								->get();
@@ -89,7 +92,6 @@ class UserTime extends Command
 				$account->save();
 				$update_user->save();
 			}
-			*/
     }
 }
  

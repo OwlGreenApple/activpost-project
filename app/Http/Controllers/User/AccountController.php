@@ -218,9 +218,6 @@ class AccountController extends Controller
 
 		$account->proxy_id = $proxy_id;
 		$account->is_on_celebgramme = $is_on_celebgramme;
-    if(env('APP_PROJECT')=='Amelia') { 
-      $account->is_started = 1;
-    }
 		$account->save();
 		
 		

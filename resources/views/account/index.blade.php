@@ -353,14 +353,12 @@ use Celebpost\Models\Proxies;
 	</div>
 	<div class="row margin-bottom">
 		<input type="hidden" id="account-id">
-		<!--
 		<button id="button-start-all" data-id="{{$user->id}}" class="fl btn btn-md btn-success btn-{{$user->id}}" value="Start" style="margin-top:0px;margin-left:15px;margin-bottom:10px;color:#fff!important;">
 			<span class='glyphicon glyphicon-play'></span> Start All
 		</button>
 		<button id="button-stop-all" data-id="{{$user->id}}" class="fl btn btn-md btn-danger btn-{{$user->id}}" value="Stop" style="margin-top:0px;margin-left:15px;margin-bottom:10px;color:#fff!important;">
 			<span class='glyphicon glyphicon-stop'></span> Stop All
 		</button>
-		-->
 		<a data-toggle="modal" href='#add' id="button-add" class="btn btn-home fl" style="margin-left:15px;margin-top:0px;"><span class='glyphicon glyphicon-plus'></span> Add IG Account</a>
 		
 <!--		<a id="button-buy-more" class="btn btn-sm btn-home-light fl" style="margin-left:15px;margin-top:-5px;" href="{{url('/order')}}">Buy More</a>
@@ -472,6 +470,9 @@ use Celebpost\Models\Proxies;
 				</div>
 				<div class="row"> 
 					<?php 
+						// if ($account->username=="dequinn_shop3"){
+							 // continue;
+						// }
 						//get proxy
 						$proxy = Proxies::find($account->proxy_id);
 					 
@@ -579,7 +580,6 @@ use Celebpost\Models\Proxies;
 					<?php } ?>
 					
 				</div>
-				<!--
 				<div class="row" >
 				
 					<button data-id="{{$account->id}}" class="button-action btn btn-md <?php if (!$account->is_started) { echo 'btn-success'; } else {echo 'btn-danger';} ?> btn-{{$account->id}}" value="<?php if (!$account->is_started) { echo 'Start'; } else {echo 'Stop';}?>" style="display:block;margin-top: 30px; margin-left:auto;margin-right:auto;color:#fff!important;">
@@ -587,7 +587,6 @@ use Celebpost\Models\Proxies;
 					</button>
 					
 				</div>
-				-->
 			</div>
 			<div class="col-md-6 col-xs-6 col-sm-6 margin-bottom">
 
@@ -602,7 +601,6 @@ use Celebpost\Models\Proxies;
 				</div>
 				
 					<h5 style="font-weight:bold;">{{ $account->username }} </h5>
-					<!--
 					<p style="margin-bottom:0px;font-weight:bold;">Status : </p>
 					<div class="started-div started-div-{{$account->id}}" <?php if (!$account->is_started) { echo 'style="display:none;"'; } ?>>
 						<span style="color:#009688;"><img src="{{url('images/startIcon.png')}}" class="img-responsive" style="animation: spin 2s infinite linear;display:inline-block;"> Started</span>
@@ -610,7 +608,6 @@ use Celebpost\Models\Proxies;
 					<div class="stopped-div stopped-div-{{$account->id}}" <?php if ($account->is_started) { echo 'style="display:none;"'; } ?>>
 						<span style="color:#E91E63;"><img src="{{url('images/stopIcon.png')}}" class="img-responsive" style="display:inline-block;"> Stopped</span>
 					</div>
-					-->
 					<p>
 					Total Post : 
 					<?php 
@@ -755,14 +752,9 @@ use Celebpost\Models\Proxies;
 													<label for="terms-add-account9" class="control-label">
                             <input type="checkbox" class="checkbox-term" id="terms-add-account9">
                             Saya sudah mempelajari  
-                            <?php if(env('APP_PROJECT')=='Celebgramme') { ?>
-                              <a href="https://youtu.be/muraXXVnq5Y" target="_blank"> Video Tutorial Activpost 1</a>
-                              <a href="https://youtu.be/F3WzEJYnrHk" target="_blank"> Video Tutorial Activpost 2</a>
-                              <a href="https://youtu.be/DBse29qDnKg" target="_blank"> Video Tutorial Activpost 3</a>
-                            <?php } if(env('APP_PROJECT')=='Amelia') { ?>
-                              <a href="https://youtu.be/-0yI4BvsTZo" target="_blank"> Video Tutorial Activpost 1</a>
-                              <a href="https://youtu.be/jF8LSy7mU7g" target="_blank"> Video Tutorial Activpost 2</a>
-                            <?php } ?>
+                            <a href="https://youtu.be/muraXXVnq5Y" target="_blank"> Video Tutorial Activpost 1</a>
+                            <a href="https://youtu.be/F3WzEJYnrHk" target="_blank"> Video Tutorial Activpost 2</a>
+                            <a href="https://youtu.be/DBse29qDnKg" target="_blank"> Video Tutorial Activpost 3</a>
                           </label>
 												</div>
 												<div class="col-sm-12 col-md-12">
