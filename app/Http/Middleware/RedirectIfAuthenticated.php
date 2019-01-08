@@ -5,6 +5,8 @@ namespace Celebpost\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
+use Carbon;
+
 class RedirectIfAuthenticated
 {
     /**
@@ -18,6 +20,12 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
+            $dt = Carbon::now();
+            $user = Auth::user();
+            $user->running_time = $dt->toDateTimeString();
+            $user->is_started = 1;
+            $user->save();
+
             return redirect('/home');
         }
 

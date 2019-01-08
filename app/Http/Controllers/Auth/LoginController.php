@@ -7,8 +7,6 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-use Carbon;
-
 class LoginController extends Controller
 {
     /*
@@ -77,10 +75,6 @@ class LoginController extends Controller
         auth()->logout();
         return redirect('/login')->with(array("error"=>"Anda tidak terdaftar sebagai member amelia"));
       } 
-      $dt = Carbon::now();
-      auth()->user()->running_time = $dt->toDateTimeString();
-      auth()->user()->is_started = 1;
-      auth()->user()->save()
     }
   }
 
