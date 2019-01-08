@@ -241,7 +241,7 @@ class ScheduleController extends Controller
 				$arr["message"]="Delete at harus lebih besar dari publish at";
 				return $arr;
 			}
-      $max_date = Carbon::now()->addSeconds($user->active_time)->format('Y-m-d H:i');
+      $max_date = Carbon::now()->addSeconds($user->active_time);
 			$dtpublish = Carbon::createFromFormat('Y-m-d H:i', $request->publish_at);
 			if ( $max_date->lt($dtpublish) ) {
 				$arr["type"]="error";
@@ -1022,7 +1022,7 @@ $offset = ($page * $perPage) - $perPage;
         $arr["message"]="Delete at harus lebih besar dari publish at";
         return $arr;
       }
-      $max_date = Carbon::now()->addSeconds($user->active_time)->format('Y-m-d H:i');
+      $max_date = Carbon::now()->addSeconds($user->active_time);
 			$dtpublish = Carbon::createFromFormat('Y-m-d H:i', $request->publish_at);
 			if ( $max_date->lt($dtpublish) ) {
 				$arr["type"]="error";
@@ -1365,7 +1365,7 @@ $offset = ($page * $perPage) - $perPage;
         $arr["message"]="Delete at harus lebih besar dari publish at";
         return $arr;
       }
-      $max_date = Carbon::now()->addSeconds($user->active_time)->format('Y-m-d H:i');
+      $max_date = Carbon::now()->addSeconds($user->active_time);
 			$dtpublish = Carbon::createFromFormat('Y-m-d H:i', $request->publish_at);
 			if ( $max_date->lt($dtpublish) ) {
 				$arr["type"]="error";
