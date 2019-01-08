@@ -241,7 +241,15 @@ class ScheduleController extends Controller
 				$arr["message"]="Delete at harus lebih besar dari publish at";
 				return $arr;
 			}
+      $max_date = Carbon::now()->addSeconds($user->active_time)->format('Y-m-d H:i');
+			$dtpublish = Carbon::createFromFormat('Y-m-d H:i', $request->publish_at);
+			if ( $max_date->lt($dtpublish) ) {
+				$arr["type"]="error";
+				$arr["message"]="Waktu schedule publish tidak boleh diluar dari waktu akun";
+				return $arr;
+      }
 		}
+
 		
 		//post tidak boleh lebih dari 3 dalam 1 jam untuk tiap accountnya
 		/*if ($request->hidden_method=="schedule")  {
@@ -1014,6 +1022,13 @@ $offset = ($page * $perPage) - $perPage;
         $arr["message"]="Delete at harus lebih besar dari publish at";
         return $arr;
       }
+      $max_date = Carbon::now()->addSeconds($user->active_time)->format('Y-m-d H:i');
+			$dtpublish = Carbon::createFromFormat('Y-m-d H:i', $request->publish_at);
+			if ( $max_date->lt($dtpublish) ) {
+				$arr["type"]="error";
+				$arr["message"]="Waktu schedule publish tidak boleh diluar dari waktu akun";
+				return $arr;
+      }
     }
     
     //post tidak boleh lebih dari 3 dalam 1 jam untuk tiap accountnya
@@ -1349,6 +1364,13 @@ $offset = ($page * $perPage) - $perPage;
         $arr["type"]="error";
         $arr["message"]="Delete at harus lebih besar dari publish at";
         return $arr;
+      }
+      $max_date = Carbon::now()->addSeconds($user->active_time)->format('Y-m-d H:i');
+			$dtpublish = Carbon::createFromFormat('Y-m-d H:i', $request->publish_at);
+			if ( $max_date->lt($dtpublish) ) {
+				$arr["type"]="error";
+				$arr["message"]="Waktu schedule publish tidak boleh diluar dari waktu akun";
+				return $arr;
       }
     }
     
