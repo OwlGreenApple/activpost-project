@@ -302,11 +302,11 @@ class AccountController extends Controller
 				}
 			// }
 			// $i->setUser($username, $password);
-			$i->login($username, $password, 300);
 			
 				$account->user_id = $user->id;
 				$account->is_active = 1;
 				$account->save();
+			$i->login($username, $password, 300);
 				
 				// Output
 			return response()->json([
