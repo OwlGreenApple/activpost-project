@@ -306,7 +306,14 @@ class AccountController extends Controller
 				$account->user_id = $user->id;
 				$account->is_active = 1;
 				$account->save();
-			$i->login($username, $password, 300);
+        $i->login($username, $password, 300);
+      
+        if ($user->active_time  > 0){
+          $dt = Carbon::now();
+          $user->running_time = $dt->toDateTimeString();
+          $user->is_started = 1;
+          $user->save();
+        }
 				
 				// Output
 			return response()->json([
