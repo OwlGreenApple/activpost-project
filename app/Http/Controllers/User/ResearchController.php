@@ -214,6 +214,7 @@ class ResearchController extends Controller
 		$account = Account::where("user_id",$user->id)
 								->where("is_active",1)
 								->where("is_error",0)
+								->where("proxy_id","<>",0)//fixing sementara
 								->first();
 		if (is_null($account)) {
 			return "Input account terlebih dahulu";
