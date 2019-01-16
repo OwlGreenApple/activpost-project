@@ -475,6 +475,7 @@ use Celebpost\Models\Proxies;
             
             //new supaya, ga ada yang proxy_id 0 untuk akun amelia
             if ($account->proxy_id == 0){
+              $cookiefile = base_path('storage/ig-cookies/'.$account->username.'/').'cookies-celebpost-temp.txt';
               if ($user->is_member_rico==0) {
                 $url = "https://activfans.com/dashboard/get-proxy-id/".$account->username;
               }
