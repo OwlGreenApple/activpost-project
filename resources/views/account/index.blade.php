@@ -472,6 +472,36 @@ use Celebpost\Models\Proxies;
 				</div>
 				<div class="row"> 
 					<?php 
+            
+            //new supaya, ga ada yang proxy_id 0 untuk akun amelia
+            if ($account->proxy_id == 0){
+              if ($user->is_member_rico==0) {
+                $url = "https://activfans.com/dashboard/get-proxy-id/".$username;
+              }
+              else{
+                $url = "https://activfans.com/amelia/get-proxy-id/".$username;
+              }
+              $c = curl_init();
+
+              curl_setopt($c, CURLOPT_URL, $url);
+              curl_setopt($c, CURLOPT_REFERER, $url);
+              curl_setopt($c, CURLOPT_FOLLOWLOCATION, true);
+              curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
+              curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+              curl_setopt($c, CURLOPT_COOKIEFILE, $cookiefile);
+              curl_setopt($c, CURLOPT_COOKIEJAR, $cookiefile);
+              $page = curl_exec($c);
+              curl_close($c);
+
+              $arr_res = json_decode($page,true);  
+
+              $proxy_id = $arr_res["proxy_id"]; 
+              $is_on_celebgramme = $arr_res["is_on_celebgramme"]; 
+              $account->proxy_id = $proxy_id;
+              $account->is_on_celebgramme = $is_on_celebgramme;
+              $account->save();
+            }
+            
 						//get proxy
 						$proxy = Proxies::find($account->proxy_id);
 					 
