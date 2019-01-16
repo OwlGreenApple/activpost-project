@@ -91,15 +91,16 @@ class ImageController extends Controller
 		//check imgData url or encode image data
 		// if ( (Request::input("captionData")=="") && (Request::input("ownerData")=="") ) {
 		if (Request::input("decryptData") == "1") {
-			$pieces = explode("?", Crypt::decrypt(Request::input("imgData")));
-			$decode_data = $pieces[0];
-			$decode_data = Crypt::decrypt(Request::input("imgData"));//fixing sementara
+      // *ga boleh di potong urlnya yang ? harus dipake
+			// *$pieces = explode("?", Crypt::decrypt(Request::input("imgData")));
+			// *$decode_data = $pieces[0];
 			
 			// Image::make($decode_data)->save($dir."/".$filename.".jpg");
 			// file_put_contents($dir."/".$filename.".jpg",$decode_data);
-			$url = $decode_data;
+			// *$url = $decode_data;
+			$url = Crypt::decrypt(Request::input("imgData"));
 			$img = $dir."/".$filename.".jpg";
-			file_put_contents($img, file_get_contents($url));			
+			file_put_contents($img, file_get_contents($url));
 		} else if (Request::input("decryptData") == "0"){
 			Image::make(Request::input("imgData"))->save($dir."/".$filename.".jpg");
 		}
