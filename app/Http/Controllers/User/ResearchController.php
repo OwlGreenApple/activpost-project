@@ -531,10 +531,13 @@ class ResearchController extends Controller
 			return $arr;
 		}
 		
-		
+		// *ga boleh di potong urlnya yang ? harus dipake
+		//*$pieces = explode("?", Crypt::decrypt(Request::input("inputUrl")));
+		//*$path = $pieces[0];
 		$pieces = explode("?", Crypt::decrypt(Request::input("inputUrl")));
-		$path = $pieces[0];
+		$path = $pieces[0];//cmn buat dapat basename
 		$filename = basename($path);
+		$path = Crypt::decrypt(Request::input("inputUrl"));
 		
 		//check valid file
 		$arr_size = getimagesize($path);
