@@ -359,7 +359,7 @@
                                 <li><a href="https://youtu.be/-0yI4BvsTZo" target="_blank"> <span class="glyphicon glyphicon-film"></span> Tutorial Video(Basic)</a></li>
                                 <li><a href="https://youtu.be/jF8LSy7mU7g" target="_blank"> <span class="glyphicon glyphicon-film"></span> Tutorial Video(Schedule Post)</a></li>
                               <?php } ?>
-															<li><a href="https://docs.google.com/document/d/1CA7hxRL-3DTQiR8CoEX7yw58mx4LNRmfLKahaHtKFic/edit" target="_blank"><span class="glyphicon glyphicon-list-alt"></span> Tutorial PDF </a></a></li>
+															<li><a href="https://docs.google.com/document/d/1RZkCDXLngHO-yTgP1Qe1kqt0C73_yRL6lezuSYPodss/edit?usp=sharing" target="_blank"><span class="glyphicon glyphicon-list-alt"></span> Tutorial PDF </a></a></li>
 															<li>
 																<a href="{{ url('/logout') }}"
 																onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
