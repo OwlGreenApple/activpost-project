@@ -182,7 +182,7 @@ class OrderController extends Controller
       $orderadd->base_price     = $request->base_price+ $unique_code;
       $orderadd->affiliate      = '0';
       $orderadd->package_id     = '0';
-      $orderadd->added_account  = $request->added_max_account+ $unique_code;
+      $orderadd->added_account  = $request->added_max_account;
       
       $orderadd->coupon_id    = $coupon_id;
       $orderadd->discount     = $request->base_price - $request->total;
