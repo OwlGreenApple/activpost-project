@@ -323,8 +323,8 @@ use Celebpost\Models\Proxies;
 							</div>
 							<div class="modal-body">
 								<div class="form-group">
-									<label for="" class="control-label">Silahkan login dahulu ke Instagram.com via browser, & jangan di logout sebelum berhasil add account <br>
-									STOP Activfans dahulu(Jika Activfans anda dalam posisi belum distop), & dapat di START lagi setelah berhasil Edit Password</label>
+									<label for="" class="control-label">Silahkan login dahulu ke Instagram.com via browser, & jangan di logout sebelum berhasil add account <!--<br>
+									STOP Activfans dahulu(Jika Activfans anda dalam posisi belum distop), & dapat di START lagi setelah berhasil Edit Password--></label>
 								</div>
                 <div class="form-group">
                     <label for="insta_password">Password</label>
@@ -703,9 +703,9 @@ use Celebpost\Models\Proxies;
 													</div>
 													<div class="modal-body">
 															Delete <strong>{{ $account->username }}</strong> Account?<br>
-															Silahkan Stop akun Activfans terlebih dulu apabila anda akan melakukan <br>
+															<!--Silahkan Stop akun Activfans terlebih dulu apabila anda akan melakukan <br>
 															delete & add akun ulang(refresh Session IG akun).<br>
-															*Abaikan pesan diatas apabila akun ini tidak sedang aktif memakai Activfans
+															*Abaikan pesan diatas apabila akun ini tidak sedang aktif memakai Activfans-->
 													</div>
 													<div class="modal-footer">
 															<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
@@ -802,12 +802,14 @@ use Celebpost\Models\Proxies;
                             Saya sudah membaca & menyetujui <a href="https://activpost.net/terms-conditions/">TERMS & CONDITIONS</a> Activpost 
                           </label>
 												</div>
+                        <!--
 												<div class="col-sm-12 col-md-12">
 													<label for="terms-add-account12" class="control-label">
                             <input type="checkbox" class="checkbox-term" id="terms-add-account12"> 
                             STOP Activfans dahulu(Jika Activfans anda dalam posisi belum distop), & dapat di START lagi setelah berhasil add account 
                           </label>
 												</div>
+                        -->
 												<div class="col-sm-12 col-md-12">
 													<label for="terms-add-account11" class="control-label">
                             <input type="checkbox" class="checkbox-term" id="terms-add-account11"> 
