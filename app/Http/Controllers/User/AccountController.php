@@ -23,6 +23,11 @@ use \InstagramAPI\Instagram;
 
 class AccountController extends Controller
 {
+  public function get_server_time()
+  {
+      return date('Y-m-d H:i:s'); 
+  }
+  
 	public function index_test()
 	{
 		echo "IN";

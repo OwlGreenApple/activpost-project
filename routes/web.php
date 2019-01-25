@@ -28,6 +28,7 @@ Route::get('test', 'Auth\LoginController@test');
 Route::get('image-editor-pixie', 'User\ResearchController@image_editor_index_pixie');
 
 Route::get('test', 'User\AccountController@test');
+Route::get('get-server-time', 'User\AccountController@get_server_time');
 
 /* IDAFF */
 Route::get('postback-idaff', 'LandingPageController@post_back_idaff');
