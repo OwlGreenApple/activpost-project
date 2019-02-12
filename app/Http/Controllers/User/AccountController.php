@@ -162,7 +162,12 @@ class AccountController extends Controller
 					'msg' => "Jumlah Account tidak boleh lebih dari ".$user->max_account
 			]);
 		}
-		
+		if ( preg_match('/\s/',$username) ){
+			return response()->json([
+					'login_status' => 403,
+					'msg' => "Username tidak boleh ada spasi"
+			]);
+    }
 		
 		$account = Account::where("username","=",$username)
 								->first();
