@@ -74,7 +74,9 @@ class UserTime extends Command
           $message .= $user->username." running_time is null;";
         }
 			}
-      Log::error($message);
+      if ($message<> "" ){
+        Log::error($message);
+      }
 			/*
 			$accounts = Account::where("is_started","=",1)
 								->where("is_active","=",1)
