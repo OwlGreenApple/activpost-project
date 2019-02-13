@@ -13,7 +13,7 @@ use Celebpost\Models\Users;
 use Celebpost\Models\Account;
 
 use \InstagramAPI\Instagram;
-use Exception,Mail;
+use Exception,Mail,Log;
 
 class UserTime extends Command
 {
@@ -53,19 +53,26 @@ class UserTime extends Command
 			foreach($users as $user){
 				$update_user = Users::find($user->id);
 				$now = Carbon::now();
-				$runTime = Carbon::createFromFormat('Y-m-d H:i:s', $user->running_time);
-				$timevalue = $now->diffInSeconds($runTime);
-				$update_user->active_time -= $timevalue;
-				if ($update_user->active_time <= 0){
-					$update_user->active_time = 0;
-					$update_user->is_started = 0;
-					
-					//mail information
-				} 
-				else {
-					$update_user->running_time = $now->toDateTimeString();
-				}
-				$update_user->save();
+        if ( !isnull($user->running_time) ) {
+          $runTime = Carbon::createFromFormat('Y-m-d H:i:s', $user->running_time);
+          $timevalue = $now->diffInSeconds($runTime);
+          $update_user->active_time -= $timevalue;
+          if ($update_user->active_time <= 0){
+            $update_user->active_time = 0;
+            $update_user->is_started = 0;
+            
+            //mail information
+          } 
+          else {
+            $update_user->running_time = $now->toDateTimeString();
+          }
+          $update_user->save();
+        }
+        else {
+          //print ke text file email user yang waktu nya null 
+          $message = $user->username." running_time is null";
+          Log::error($message);
+        }
 			}
 			/*
 			$accounts = Account::where("is_started","=",1)
