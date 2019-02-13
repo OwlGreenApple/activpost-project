@@ -53,7 +53,7 @@ class UserTime extends Command
 			foreach($users as $user){
 				$update_user = Users::find($user->id);
 				$now = Carbon::now();
-        if ( !isnull($user->running_time) ) {
+        if ( !is_null($user->running_time) ) {
           $runTime = Carbon::createFromFormat('Y-m-d H:i:s', $user->running_time);
           $timevalue = $now->diffInSeconds($runTime);
           $update_user->active_time -= $timevalue;
