@@ -14,7 +14,7 @@ use Celebpost\Jobs\PostTask;
 use \InstagramAPI\Instagram;
 use Carbon\Carbon;
 
-use Config,Crypt;
+use Config,Crypt,Log;
 
 class APIController extends Controller
 {
@@ -52,8 +52,8 @@ class APIController extends Controller
 				}
 				if ($check_sa->status < 2) {
 					//start
-					$check_sa->status_process = 1;
-					$check_sa->save();
+					//$check_sa->status_process = 1;
+					//$check_sa->save();
 					
 					// Decrypt
 					$decrypted_string = Crypt::decrypt($account->password);
@@ -107,6 +107,7 @@ class APIController extends Controller
 						$update_account->is_error = 1;
 						$update_account->save();
 						$smsg = $e->getMessage();
+            Log::alert("IncorrectPasswordException ".$smsg);
 						
 						$subject_message = "[Activpost] Notif Post Failed";
 						$emaildata = [
@@ -147,13 +148,13 @@ class APIController extends Controller
 								$check_sa->status_process = 0;
 								$check_sa->save();
 							}
-							
+							Log::alert($username." ".$smsg);
+              
 							// continue;
 							return "Error Login ".$smsg;
 						}
 						$smsg .= " Line: ".$e->getTraceAsString(); // this prints the line where the error occurs
-						
-						
+						Log::alert($username." ".$smsg);
 					}
 					catch (\InstagramAPI\Exception\BadRequestException $e) {
 						//supaya diproses lagi
@@ -163,6 +164,7 @@ class APIController extends Controller
 							$check_sa->save();
 						}
 						
+            Log::alert($username." BadRequestException");
 						// continue;
 						return "Error Bad request(login)";
 					}
@@ -284,6 +286,7 @@ class APIController extends Controller
 								$check_sa->save();
 							}
 							
+              Log::alert($username." ".$smsg." (posting)");
 							// continue;
 							return "Error ".$smsg."(posting)";
 						}
@@ -327,6 +330,8 @@ class APIController extends Controller
 							$check_sa->status_process = 0;
 							$check_sa->save();
 						}
+            
+            Log::alert($username." BadRequestException (posting)");
 						
 						// continue;
 						return "Error  badrequest (posting)";
@@ -337,6 +342,7 @@ class APIController extends Controller
 					$check_sa->status = 2;
 					$check_sa->status_helper = 2;
 					$check_sa->media_id = $instagram->getMedia()->getId();
+          $check_sa->status_process = 1;
 					$check_sa->save();
 					
 					
