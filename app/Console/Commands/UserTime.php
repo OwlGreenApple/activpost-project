@@ -48,6 +48,7 @@ class UserTime extends Command
      */
     public function handle()
     {
+      $message = "";
 			$users = Users::where("is_started","=",1)
 								->get();
 			foreach($users as $user){
@@ -70,10 +71,10 @@ class UserTime extends Command
         }
         else {
           //print ke text file email user yang waktu nya null 
-          $message = $user->username." running_time is null";
-          Log::error($message);
+          $message .= $user->username." running_time is null;";
         }
 			}
+      Log::error($message);
 			/*
 			$accounts = Account::where("is_started","=",1)
 								->where("is_active","=",1)
