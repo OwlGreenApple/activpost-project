@@ -97,7 +97,7 @@ class APIController extends Controller
 							}
 						}
 						$i->login($username, $password, 300);
-            if ($username=="kaff.store"){
+            if ($username=="emblem.gunung.store"){
               Log::info('A');
             }
 						// $logs = $sc->slug.'-'.$sc->media_type.", Login akun\n";
@@ -170,7 +170,7 @@ class APIController extends Controller
 						// continue;
 						return "Error Bad request(login)";
 					}
-          if ($username=="kaff.store"){
+          if ($username=="emblem.gunung.store"){
             Log::info('B');
           }
           
@@ -205,7 +205,7 @@ class APIController extends Controller
 					}
 					// Upload
 					try {
-          if ($username=="kaff.store"){
+          if ($username=="emblem.gunung.store"){
             Log::info('C');
           }
 						if ($sc->media_type == "photo") {
@@ -270,7 +270,7 @@ class APIController extends Controller
 							// $logs = $sc->slug.'-'.$sc->media_type.", Pasca posting\n";
 							// fwrite($myfile, $logs);
 						}
-          if ($username=="kaff.store"){
+          if ($username=="emblem.gunung.store"){
             Log::info('D');
           }
 					} 
@@ -349,7 +349,7 @@ class APIController extends Controller
 						return "Error  badrequest (posting)";
 					}
 				
-          if ($username=="kaff.store"){
+          if ($username=="emblem.gunung.store"){
             Log::info('E');
           }
 					$dt = Carbon::now();
@@ -398,7 +398,7 @@ class APIController extends Controller
 					}
 					//end
 
-          if ($username=="kaff.store"){
+          if ($username=="emblem.gunung.store"){
             Log::info('F');
           }
 					
