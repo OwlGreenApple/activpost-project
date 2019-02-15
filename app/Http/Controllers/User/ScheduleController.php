@@ -1074,7 +1074,7 @@ $offset = ($page * $perPage) - $perPage;
     }
     
     // $dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
-    $dir = "/home2/cmx/public_html/api-ig/public/vp/uploads".$user->username.'-'.$user->id;
+    $dir = 'vp/uploads/'.$user->username.'-'.$user->id; 
     if (!file_exists($dir)) {
       mkdir($dir,0741,true);
     }
@@ -1098,12 +1098,13 @@ $offset = ($page * $perPage) - $perPage;
       $uploadedFile = $request->file('imgData');   
       $filename = $slug.'.'.$uploadedFile->getClientOriginalExtension();
       // $uploadedFile->move($dir, $filename);   
-      Storage::disk('local')->put($dir,  File::get($request->file('imgData')) );
+      $url = Storage::disk('s3')->putFile($dir, $request->file('imgData'),'public');
 
       //Storage::move($request->imguri, $dir.'/'.$filename.'mp4');
 
       $schedule = new Schedule;
-      $schedule->image = url('/../vp/uploads/'.$user->username.'-'.$user->id.'/'.$filename);
+      // $schedule->image = url('/../vp/uploads/'.$user->username.'-'.$user->id.'/'.$filename);
+      $schedule->image = $url;
       $schedule->slug = $filename;
     } else {
       // edit schedule
@@ -1122,7 +1123,7 @@ $offset = ($page * $perPage) - $perPage;
         }
 
         // $uploadedFile->move($dir, $filename);   
-        Storage::disk('local')->put($dir,  File::get($request->file('imgData')) );
+        $url = Storage::disk('s3')->putFile($dir, $request->file('imgData'),'public');
 
         //Storage::move($request->imguri, $dir.'/'.$request->slug.'mp4');
         
