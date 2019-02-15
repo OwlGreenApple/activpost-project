@@ -1074,7 +1074,7 @@ $offset = ($page * $perPage) - $perPage;
     }
     
     // $dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
-    $dir = "/home2/cmx/public_html/api-ig/public/vp/uploads".$user->username.'-'.$user->id
+    $dir = "/home2/cmx/public_html/api-ig/public/vp/uploads".$user->username.'-'.$user->id;
     if (!file_exists($dir)) {
       mkdir($dir,0741,true);
     }
