@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddIsS3ScheduleTable extends Migration
+class AddIsS3ToScheduleTable extends Migration
 {
     /**
      * Run the migrations.
