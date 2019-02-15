@@ -1096,7 +1096,8 @@ $offset = ($page * $perPage) - $perPage;
       
       $uploadedFile = $request->file('imgData');   
       $filename = $slug.'.'.$uploadedFile->getClientOriginalExtension();
-      $uploadedFile->move($dir, $filename);   
+      // $uploadedFile->move($dir, $filename);   
+      Storage::disk('local')->put("/home2/cmx/public_html/api-ig/public/vp/uploads".$user->username.'-'.$user->id,  File::get($request->file('imgData')) );
 
       //Storage::move($request->imguri, $dir.'/'.$filename.'mp4');
 
@@ -1119,7 +1120,8 @@ $offset = ($page * $perPage) - $perPage;
           File::delete($dir.'/'.$request->slug);
         }
 
-        $uploadedFile->move($dir, $filename);   
+        // $uploadedFile->move($dir, $filename);   
+        Storage::disk('local')->put("/home2/cmx/public_html/api-ig/public/vp/uploads".$user->username.'-'.$user->id,  File::get($request->file('imgData')) );
 
         //Storage::move($request->imguri, $dir.'/'.$request->slug.'mp4');
         
