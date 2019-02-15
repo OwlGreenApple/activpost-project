@@ -1073,7 +1073,8 @@ $offset = ($page * $perPage) - $perPage;
       }
     }
     
-    $dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
+    // $dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
+    $dir = "/home2/cmx/public_html/api-ig/public/vp/uploads".$user->username.'-'.$user->id
     if (!file_exists($dir)) {
       mkdir($dir,0741,true);
     }
@@ -1097,7 +1098,7 @@ $offset = ($page * $perPage) - $perPage;
       $uploadedFile = $request->file('imgData');   
       $filename = $slug.'.'.$uploadedFile->getClientOriginalExtension();
       // $uploadedFile->move($dir, $filename);   
-      Storage::disk('local')->put("/home2/cmx/public_html/api-ig/public/vp/uploads".$user->username.'-'.$user->id,  File::get($request->file('imgData')) );
+      Storage::disk('local')->put($dir,  File::get($request->file('imgData')) );
 
       //Storage::move($request->imguri, $dir.'/'.$filename.'mp4');
 
@@ -1121,7 +1122,7 @@ $offset = ($page * $perPage) - $perPage;
         }
 
         // $uploadedFile->move($dir, $filename);   
-        Storage::disk('local')->put("/home2/cmx/public_html/api-ig/public/vp/uploads".$user->username.'-'.$user->id,  File::get($request->file('imgData')) );
+        Storage::disk('local')->put($dir,  File::get($request->file('imgData')) );
 
         //Storage::move($request->imguri, $dir.'/'.$request->slug.'mp4');
         
