@@ -116,14 +116,19 @@
 					// $file = public_path('images/users/'.$res->file); 
           //$file = url('/images/users/'.$user->username.'-'.$user->id.'/'.$res->file); 
           // $file = url('/images/users/'.$user->username.'-'.$user->id.'/'.$res->file.'?v='.uniqid()); 
-          $file = url('/../vp/users/'.$user->username.'-'.$user->id.'/'.$res->file.'?v='.uniqid()); 
-					$pieces = explode(".", $res->file);
-					$ext = $pieces[1];
+          if ($res->is_s3) {
+            $file = Storage::disk('s3')->url($res->file);
+          }
+          else {
+            $file = url('/../vp/users/'.$user->username.'-'.$user->id.'/'.$res->file.'?v='.uniqid()); 
+            $pieces = explode(".", $res->file);
+            $ext = $pieces[1];
+          }
 					?>
 						<div style="background-image:url('{{$file}}');" class="same-height">
 							<div class="action-image hide" data-url="{{ $file}}" data-owner="{{$res->owner_post}}" data-caption="{{$res->caption}}" data-id="{{$res->id}}">
 								<a href="" class="col-md-4 col-xs-4 link-home link-action-left link-edit"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-								<a href="{{ $file}}" data-url="{{ $file}}" class="col-md-4 col-xs-4 link-home link-action-center link-download" download="{{'download.'.$ext}}"><span class="glyphicon glyphicon-download-alt"></span> Download</a>
+								<a href="{{ $file}}" data-url="{{ $file}}" class="col-md-4 col-xs-4 link-home link-action-center link-download" download="{{'file'}}"><span class="glyphicon glyphicon-download-alt"></span> Download</a>
 								<?php //if($res->is_use_caption) { ?>
 									<!--<a href="" class="col-md-4 col-xs-4 link-home link-action-right link-repost">-->
 									<a href="" class="col-md-4 col-xs-4 link-home link-action-right link-schedule">

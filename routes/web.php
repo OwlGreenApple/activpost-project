@@ -24,7 +24,7 @@ if(env('APP_PROJECT')=='Celebgramme'){
   Route::get('checkout', 'Auth\RegisterController@showCheckout');
   Route::post('checkout', 'Auth\RegisterController@process_checkout');
 }
-Route::get('test', 'Auth\LoginController@test');
+// Route::get('test', 'Auth\LoginController@test');
 Route::get('image-editor-pixie', 'User\ResearchController@image_editor_index_pixie');
 
 Route::get('test', 'User\AccountController@test');
@@ -132,7 +132,7 @@ Route::group(['middleware' => 'auth'], function () {
   Route::get('schedule', 'User\ScheduleController@index');
   Route::get('load-main-schedule', 'User\ScheduleController@load_main_schedule');
   Route::post('schedule/publish', 'User\ScheduleController@publish');
-  Route::post('schedule/saveimage', 'User\ScheduleController@saveimage');
+  // Route::post('schedule/saveimage', 'User\ScheduleController@saveimage');
   Route::get('schedule/add', 'User\ScheduleController@add');
   Route::get('schedule/repost/{imageid}', 'User\ScheduleController@repost');
   Route::get('schedule/edit/{sid}', 'User\ScheduleController@add');

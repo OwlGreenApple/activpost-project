@@ -16,6 +16,7 @@ use Celebpost\Models\Proxies;
 use Celebpost\Models\ProxyLogin;
 use Celebpost\Models\UserLog;
 use Celebpost\Models\UserSetting;
+use Illuminate\Support\Facades\Storage;
 
 use File,Auth,Exception,Request,Config;
 
@@ -716,11 +717,8 @@ class AccountController extends Controller
 	}
 
 	public function test(){
-		$IGDataPath = base_path('storage/ig/sapiterbang369/');
-		$i = new Instagram("sapiterbang369", "iloveblue", false, $IGDataPath);
-		$temp = $i->getSelfUserFeed()->getItems()[0]->getTakenAt();
-		echo date("Y-m-d H:i:s", $temp);
-		// echo $i->getProfileData()->getProfilePicUrl();
+    $contents = Storage::disk('s3')->get("vp/uploads/rizky87123@gmail.com-5/M6FGQL16dja4AiYzyB877BpLRHvy1KYrqWrmrctd.mp4");
+    dd($contents);
 	}
 
 	

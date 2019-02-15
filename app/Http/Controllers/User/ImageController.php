@@ -83,10 +83,11 @@ class ImageController extends Controller
 		$filename = $slug;
 
 		// $dir = public_path('images/users/'.$user->username.'-'.$user->id); 
-		$dir = public_path('../vp/users/'.$user->username.'-'.$user->id); 
+		/*$dir = public_path('../vp/users/'.$user->username.'-'.$user->id); 
 		if (!file_exists($dir)) {
 			mkdir($dir,0741,true);
-		}
+		}*/
+    $dir = 'vp/users/'.$user->username.'-'.$user->id; 
 
 		//check imgData url or encode image data
 		// if ( (Request::input("captionData")=="") && (Request::input("ownerData")=="") ) {
@@ -100,14 +101,18 @@ class ImageController extends Controller
 			// *$url = $decode_data;
 			$url = Crypt::decrypt(Request::input("imgData"));
 			$img = $dir."/".$filename.".jpg";
-			file_put_contents($img, file_get_contents($url));			
+			// file_put_contents($img, file_get_contents($url));			
+      $urls3 = Storage::disk('s3')->putFile($dir, file_get_contents($url),'public');
 		} else if (Request::input("decryptData") == "0"){
-			Image::make(Request::input("imgData"))->save($dir."/".$filename.".jpg");
+			// Image::make(Request::input("imgData"))->save($dir."/".$filename.".jpg");
+      $urls3 = Storage::disk('s3')->putFile($dir, Request::input("imgData"),'public');
 		}
 		$imageM = new ImageModel;
 		$imageM->is_schedule = 0;
 		$imageM->user_id = $user->id;
-		$imageM->file = $filename.".jpg";
+		// $imageM->file = $filename.".jpg";
+		$imageM->file = $urls3;
+    $imageM->is_s3 = 1;
 		if ( (Request::input("captionData")=="") && (Request::input("ownerData")=="") ) {
 			$imageM->is_use_caption = 0;
 			$imageM->caption = "";
@@ -134,24 +139,35 @@ class ImageController extends Controller
 		
 		$user = Auth::user();
 		if (Request::input("inputId")=="all") { 
+      $dir = public_path('../vp/users/'.$user->username.'-'.$user->id); 
 			$images = ImageModel::where("user_id","=",$user->id)
+                ->where("is_s3",0)
 								->get();
 			foreach ($images as $image) {
 				$image->delete();
 				// $dir = public_path('images/users/'.$user->username.'-'.$user->id); 
-				$dir = public_path('../vp/users/'.$user->username.'-'.$user->id); 
 				unlink($dir."/".$image->file);
 			}
+			$images = ImageModel::where("user_id","=",$user->id)
+                ->where("is_s3",1)
+								->get();
+			foreach ($images as $image) {
+        Storage::disk('s3')->delete($image->file);
+      }
 		} 
 		else {
 			$image = ImageModel::where("user_id","=",$user->id)
 								->where("id","=",Request::input("inputId"))
 								->first();
 			if (!is_null($image)) {
-				$image->delete();
-				// $dir = public_path('images/users/'.$user->username.'-'.$user->id); 
-				$dir = public_path('../vp/users/'.$user->username.'-'.$user->id); 
-				unlink($dir."/".$image->file);
+        if (!$image->is_s3) {
+          $image->delete();
+          // $dir = public_path('images/users/'.$user->username.'-'.$user->id); 
+          $dir = public_path('../vp/users/'.$user->username.'-'.$user->id); 
+          unlink($dir."/".$image->file);
+        } else {
+          Storage::disk('s3')->delete($image->file);
+        }
 			} else {
 				$arr["type"] = "error";
 				$arr["message"] = "Image tidak berhasil dihapus";
@@ -171,12 +187,14 @@ class ImageController extends Controller
 		$filename = "temp.jpg";
 
 		// $dir = public_path('images/users/'.$user->username.'-'.$user->id); 
-		$dir = public_path('../vp/users/'.$user->username.'-'.$user->id); 
+		/*$dir = public_path('../vp/users/'.$user->username.'-'.$user->id); 
 		if (!file_exists($dir)) {
 			mkdir($dir,0741,true);
-		}
+		}*/
+    $dir = 'vp/users/'.$user->username.'-'.$user->id; 
 
-		Image::make($path)->save($dir."/".$filename);
+		// Image::make($path)->save($dir."/".$filename);
+    $urls3 = Storage::disk('s3')->putFile($dir, $path,'public');
 		$imageM = ImageModel::where("file","=",$filename)
 							->where("user_id","=",$user->id)
 							->first();
@@ -184,10 +202,12 @@ class ImageController extends Controller
 			$imageM = new ImageModel;
 		}
 		$imageM->user_id = $user->id;
-		$imageM->file = $filename;
+		// $imageM->file = $filename;
+		$imageM->file = $urls3;
 		$imageM->is_use_caption = 0;
 		$imageM->caption = "";
 		$imageM->owner_post = "";
+    $imageM->is_s3 = 1;
 		$imageM->save();
 		
 		// $request->session()->put('url', 'images/users/'.$user->username.'-'.$user->id."/temp.jpg");
@@ -200,7 +220,7 @@ class ImageController extends Controller
 		return $arr;
 		
 	}
-	
+	//ngga perlu disave ke s3, karena cuman single file
 	public function save_image_schedule()
 	{
 		$user = Auth::user();
@@ -309,21 +329,25 @@ class ImageController extends Controller
 				$filename = $slug;
 
 				// $dir = public_path('images/users/'.$user->username.'-'.$user->id); 
-				$dir = public_path('../vp/users/'.$user->username.'-'.$user->id); 
+				/*$dir = public_path('../vp/users/'.$user->username.'-'.$user->id); 
 				if (!file_exists($dir)) {
 					mkdir($dir,0741,true);
-				}
+				}*/
+        $dir = 'vp/users/'.$user->username.'-'.$user->id; 
 				
 				// Image::make(Request::input("imgData"))->save($dir."/".$filename.".jpg");
-        $upload_success = $file->move($dir, $filename.".".$file->getClientOriginalExtension());
+        // $upload_success = $file->move($dir, $filename.".".$file->getClientOriginalExtension());
+        $urls3 = Storage::disk('s3')->putFile($dir, $file,'public');
 				
 				$imageM = new ImageModel;
 				$imageM->user_id = $user->id;
-				$imageM->file = $filename.".".$file->getClientOriginalExtension();
+				// $imageM->file = $filename.".".$file->getClientOriginalExtension();
+				$imageM->file = $urls3;
 				$imageM->is_use_caption = 0;
 				$imageM->caption = "";
 				$imageM->owner_post = "";
 				$imageM->is_schedule = 0;
+        $imageM->is_s3 = 1;
 				$imageM->save();
 				
 				

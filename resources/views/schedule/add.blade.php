@@ -251,9 +251,14 @@
 											// $file = public_path('images/users/'.$res->file); 
 											//$file = url('/images/users/'.$user->username.'-'.$user->id.'/'.$res->file); 
                       // $file = url('/images/users/'.$user->username.'-'.$user->id.'/'.$res->file.'?v='.uniqid());
-                      $file = url('/../vp/users/'.$user->username.'-'.$user->id.'/'.$res->file.'?v='.uniqid());
-											$pieces = explode(".", $res->file);
-											$ext = $pieces[1];
+                      if ($res->is_s3) {
+                        $file = Storage::disk('s3')->url($res->file);
+                      }
+                      else {
+                        $file = url('/../vp/users/'.$user->username.'-'.$user->id.'/'.$res->file.'?v='.uniqid());
+                        $pieces = explode(".", $res->file);
+                        $ext = $pieces[1];
+                      }
 											?>
 												<div style="background-image:url('{{$file}}');" data-url="{{$file}}" class="same-height same-height-175" data-id="{{$res->id}}">
 												</div>

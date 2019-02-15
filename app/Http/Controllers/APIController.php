@@ -64,12 +64,18 @@ class APIController extends Controller
 					$password = $pass;
 					// $dir = public_path('images/uploads/'.$user->username.'-'.$user->id); 
 					// $dir = base_path('../public_html/dashboard/images/uploads/'.$user->username.'-'.$user->id); 
-					$dir = base_path('../public_html/vp/uploads/'.$user->username.'-'.$user->id); 
-					if($sc->media_type=='video' || strpos($sc->slug, 'StoryFile')===0){
-						$photo = $dir."/".$sc->slug;
-					} else {
-						$photo = $dir."/".$sc->slug.".jpg";
-					}
+          if ($sc->is_s3) {
+            $fileContents = Storage::disk('s3')->get($sc->image);
+            $photo = Storage::disk('local')->put('post-temp/'.$user->username.'-'.$user->id.'/', $fileContents);
+          }
+          else {
+            $dir = base_path('../public_html/vp/uploads/'.$user->username.'-'.$user->id); 
+            if($sc->media_type=='video' || strpos($sc->slug, 'StoryFile')===0){
+              $photo = $dir."/".$sc->slug;
+            } else {
+              $photo = $dir."/".$sc->slug.".jpg";
+            }
+          }
 					
 					$caption = $sc->description;
 					
@@ -402,6 +408,12 @@ class APIController extends Controller
             Log::info('F');
           }
 					
+          //
+          if ($sc->is_s3) {
+            $photo = Storage::disk('local')->put('post-temp/'.$user->username.'-'.$user->id.'/', $fileContents);
+            Storage::disk('local')->delete($photo);
+          }
+          
 				}
 			}
 		}
