@@ -343,22 +343,22 @@ class ScheduleController extends Controller
 			
 			$filename = $slug;
 			// Image::make(Request::input("imguri"))->save($dir."/".$filename.".jpg");
-      $url = Storage::disk('s3')->put($dir, file_get_contents(Request::input("imguri")));
+      $url = Storage::disk('s3')->putFile($dir, new File($dir."/".$filename.".jpg"), 'public');
 
 			$schedule = new Schedule;
 			// $schedule->image = url('/images/uploads/'.$user->username.'-'.$user->id.'/'.$filename.".jpg");
 			// $schedule->image = url('/../vp/uploads/'.$user->username.'-'.$user->id.'/'.$filename.".jpg");
-			// $schedule->image = $url;
-			$schedule->image = $dir."/".$filename.".jpg";
+			$schedule->image = $url;
+			// $schedule->image = $dir."/".$filename.".jpg";
 			$schedule->slug = $filename;
 		} else {
 			// edit schedule
 			// Image::make(Request::input("imguri"))->save($dir."/".$request->slug.".jpg");
       Storage::disk('s3')->delete($schedule->image);
-      $url = Storage::disk('s3')->put($dir, file_get_contents(Request::input("imguri")));
+      $url = Storage::disk('s3')->putFile($dir, new File($dir."/".$request->slug.".jpg"), 'public');
 			
-      // $schedule->image = $url;
-      $schedule->image = $dir."/".$request->slug.".jpg";
+      $schedule->image = $url;
+      // $schedule->image = $dir."/".$request->slug.".jpg";
 			$schedule = Schedule::findOrFail($request->id);
 			$schedule->slug = $request->slug;
 			
