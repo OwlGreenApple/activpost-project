@@ -323,7 +323,7 @@ class ScheduleController extends Controller
 		if (!file_exists($dir)) {
 			mkdir($dir,0741,true);
 		}*/
-    $dir = 'vp/uploads/'.$user->username.'-'.$user->id; 
+    $dir = '../vp/uploads/'.$user->username.'-'.$user->id; 
 
 		if ($request->id == 0) {
 			// new schedule
@@ -343,7 +343,7 @@ class ScheduleController extends Controller
 			
 			$filename = $slug;
 			// Image::make(Request::input("imguri"))->save($dir."/".$filename.".jpg");
-      $url = Storage::disk('s3')->putFile($dir, new File($dir."/".$filename.".jpg"), 'public');
+      $url = Storage::disk('s3')->putFile($dir, new File(public_path($dir."/".$filename.".jpg")), 'public');
 
 			$schedule = new Schedule;
 			// $schedule->image = url('/images/uploads/'.$user->username.'-'.$user->id.'/'.$filename.".jpg");
@@ -355,7 +355,7 @@ class ScheduleController extends Controller
 			// edit schedule
 			// Image::make(Request::input("imguri"))->save($dir."/".$request->slug.".jpg");
       Storage::disk('s3')->delete($schedule->image);
-      $url = Storage::disk('s3')->putFile($dir, new File($dir."/".$request->slug.".jpg"), 'public');
+      $url = Storage::disk('s3')->putFile($dir, new File(public_path($dir."/".$request->slug.".jpg")), 'public');
 			
       $schedule->image = $url;
       // $schedule->image = $dir."/".$request->slug.".jpg";
