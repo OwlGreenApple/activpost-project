@@ -323,7 +323,6 @@ class ScheduleController extends Controller
 		if (!file_exists($dir)) {
 			mkdir($dir,0741,true);
 		}
-    // $dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
     $dirs3 = 'vp/uploads/'.$user->username.'-'.$user->id; 
 
 		if ($request->id == 0) {
@@ -349,8 +348,8 @@ class ScheduleController extends Controller
 			$schedule = new Schedule;
 			// $schedule->image = url('/images/uploads/'.$user->username.'-'.$user->id.'/'.$filename.".jpg");
 			// $schedule->image = url('/../vp/uploads/'.$user->username.'-'.$user->id.'/'.$filename.".jpg");
-			$schedule->image = $url;
-			// $schedule->image = $dir."/".$filename.".jpg";
+			// $schedule->image = $url;
+			$schedule->image = $dirs3."/".$filename.".jpg";
 			$schedule->slug = $filename;
 		} else {
 			// edit schedule
@@ -359,8 +358,8 @@ class ScheduleController extends Controller
       Storage::disk('s3')->delete($schedule->image);
       $url = Storage::disk('s3')->put($dirs3, file_get_contents(Request::input("imguri")), 'public');
 			
-      $schedule->image = $url;
-      // $schedule->image = $dir."/".$request->slug.".jpg";
+      // $schedule->image = $url;
+      $schedule->image = $dirs3."/".$request->slug.".jpg";
 			$schedule->slug = $request->slug;
 			
 			$check_sa = ScheduleAccount::where("schedule_id","=",$schedule->id)
