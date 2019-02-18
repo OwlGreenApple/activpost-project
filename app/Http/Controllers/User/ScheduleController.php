@@ -18,7 +18,7 @@ use Celebpost\Models\Users;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 use Celebpost\Jobs\SendInstagram;
-use Image,Request,DB;
+use Image,File,Request,DB;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Response;
@@ -538,7 +538,12 @@ class ScheduleController extends Controller
 		$dir = basename($schedule->image);
 		// $directory = public_path() . '/images/uploads/' .$dir;
 		$directory = public_path() . '/../vp/uploads/' .$dir;
-		File::delete($directory);
+    if ($schedule->is_s3) {
+      Storage::disk('s3')->delete($schedule->image);
+    }
+    else {
+      File::delete($directory);
+    }
 		Schedule::destroy($id);
 		ScheduleAccount::where("schedule_id",$id)->delete();
 		return back()->with('status', 'Schedule Deleted!');
