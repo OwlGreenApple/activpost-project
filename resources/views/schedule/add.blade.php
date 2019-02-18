@@ -10,21 +10,6 @@
 
 ?>
 <script>
-  function convertImgToBase64URL(url, callback, outputFormat){
-    var img = new Image();
-    img.crossOrigin = 'Anonymous';
-    img.onload = function(){
-        var canvas = document.createElement('CANVAS'),
-        ctx = canvas.getContext('2d'), dataURL;
-        canvas.height = img.height;
-        canvas.width = img.width;
-        ctx.drawImage(img, 0, 0);
-        dataURL = canvas.toDataURL(outputFormat);
-        callback(dataURL);
-        canvas = null; 
-    };
-    img.src = url;
-  }
 	function load_image(imgData){
 		$.ajax({
 				headers: {
@@ -49,7 +34,6 @@
 							$("#imguri").val(dataR.url);
 							$("#image-id").val(0);
 							$("#canvas-image").attr('src',imgData);
-              $("#file-upload-imgData").val(imgData);
 						}
 						else if(dataR.type=='error')
 						{
@@ -183,11 +167,6 @@
     
 		$( "body" ).on( "dblclick", '.same-height', function(e) {
 			$("#canvas-image").attr('src',$(this).attr("data-url"));
-      convertImgToBase64URL($(this).attr("data-url"),function(base64Img){
-        // Base64DataURL
-        // console.log(base64Img);
-        $("#file-upload-imgData").val(base64Img);
-      },"image/png");
 			$("#imguri").val($(this).attr("data-url"));
 			$("#image-id").val($(this).attr("data-id"));
 			$('#choose-image').modal('toggle');
@@ -359,7 +338,6 @@
 
 									<form role="form" id="form-publish" enctype="multipart/form-data">
 											{{ csrf_field() }}
-                      <input type="hidden" name="imgData" id="file-upload-imgData" />  
 											<input type="hidden" id="imguri" name="imguri" 
 											value="<?php 
 												if (!is_null($arr_repost)){ echo $arr_repost['url'];} 
