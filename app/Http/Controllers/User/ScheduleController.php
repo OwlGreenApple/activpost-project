@@ -18,7 +18,7 @@ use Celebpost\Models\Users;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 use Celebpost\Jobs\SendInstagram;
-use Image,File,Request,DB;
+use Image,Request,DB;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Response;
@@ -344,8 +344,7 @@ class ScheduleController extends Controller
 			
 			$filename = $slug;
 			// Image::make(Request::input("imguri"))->save($dir."/".$filename.".jpg");
-      // $url = Storage::disk('s3')->putFile($dirs3, Request::input("canvasImage"), 'public');
-      $url = Storage::disk('s3')->putFile($dirs3, file_get_contents($request->imgData), 'public');
+      $url = Storage::disk('s3')->put($dirs3, file_get_contents(Request::input("imguri")), 'public');
 
 			$schedule = new Schedule;
 			// $schedule->image = url('/images/uploads/'.$user->username.'-'.$user->id.'/'.$filename.".jpg");
@@ -358,8 +357,7 @@ class ScheduleController extends Controller
 			$schedule = Schedule::findOrFail($request->id);
 			// Image::make(Request::input("imguri"))->save($dir."/".$request->slug.".jpg");
       Storage::disk('s3')->delete($schedule->image);
-      // $url = Storage::disk('s3')->putFile($dirs3, Request::input("canvasImage"), 'public');
-      $url = Storage::disk('s3')->putFile($dirs3, file_get_contents($request->imgData), 'public');
+      $url = Storage::disk('s3')->put($dirs3, file_get_contents(Request::input("imguri")), 'public');
 			
       $schedule->image = $url;
       // $schedule->image = $dir."/".$request->slug.".jpg";
