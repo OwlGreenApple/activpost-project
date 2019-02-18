@@ -69,7 +69,9 @@ class APIController extends Controller
           if ($sc->is_s3) {
             $fileContents = Storage::disk('s3')->url($sc->image);
             // $photo = Storage::disk('local')->put('post-temp/'.$user->username.'-'.$user->id.'/', $fileContents);
-            $photo = Storage::disk('local')->putFile('post-temp/'.$user->username.'-'.$user->id.'/', file_get_contents($fileContents));
+            $ext = Storage::disk('s3')->mimeType($sc->image);
+            Storage::disk('local')->put('post-temp/'.$user->username.'-'.$user->id.'/temp.'.$ext, file_get_contents($fileContents));
+            $photo = storage_path('post-temp/'.$user->username.'-'.$user->id.'/temp.'.$ext);
           }
           else {
             $dir = base_path('../public_html/vp/uploads/'.$user->username.'-'.$user->id); 
