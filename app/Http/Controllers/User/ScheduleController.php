@@ -344,7 +344,8 @@ class ScheduleController extends Controller
 			
 			$filename = $slug;
 			// Image::make(Request::input("imguri"))->save($dir."/".$filename.".jpg");
-      $url = Storage::disk('s3')->putFile($dirs3, Request::input("canvasImage"), 'public');
+      // $url = Storage::disk('s3')->putFile($dirs3, Request::input("canvasImage"), 'public');
+      $url = Storage::disk('s3')->putFile($dirs3, $request->file('imgData'), 'public');
 
 			$schedule = new Schedule;
 			// $schedule->image = url('/images/uploads/'.$user->username.'-'.$user->id.'/'.$filename.".jpg");
@@ -357,7 +358,8 @@ class ScheduleController extends Controller
 			$schedule = Schedule::findOrFail($request->id);
 			// Image::make(Request::input("imguri"))->save($dir."/".$request->slug.".jpg");
       Storage::disk('s3')->delete($schedule->image);
-      $url = Storage::disk('s3')->putFile($dirs3, Request::input("canvasImage"), 'public');
+      // $url = Storage::disk('s3')->putFile($dirs3, Request::input("canvasImage"), 'public');
+      $url = Storage::disk('s3')->putFile($dirs3, $request->file('imgData'), 'public');
 			
       $schedule->image = $url;
       // $schedule->image = $dir."/".$request->slug.".jpg";

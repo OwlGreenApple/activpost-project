@@ -10,6 +10,15 @@
 
 ?>
 <script>
+function getBase64Image(img) {
+  var canvas = document.createElement("canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
+  var ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+  var dataURL = canvas.toDataURL("image/png");
+  return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+}
 	function load_image(imgData){
 		$.ajax({
 				headers: {
@@ -34,6 +43,7 @@
 							$("#imguri").val(dataR.url);
 							$("#image-id").val(0);
 							$("#canvas-image").attr('src',imgData);
+              $("#file-upload-imgData").val(imgData);
 						}
 						else if(dataR.type=='error')
 						{
@@ -167,6 +177,7 @@
     
 		$( "body" ).on( "dblclick", '.same-height', function(e) {
 			$("#canvas-image").attr('src',$(this).attr("data-url"));
+      $("#file-upload-imgData").val(getBase64Image($("#canvas-image")));
 			$("#imguri").val($(this).attr("data-url"));
 			$("#image-id").val($(this).attr("data-id"));
 			$('#choose-image').modal('toggle');
@@ -338,6 +349,7 @@
 
 									<form role="form" id="form-publish" enctype="multipart/form-data">
 											{{ csrf_field() }}
+                      <input type="file" name="imgData" style="display: none" id="file-upload-imgData" />  
 											<input type="hidden" id="imguri" name="imguri" 
 											value="<?php 
 												if (!is_null($arr_repost)){ echo $arr_repost['url'];} 
@@ -351,7 +363,7 @@
 											<img id="canvas-image" class="img-responsive" src="<?php 
 											if ($sid<>0) { echo $schedule->image; } 
 											else if (!is_null($arr_repost)){ echo $arr_repost['url'];}
-											?>" name="canvasImage">
+											?>">
 												
 											<div class="form-group">
 													<label>Caption
