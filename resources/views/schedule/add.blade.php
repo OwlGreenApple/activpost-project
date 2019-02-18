@@ -10,15 +10,21 @@
 
 ?>
 <script>
-function getBase64Image(img) {
-  var canvas = document.createElement("canvas");
-  canvas.width = img.width;
-  canvas.height = img.height;
-  var ctx = canvas.getContext("2d");
-  ctx.drawImage(img, 0, 0);
-  var dataURL = canvas.toDataURL("image/png");
-  return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-}
+  function convertImgToBase64URL(url, callback, outputFormat){
+    var img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = function(){
+        var canvas = document.createElement('CANVAS'),
+        ctx = canvas.getContext('2d'), dataURL;
+        canvas.height = img.height;
+        canvas.width = img.width;
+        ctx.drawImage(img, 0, 0);
+        dataURL = canvas.toDataURL(outputFormat);
+        callback(dataURL);
+        canvas = null; 
+    };
+    img.src = url;
+  }
 	function load_image(imgData){
 		$.ajax({
 				headers: {
@@ -177,7 +183,11 @@ function getBase64Image(img) {
     
 		$( "body" ).on( "dblclick", '.same-height', function(e) {
 			$("#canvas-image").attr('src',$(this).attr("data-url"));
-      $("#file-upload-imgData").val(getBase64Image($("#canvas-image")));
+      convertImgToBase64URL($(this).attr("data-url"),function(base64Img){
+        // Base64DataURL
+        console.log(base64Img);
+        $("#file-upload-imgData").val();
+      },"image/png");
 			$("#imguri").val($(this).attr("data-url"));
 			$("#image-id").val($(this).attr("data-id"));
 			$('#choose-image').modal('toggle');
