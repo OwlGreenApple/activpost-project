@@ -185,8 +185,8 @@
 			$("#canvas-image").attr('src',$(this).attr("data-url"));
       convertImgToBase64URL($(this).attr("data-url"),function(base64Img){
         // Base64DataURL
-        console.log(base64Img);
-        $("#file-upload-imgData").val();
+        // console.log(base64Img);
+        $("#file-upload-imgData").val(base64Img);
       },"image/png");
 			$("#imguri").val($(this).attr("data-url"));
 			$("#image-id").val($(this).attr("data-id"));
