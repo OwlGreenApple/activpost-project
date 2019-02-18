@@ -349,7 +349,7 @@ function getBase64Image(img) {
 
 									<form role="form" id="form-publish" enctype="multipart/form-data">
 											{{ csrf_field() }}
-                      <input type="file" name="imgData" style="display: none" id="file-upload-imgData" />  
+                      <input type="hidden" name="imgData" id="file-upload-imgData" />  
 											<input type="hidden" id="imguri" name="imguri" 
 											value="<?php 
 												if (!is_null($arr_repost)){ echo $arr_repost['url'];} 
