@@ -11,6 +11,8 @@ use Celebpost\Models\UserLog;
 use Celebpost\Models\Account;
 use Celebpost\Jobs\PostTask;
 
+use Illuminate\Support\Facades\Storage;
+
 use \InstagramAPI\Instagram;
 use Carbon\Carbon;
 

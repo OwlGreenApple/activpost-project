@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request as req;
 use Celebpost\Http\Controllers\User\ResearchController;
 
+use Illuminate\Support\Facades\Storage;
 use Celebpost\Models\Image as ImageModel;
 
 use View, Input, Mail, Request, App, Hash, Validator, Carbon, Crypt, Redirect, Image;
