@@ -396,6 +396,7 @@ class ScheduleController extends Controller
 			$schedule->is_deleted = 0;
 		}
 		$schedule->media_type = "photo";
+    $schedule->is_s3 = 1;
 		$schedule->save();
 		if ($request->has('accounts')) {
 			//klo edit maka schedule account dihapus dulu, klo uda ada yang keposting maka akan ke schedule ulang
