@@ -14,11 +14,12 @@ use Celebpost\Models\Template;
 use Celebpost\Models\Image as ImageModel;
 use Celebpost\Models\Proxies;
 use Celebpost\Models\Users;
+use Illuminate\Support\Facades\File;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 
 use Celebpost\Jobs\SendInstagram;
-use Image,File,Request,DB;
+use Image,Request,DB;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Response;
