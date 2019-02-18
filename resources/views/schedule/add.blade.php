@@ -351,7 +351,7 @@
 											<img id="canvas-image" class="img-responsive" src="<?php 
 											if ($sid<>0) { echo $schedule->image; } 
 											else if (!is_null($arr_repost)){ echo $arr_repost['url'];}
-											?>">
+											?>" name="canvasImage">
 												
 											<div class="form-group">
 													<label>Caption
