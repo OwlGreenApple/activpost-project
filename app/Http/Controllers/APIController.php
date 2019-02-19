@@ -69,7 +69,7 @@ class APIController extends Controller
           if ($sc->is_s3) {
             $fileContents = Storage::disk('s3')->url($sc->image);
             $ext = substr(strrchr($fileContents,'.'),1);
-            $dir = storage_path('app/post-temp/'.$user->username.'-'.$user->id)
+            $dir = storage_path('app/post-temp/'.$user->username.'-'.$user->id);
             if (!file_exists($dir)) {
               mkdir($dir,0755,true);
             }
