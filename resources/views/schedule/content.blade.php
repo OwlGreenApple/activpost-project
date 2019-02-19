@@ -32,19 +32,32 @@
 				if($arr->media_type=='photo') {
 					//check jika diawali 
 					if(strpos($arr->slug, 'PublishFile')===0){
-						$file = $file.'.jpg';
+            if ($arr->is_s3) {
+              $url = Storage::disk('s3')->url($arr->image);
+            }
+            else {
+              $url = '../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file.'.jpg';
+            }
 					}
 					?>
-          <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" class="img-responsive" width="65" height="65" >
+          <img src="{{$url}}" class="img-responsive" width="65" height="65" >
         <?php 
 				} 
 				else {
 						if ($arr->status >= 2 ){?>
 							<div class="video-remove"><i class="glyphicon glyphicon-play-circle"></i></div>
         <?php }
-						else {?>
-							<video src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" width="65" height="65"></video>
-        <?php }
+						else {
+              if ($arr->is_s3) {
+                $url = Storage::disk('s3')->url($arr->image);
+              }
+              else {
+                $url = '../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file;
+              }
+        ?>
+							<video src="{{$url}}" width="65" height="65"></video>
+        <?php 
+            }
 				} ?>
       </td>
       <td align="center">

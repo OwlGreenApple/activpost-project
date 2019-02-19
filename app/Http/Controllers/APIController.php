@@ -11,6 +11,8 @@ use Celebpost\Models\UserLog;
 use Celebpost\Models\Account;
 use Celebpost\Jobs\PostTask;
 
+use Illuminate\Support\Facades\Storage;
+
 use \InstagramAPI\Instagram;
 use Carbon\Carbon;
 
@@ -64,12 +66,24 @@ class APIController extends Controller
 					$password = $pass;
 					// $dir = public_path('images/uploads/'.$user->username.'-'.$user->id); 
 					// $dir = base_path('../public_html/dashboard/images/uploads/'.$user->username.'-'.$user->id); 
-					$dir = base_path('../public_html/vp/uploads/'.$user->username.'-'.$user->id); 
-					if($sc->media_type=='video' || strpos($sc->slug, 'StoryFile')===0){
-						$photo = $dir."/".$sc->slug;
-					} else {
-						$photo = $dir."/".$sc->slug.".jpg";
-					}
+          if ($sc->is_s3) {
+            $fileContents = Storage::disk('s3')->url($sc->image);
+            $ext = substr(strrchr($fileContents,'.'),1);
+            $path = 'post-temp/'.$user->username.'-'.$user->id.'/temp.'.$ext;
+            if (Storage::disk('local')->exists($path)) {
+              Storage::disk('local')->delete($path);
+            }
+            Storage::disk('local')->put($path, file_get_contents($fileContents));
+            $photo = storage_path('app/post-temp/'.$user->username.'-'.$user->id.'/temp.'.$ext);
+          }
+          else {
+            $dir = base_path('../public_html/vp/uploads/'.$user->username.'-'.$user->id); 
+            if($sc->media_type=='video' || strpos($sc->slug, 'StoryFile')===0){
+              $photo = $dir."/".$sc->slug;
+            } else {
+              $photo = $dir."/".$sc->slug.".jpg";
+            }
+          }
 					
 					$caption = $sc->description;
 					
@@ -97,7 +111,6 @@ class APIController extends Controller
 							}
 						}
 						$i->login($username, $password, 300);
-
 						// $logs = $sc->slug.'-'.$sc->media_type.", Login akun\n";
 						// fwrite($myfile, $logs);
 					} 
@@ -168,6 +181,7 @@ class APIController extends Controller
 						// continue;
 						return "Error Bad request(login)";
 					}
+          
 					if ($is_error) {
 							$check_sa->status = 5;
 							$check_sa->media_id = $smsg;
@@ -362,8 +376,14 @@ class APIController extends Controller
 						$update_schedule->save();
 						
 						if(($update_schedule->media_type=='video') || (strpos($update_schedule->slug, 'StoryFile')===0 && ($update_schedule->media_type == "video"))){
-							$photo = $dir."/".$update_schedule->slug;
-							unlink($photo);
+              if ($sc->is_s3) {
+                Storage::disk('s3')->delete($sc->image);
+              }
+              else {
+                $dir = base_path('../public_html/vp/uploads/'.$user->username.'-'.$user->id); 
+                $photo = $dir."/".$update_schedule->slug;
+                unlink($photo);
+              }
 						}
 					}
 					
@@ -383,7 +403,12 @@ class APIController extends Controller
 					}
 					//end
 
-					
+          //
+          if ($sc->is_s3) {
+            $photo = Storage::disk('local')->put('post-temp/'.$user->username.'-'.$user->id.'/', $fileContents);
+            Storage::disk('local')->delete($photo);
+          }
+          
 				}
 			}
 		}

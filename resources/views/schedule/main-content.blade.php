@@ -11,14 +11,31 @@ $user = Auth::user();
 				$file = $schedule->slug;
 				if($schedule->media_type=='photo') {
 					//check jika diawali 
-					if(strpos($schedule->slug, 'PublishFile')===0){
-						$file = $file.'.jpg';
-					}
+          $url ="";
+          if ($schedule->is_s3) {
+            $url = Storage::disk('s3')->url($schedule->image);
+          }
+          else {
+            if(strpos($schedule->slug, 'PublishFile')===0){
+              $url = '../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file.'.jpg';
+            }
+            else {
+              $url = '../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file;
+            }
+          }
         ?>
-				  <img src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" class="img-responsive schedule-image" data-zoom-image="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" style="max-height:240px;margin:0 auto;">
+				  <img src="{{$url}}" class="img-responsive schedule-image" data-zoom-image="{{$url}}" style="max-height:240px;margin:0 auto;">
         <?php 
-				} else { ?>
-          <video src="{{'../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file}}" width="260" height="240" controls></video>
+				}
+        else { 
+          if ($schedule->is_s3) {
+            $url = Storage::disk('s3')->url($schedule->image);
+          }
+          else {
+            $url = '../vp/uploads/'.$user->username.'-'.$user->id.'/'.$file;
+          }
+        ?>
+          <video src="{{$url}}" width="260" height="240" controls></video>
         <?php } ?>
 			@endif
 		</div>

@@ -314,7 +314,8 @@ class ScheduleController extends Controller
 		if (!file_exists($dir)) {
 			mkdir($dir,0741,true);
 		}
-
+    $dirs3 = 'vp/uploads/'.$user->username.'-'.$user->id; 
+    
 		if ($request->id == 0) {
 			// new schedule
 			//copy file jadi file publish
@@ -332,17 +333,22 @@ class ScheduleController extends Controller
 			}
 			
 			$filename = $slug;
-			Image::make(Request::input("imguri"))->save($dir."/".$filename.".jpg");
+			// Image::make(Request::input("imguri"))->save($dir."/".$filename.".jpg");
+      $url = Storage::disk('s3')->put($dirs3."/".$filename.".jpg", file_get_contents(Request::input("imguri")), 'public');
 
 			$schedule = new Schedule;
 			// $schedule->image = url('/images/uploads/'.$user->username.'-'.$user->id.'/'.$filename.".jpg");
-			$schedule->image = url('/../vp/uploads/'.$user->username.'-'.$user->id.'/'.$filename.".jpg");
+			// $schedule->image = url('/../vp/uploads/'.$user->username.'-'.$user->id.'/'.$filename.".jpg");
+      $schedule->image = $dirs3."/".$filename.".jpg";
 			$schedule->slug = $filename;
 		} else {
 			// edit schedule
-			Image::make(Request::input("imguri"))->save($dir."/".$request->slug.".jpg");
-			
 			$schedule = Schedule::findOrFail($request->id);
+			// Image::make(Request::input("imguri"))->save($dir."/".$request->slug.".jpg");
+      Storage::disk('s3')->delete($schedule->image);
+      $url = Storage::disk('s3')->put($dirs3."/".$request->slug.".jpg", file_get_contents(Request::input("imguri")), 'public');
+
+      $schedule->image = $dirs3."/".$request->slug.".jpg";
 			$schedule->slug = $request->slug;
 			
 			$check_sa = ScheduleAccount::where("schedule_id","=",$schedule->id)
@@ -398,6 +404,7 @@ class ScheduleController extends Controller
 			$schedule->PutAccount($request->accounts);
 			// $schedule->PutAccount($accounts);
 		}
+    $schedule->is_s3 = 1;
 		$schedule->save();
 		$check_sa = ScheduleAccount::where("schedule_id","=",$schedule->id)
 								->get();
@@ -520,7 +527,12 @@ class ScheduleController extends Controller
 		$dir = basename($schedule->image);
 		// $directory = public_path() . '/images/uploads/' .$dir;
 		$directory = public_path() . '/../vp/uploads/' .$dir;
-		File::delete($directory);
+    if ($schedule->is_s3) {
+      Storage::disk('s3')->delete($schedule->image);
+    }
+    else {
+      File::delete($directory);
+    }
 		Schedule::destroy($id);
 		ScheduleAccount::where("schedule_id",$id)->delete();
 		return back()->with('status', 'Schedule Deleted!');
@@ -1057,10 +1069,11 @@ $offset = ($page * $perPage) - $perPage;
       }
     }
     
-    $dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
+    /* $dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
     if (!file_exists($dir)) {
       mkdir($dir,0741,true);
-    }
+    }*/
+    $dir = 'vp/uploads/'.$user->username.'-'.$user->id; 
 
     if ($request->id == 0) {
       // new schedule
@@ -1080,12 +1093,14 @@ $offset = ($page * $perPage) - $perPage;
       
       $uploadedFile = $request->file('imgData');   
       $filename = $slug.'.'.$uploadedFile->getClientOriginalExtension();
-      $uploadedFile->move($dir, $filename);   
+      // $uploadedFile->move($dir, $filename);   
+      $url = Storage::disk('s3')->putFile($dir, $request->file('imgData'),'public');
 
       //Storage::move($request->imguri, $dir.'/'.$filename.'mp4');
 
       $schedule = new Schedule;
-      $schedule->image = url('/../vp/uploads/'.$user->username.'-'.$user->id.'/'.$filename);
+      // $schedule->image = url('/../vp/uploads/'.$user->username.'-'.$user->id.'/'.$filename);
+      $schedule->image = $url;
       $schedule->slug = $filename;
     } else {
       // edit schedule
@@ -1103,10 +1118,13 @@ $offset = ($page * $perPage) - $perPage;
           File::delete($dir.'/'.$request->slug);
         }
 
-        $uploadedFile->move($dir, $filename);   
+        // $uploadedFile->move($dir, $filename);   
+        Storage::disk('s3')->delete($schedule->image);
+        $url = Storage::disk('s3')->putFile($dir, $request->file('imgData'),'public');
 
         //Storage::move($request->imguri, $dir.'/'.$request->slug.'mp4');
         
+        $schedule->image = $url;
         $schedule->slug = $request->slug;
       }
       
@@ -1160,6 +1178,7 @@ $offset = ($page * $perPage) - $perPage;
       $schedule->PutAccount($request->accounts);
       // $schedule->PutAccount($accounts);
     }
+    $schedule->is_s3 = 1;
     $schedule->save();
     $check_sa = ScheduleAccount::where("schedule_id","=",$schedule->id)
                 ->get();
@@ -1393,10 +1412,11 @@ $offset = ($page * $perPage) - $perPage;
       }
     }
     
-    $dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
+    /* $dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
     if (!file_exists($dir)) {
       mkdir($dir,0741,true);
-    }
+    }*/
+    $dir = 'vp/uploads/'.$user->username.'-'.$user->id; 
 
     if ($request->id == 0) {
       // new schedule
@@ -1416,12 +1436,14 @@ $offset = ($page * $perPage) - $perPage;
       
       $uploadedFile = $request->file('imgData');   
       $filename = $slug.'.'.$uploadedFile->getClientOriginalExtension();
-      $uploadedFile->move($dir, $filename);   
+      // $uploadedFile->move($dir, $filename);   
+      $url = Storage::disk('s3')->putFile($dir, $request->file('imgData'),'public');
 
       //Storage::move($request->imguri, $dir.'/'.$filename.'mp4');
 
       $schedule = new Schedule;
-      $schedule->image = url('/../vp/uploads/'.$user->username.'-'.$user->id.'/'.$filename);
+      // $schedule->image = url('/../vp/uploads/'.$user->username.'-'.$user->id.'/'.$filename);
+      $schedule->image = $url;
       $schedule->slug = $filename;
     } else {
       // edit schedule
@@ -1439,11 +1461,14 @@ $offset = ($page * $perPage) - $perPage;
           File::delete($dir.'/'.$request->slug);
         }
 
-        $uploadedFile->move($dir, $filename);   
+        // $uploadedFile->move($dir, $filename);   
+        Storage::disk('s3')->delete($schedule->image);
+        $url = Storage::disk('s3')->putFile($dir, $request->file('imgData'),'public');
 
         //Storage::move($request->imguri, $dir.'/'.$request->slug.'mp4');
         
-        $schedule->image = url('/../vp/uploads/'.$user->username.'-'.$user->id.'/'.$filename);
+        // $schedule->image = url('/../vp/uploads/'.$user->username.'-'.$user->id.'/'.$filename);
+        $schedule->image = $url;
         $schedule->slug = $filename;
       }
       
@@ -1505,6 +1530,7 @@ $offset = ($page * $perPage) - $perPage;
       $schedule->PutAccount($request->accounts);
       // $schedule->PutAccount($accounts);
     }
+    $schedule->is_s3 = 1;
     $schedule->save();
     $check_sa = ScheduleAccount::where("schedule_id","=",$schedule->id)
                 ->get();

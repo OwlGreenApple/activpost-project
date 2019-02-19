@@ -18,10 +18,14 @@
 					<?php 
 						//$file = url('/images/users/'.$user->username.'-'.$user->id.'/'.$arr->file); 
             // $file = url('/images/users/'.$user->username.'-'.$user->id.'/'.$arr->file.'?v='.uniqid()); 
-            $file = url('/../vp/users/'.$user->username.'-'.$user->id.'/'.$arr->file.'?v='.uniqid()); 
-						
+            if ($arr->is_s3) {
+              $file = Storage::disk('s3')->url($arr->file);
+            }
+            else {
+              $file = url('/../vp/users/'.$user->username.'-'.$user->id.'/'.$arr->file.'?v='.uniqid()); 
+						}
 					?>
-						<img src="{{url($file)}}" class="img-responsive zoom" data-zoom-image="{{url($file)}}" width="65" height="65" >
+						<img src="{{$file}}" class="img-responsive zoom" data-zoom-image="{{$file}}" width="65" height="65" >
 				@endif
 			
       </td>
