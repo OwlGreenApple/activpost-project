@@ -717,8 +717,13 @@ class AccountController extends Controller
 	}
 
 	public function test(){
-    $contents = Storage::disk('s3')->get("vp/uploads/rizky87123@gmail.com-5/M6FGQL16dja4AiYzyB877BpLRHvy1KYrqWrmrctd.mp4");
-    dd($contents);
+    $s = "vp/uploads/rizky87123@gmail.com-5/PublishFile-00067.jpg";
+    // $contents = Storage::disk('s3')->get("vp/uploads/rizky87123@gmail.com-5/M6FGQL16dja4AiYzyB877BpLRHvy1KYrqWrmrctd.mp4");
+            $fileContents = Storage::disk('s3')->url($s);
+            $ext = substr(strrchr($fileContents,'.'),1);
+            Storage::disk('local')->put('post-temp/rizkyred-5/temp.'.$ext, file_get_contents($fileContents));
+            $photo = storage_path('post-temp/rizkyred-5/temp.'.$ext);
+            echo $ext;
 	}
 
 	
