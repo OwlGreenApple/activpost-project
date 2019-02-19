@@ -391,8 +391,14 @@ class APIController extends Controller
 						$update_schedule->save();
 						
 						if(($update_schedule->media_type=='video') || (strpos($update_schedule->slug, 'StoryFile')===0 && ($update_schedule->media_type == "video"))){
-							$photo = $dir."/".$update_schedule->slug;
-							unlink($photo);
+              if ($sc->is_s3) {
+                Storage::disk('s3')->delete($sc->image);
+              }
+              else {
+                $dir = base_path('../public_html/vp/uploads/'.$user->username.'-'.$user->id); 
+                $photo = $dir."/".$update_schedule->slug;
+                unlink($photo);
+              }
 						}
 					}
 					
