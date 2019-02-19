@@ -722,8 +722,8 @@ class AccountController extends Controller
             $fileContents = Storage::disk('s3')->url($s);
             $ext = substr(strrchr($fileContents,'.'),1);
             Storage::disk('local')->put('post-temp/rizkyred-5/temp.'.$ext, file_get_contents($fileContents));
-            $photo = storage_path('post-temp/rizkyred-5/temp.'.$ext);
-            echo $ext;
+            $photo = storage_path('app/post-temp/rizkyred-5/temp.'.$ext);
+            echo $photo;
 	}
 
 	
