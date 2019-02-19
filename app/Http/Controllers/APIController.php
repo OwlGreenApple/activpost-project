@@ -71,8 +71,8 @@ class APIController extends Controller
             $ext = substr(strrchr($fileContents,'.'),1);
             // if (!file_exists($dir)) {
             // }
-            Storage::disk('local')->put('app/post-temp/'.$user->username.'-'.$user->id.'/temp.'.$ext, file_get_contents($fileContents));
-            $photo = storage_path('post-temp/'.$user->username.'-'.$user->id).'/temp.'.$ext;
+            Storage::disk('local')->put('post-temp/'.$user->username.'-'.$user->id.'/temp.'.$ext, file_get_contents($fileContents));
+            $photo = storage_path('app/post-temp/'.$user->username.'-'.$user->id).'/temp.'.$ext;
           }
           else {
             $dir = base_path('../public_html/vp/uploads/'.$user->username.'-'.$user->id); 
