@@ -145,6 +145,7 @@ class ImageController extends Controller
                 ->where("is_s3",1)
 								->get();
 			foreach ($images as $image) {
+        $image->delete();
         Storage::disk('s3')->delete($image->file);
       }
 		} 
@@ -154,13 +155,13 @@ class ImageController extends Controller
 								->first();
 			if (!is_null($image)) {
         if (!$image->is_s3) {
-          $image->delete();
           // $dir = public_path('images/users/'.$user->username.'-'.$user->id); 
           $dir = public_path('../vp/users/'.$user->username.'-'.$user->id); 
           unlink($dir."/".$image->file);
         } else {
           Storage::disk('s3')->delete($image->file);
         }
+        $image->delete();
 			} else {
 				$arr["type"] = "error";
 				$arr["message"] = "Image tidak berhasil dihapus";

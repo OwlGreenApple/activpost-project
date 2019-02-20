@@ -6,8 +6,9 @@
   $i=($page-1)*15 + 1;
   foreach ($data as $arr) {
 		$file = "";
-		$pieces = explode(".", $arr->file);
-		$ext = $pieces[1];
+		// $pieces = explode(".", $arr->file);
+		// $ext = $pieces[1];
+    $ext = substr(strrchr($arr->file,'.'),1);
 ?>
     <tr id="tr-{{ $arr->id }}">
       <td>
