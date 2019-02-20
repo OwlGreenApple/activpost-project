@@ -143,7 +143,7 @@ class ScheduleController extends Controller
 			$arr_repost["caption"] = $repost->caption;
 			$arr_repost["owner"] = $repost->owner_post;
 			// $arr_repost["url"] = url('/images/users/'.$user->username.'-'.$user->id.'/'.$repost->file);
-      if ($res->is_s3) {
+      if ($repost->is_s3) {
         $arr_repost["url"] = Storage::disk('s3')->url($repost->file);
       }
       else {
