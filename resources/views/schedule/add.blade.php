@@ -341,7 +341,14 @@
 											<input type="hidden" id="imguri" name="imguri" 
 											value="<?php 
 												if (!is_null($arr_repost)){ echo $arr_repost['url'];} 
-												if ($sid<>0) { echo $schedule->image; } 
+												if ($sid<>0) { 
+                          if ($schedule->is_s3) {
+                            echo Storage::disk('s3')->url($schedule->image);
+                          }
+                          else {
+                            echo $schedule->image; 
+                          }
+                        } 
 											?>">
 											<input type="hidden" name="saveuri" value="{{ url('schedule/publish') }}">
 											<input type="hidden" name="ruri" value="{{ url('schedule') }}">
@@ -349,7 +356,14 @@
 											<input type="hidden" id="image-id" name="image_id" value="">
 											<input type="hidden" id="slug" name="slug" value="<?php if ($sid<>0) { echo $schedule->slug; } ?>"> 
 											<img id="canvas-image" class="img-responsive" src="<?php 
-											if ($sid<>0) { echo $schedule->image; } 
+											if ($sid<>0) { 
+                        if ($schedule->is_s3) {
+                          echo Storage::disk('s3')->url($schedule->image);
+                        }
+                        else {
+                          echo $schedule->image; 
+                        }
+                      } 
 											else if (!is_null($arr_repost)){ echo $arr_repost['url'];}
 											?>">
 												

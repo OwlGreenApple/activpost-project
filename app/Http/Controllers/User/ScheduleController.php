@@ -144,7 +144,12 @@ class ScheduleController extends Controller
 			$arr_repost["caption"] = $repost->caption;
 			$arr_repost["owner"] = $repost->owner_post;
 			// $arr_repost["url"] = url('/images/users/'.$user->username.'-'.$user->id.'/'.$repost->file);
-			$arr_repost["url"] = url('/../vp/users/'.$user->username.'-'.$user->id.'/'.$repost->file);
+      if ($repost->is_s3) {
+        $arr_repost["url"] = Storage::disk('s3')->url($repost->file);
+      }
+      else {
+        $arr_repost["url"] = url('/../vp/users/'.$user->username.'-'.$user->id.'/'.$repost->file);
+      }
 		}
 		
 		//check schedule page users, check schedule publish or not 
