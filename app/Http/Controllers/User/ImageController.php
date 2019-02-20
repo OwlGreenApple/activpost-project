@@ -137,9 +137,9 @@ class ImageController extends Controller
                 ->where("is_s3",0)
 								->get();
 			foreach ($images as $image) {
-				$image->delete();
 				// $dir = public_path('images/users/'.$user->username.'-'.$user->id); 
 				unlink($dir."/".$image->file);
+				$image->delete();
 			}
 			$images = ImageModel::where("user_id","=",$user->id)
                 ->where("is_s3",1)
