@@ -400,7 +400,14 @@
 											<input type="hidden" id="imguri" name="imguri" 
 											value="<?php 
 												if (!is_null($arr_repost)){ echo $arr_repost['url'];} 
-												if ($sid<>0) { echo $schedule->image; } 
+												if ($sid<>0) { 
+                          if ($schedule->is_s3) {
+                            echo Storage::disk('s3')->url($schedule->image);
+                          }
+                          else {
+                            echo $schedule->image; 
+                          }
+                        } 
 											?>">
                       <input type="file" name="imgData" style="display: none" id="file-upload" />  
 											<input type="hidden" name="saveuri" value="{{ url('schedule/publish') }}">
@@ -412,7 +419,14 @@
 											<div class="form-group row">
 												<div class="col-md-6 col-xs-12 col-sm-12">
 													<video id="video-preview" <?php if($sid==0) echo 'style="display: none;"' ?> src="<?php 
-													if ($sid<>0) { echo $schedule->image; } 
+													if ($sid<>0) { 
+                            if ($schedule->is_s3) {
+                              echo Storage::disk('s3')->url($schedule->image);
+                            }
+                            else {
+                              echo $schedule->image; 
+                            }
+                          } 
 													else if (!is_null($arr_repost)){ echo $arr_repost['url'];}
 													?>" width="320" height="240" controls></video>
 												</div>
