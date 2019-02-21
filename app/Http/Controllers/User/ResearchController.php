@@ -21,97 +21,97 @@ class ResearchController extends Controller
 	{
 		$user = Auth::user();
 		$arr_proxys[] = [
-			"proxy"=>"103.31.250.170",
-			"cred"=>"rizky12:proxyrizky",
-			"port"=>"8080",
+			"proxy"=>"id.smartproxy.io",
+			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"11000",
 			"no"=>"1",
 		];
 		$arr_proxys[] = [
-			"proxy"=>"103.31.250.170",
-			"cred"=>"rizky12:proxyrizky",
-			"port"=>"9700",
+			"proxy"=>"id.smartproxy.io",
+			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"11001",
 			"no"=>"2",
 		];
 		$arr_proxys[] = [
-			"proxy"=>"103.31.250.170",
-			"cred"=>"rizky12:proxyrizky",
-			"port"=>"3128",
+			"proxy"=>"id.smartproxy.io",
+			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"11002",
 			"no"=>"3",
 		];
 		
 		$arr_proxys[] = [
-			"proxy"=>"103.31.251.67",
-			"cred"=>"rizky12:proxyrizky",
-			"port"=>"8080",
+			"proxy"=>"id.smartproxy.io",
+			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"11003",
 			"no"=>"4",
 		];
 		$arr_proxys[] = [
-			"proxy"=>"103.31.251.67",
-			"cred"=>"rizky12:proxyrizky",
-			"port"=>"9700",
+			"proxy"=>"id.smartproxy.io",
+			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"11004",
 			"no"=>"5",
 		];
 		$arr_proxys[] = [
-			"proxy"=>"103.31.251.67",
-			"cred"=>"rizky12:proxyrizky",
-			"port"=>"3128",
+			"proxy"=>"id.smartproxy.io",
+			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"11005",
 			"no"=>"6",
 		];
 		
 		$arr_proxys[] = [
-			"proxy"=>"103.28.148.251",
-			"cred"=>"rizky12:proxyrizky",
-			"port"=>"8080",
+			"proxy"=>"id.smartproxy.io",
+			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"11006",
 			"no"=>"7",
 		];
 		$arr_proxys[] = [
-			"proxy"=>"103.28.148.251",
-			"cred"=>"rizky12:proxyrizky",
-			"port"=>"9700",
+			"proxy"=>"id.smartproxy.io",
+			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"11007",
 			"no"=>"8",
 		];
 		$arr_proxys[] = [
-			"proxy"=>"103.28.148.251",
-			"cred"=>"rizky12:proxyrizky",
-			"port"=>"3128",
+			"proxy"=>"id.smartproxy.io",
+			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"11008",
 			"no"=>"9",
 		];
 		
 		$arr_proxys[] = [
-			"proxy"=>"103.28.148.218",
-			"cred"=>"rizky12:proxyrizky",
-			"port"=>"8080",
+			"proxy"=>"id.smartproxy.io",
+			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"11009",
 			"no"=>"10",
 		];
 		$arr_proxys[] = [
-			"proxy"=>"103.28.148.218",
-			"cred"=>"rizky12:proxyrizky",
-			"port"=>"9700",
+			"proxy"=>"id.smartproxy.io",
+			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"11010",
 			"no"=>"11",
 		];
 		$arr_proxys[] = [
-			"proxy"=>"103.28.148.218",
-			"cred"=>"rizky12:proxyrizky",
-			"port"=>"3128",
+			"proxy"=>"id.smartproxy.io",
+			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"11011",
 			"no"=>"12",
 		];
 		
 		$arr_proxys[] = [
-			"proxy"=>"103.31.251.179",
-			"cred"=>"rizky12:proxyrizky",
-			"port"=>"8080",
+			"proxy"=>"id.smartproxy.io",
+			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"11012",
 			"no"=>"13",
 		];
 		$arr_proxys[] = [
-			"proxy"=>"103.31.251.179",
-			"cred"=>"rizky12:proxyrizky",
-			"port"=>"9700",
+			"proxy"=>"id.smartproxy.io",
+			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"11013",
 			"no"=>"14",
 		];
 		$arr_proxys[] = [
-			"proxy"=>"103.31.251.179",
-			"cred"=>"rizky12:proxyrizky",
-			"port"=>"3128",
+			"proxy"=>"id.smartproxy.io",
+			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"11014",
 			"no"=>"15",
 		];
 		
