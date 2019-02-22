@@ -368,7 +368,9 @@ class ScheduleController extends Controller
 			// edit schedule
 			$schedule = Schedule::findOrFail($request->id);
 			// Image::make(Request::input("imguri"))->save($dir."/".$request->slug.".jpg");
-      Storage::disk('s3')->delete($schedule->image);
+      if (Storage::disk('s3')->exists($schedule->image) ) {
+        Storage::disk('s3')->delete($schedule->image);
+      }
       $url = Storage::disk('s3')->put($dirs3."/".$request->slug.".jpg", file_get_contents(Request::input("imguri")), 'public');
 			
       // $schedule->image = $url;
@@ -552,7 +554,9 @@ class ScheduleController extends Controller
 		// $directory = public_path() . '/images/uploads/' .$dir;
 		$directory = public_path() . '/../vp/uploads/' .$dir;
     if ($schedule->is_s3) {
-      Storage::disk('s3')->delete($schedule->image);
+      if (Storage::disk('s3')->exists($schedule->image) ) {
+        Storage::disk('s3')->delete($schedule->image);
+      }
     }
     else {
       File::delete($directory);
@@ -1150,7 +1154,9 @@ $offset = ($page * $perPage) - $perPage;
         }
 
         // $uploadedFile->move($dir, $filename);   
-        Storage::disk('s3')->delete($schedule->image);
+        if (Storage::disk('s3')->exists($schedule->image) ) {
+          Storage::disk('s3')->delete($schedule->image);
+        }
         $url = Storage::disk('s3')->putFile($dir, $request->file('imgData'),'public');
 
         //Storage::move($request->imguri, $dir.'/'.$request->slug.'mp4');
@@ -1500,7 +1506,9 @@ $offset = ($page * $perPage) - $perPage;
         }
 
         // $uploadedFile->move($dir, $filename);   
-        Storage::disk('s3')->delete($schedule->image);
+        if (Storage::disk('s3')->exists($schedule->image) ) {
+          Storage::disk('s3')->delete($schedule->image);
+        }
         $url = Storage::disk('s3')->putFile($dir, $request->file('imgData'),'public');
 
         //Storage::move($request->imguri, $dir.'/'.$request->slug.'mp4');
