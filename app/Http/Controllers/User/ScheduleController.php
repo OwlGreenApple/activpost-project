@@ -41,6 +41,13 @@ class ScheduleController extends Controller
 		if (!$user->is_confirmed) {
 			return "Please Confirm Your Email";
 		}
+    if ($user->active_time  > 0){
+      $dt = Carbon::now();
+      $user->running_time = $dt->toDateTimeString();
+      $user->is_started = 1;
+      $user->save();
+    }
+    
 		$from = new Carbon("first day of this month");
 		$to = new Carbon("last day of this month");
 		
