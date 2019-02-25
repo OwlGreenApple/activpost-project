@@ -12,7 +12,7 @@ use Celebpost\Http\Controllers\User\ResearchController;
 use Illuminate\Support\Facades\Storage;
 use Celebpost\Models\Image as ImageModel;
 
-use View, Input, Mail, Request, App, Hash, Validator, Carbon, Crypt, Redirect, Image;
+use View, Input, Mail, Request, App, Hash, Validator, Carbon, Crypt, Redirect, Image, File;
 
 class ImageController extends Controller
 {
@@ -106,8 +106,9 @@ class ImageController extends Controller
 			// file_put_contents($img, file_get_contents($url));			
       $urls3 = Storage::disk('s3')->putFile($dir, file_get_contents($url),'public');
 		} else if (Request::input("decryptData") == "0"){
-			// Image::make(Request::input("imgData"))->save($dir."/".$filename.".jpg");
-      $urls3 = Storage::disk('s3')->putFile($dir, Request::input("imgData"),'public');
+			Image::make(Request::input("imgData"))->save($dir."/".$filename.".jpg");
+      // $urls3 = Storage::disk('s3')->putFile($dir, Request::input("imgData"),'public');
+      $urls3 = Storage::disk('s3')->putFile($dir, new File($dir."/".$filename.".jpg"),'public');
       // $urls3 = Storage::disk('s3')->putFile($dir, $request->file('imgData'),'public');
 		}
 		$imageM = new ImageModel;
