@@ -94,20 +94,20 @@ class ImageController extends Controller
 		// if ( (Request::input("captionData")=="") && (Request::input("ownerData")=="") ) {
 		if (Request::input("decryptData") == "1") {
       // *ga boleh di potong urlnya yang ? harus dipake
-			$pieces = explode("?", Crypt::decrypt(Request::input("imgData")));
-			$decode_data = $pieces[0];
+			// *$pieces = explode("?", Crypt::decrypt(Request::input("imgData")));
+			// *$decode_data = $pieces[0];
 			
 			// Image::make($decode_data)->save($dir."/".$filename.".jpg");
 			// file_put_contents($dir."/".$filename.".jpg",$decode_data);
-			$url = $decode_data;
-			// $url = Crypt::decrypt(Request::input("imgData"));
+			// *$url = $decode_data;
+			$url = Crypt::decrypt(Request::input("imgData"));
 			$img = $dir."/".$filename.".jpg";
 			// file_put_contents($img, file_get_contents($url));			
       $urls3 = Storage::disk('s3')->putFile($dir, file_get_contents($url),'public');
 		} else if (Request::input("decryptData") == "0"){
 			// Image::make(Request::input("imgData"))->save($dir."/".$filename.".jpg");
-      $urls3 = Storage::disk('s3')->putFile($dir, Request::input("imgData"),'public');
 		}
+      $urls3 = Storage::disk('s3')->putFile($dir, Request::input("imgData"),'public');
 		$imageM = new ImageModel;
 		$imageM->is_schedule = 0;
 		$imageM->user_id = $user->id;
