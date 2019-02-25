@@ -89,6 +89,7 @@ class ImageController extends Controller
 			mkdir($dir,0741,true);
 		}*/
     $dir = 'vp/users/'.$user->username.'-'.$user->id; 
+    $urls3 = "";
 
 		//check imgData url or encode image data
 		// if ( (Request::input("captionData")=="") && (Request::input("ownerData")=="") ) {
