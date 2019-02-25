@@ -107,7 +107,7 @@ class ImageController extends Controller
       $urls3 = Storage::disk('s3')->putFile($dir, file_get_contents($url),'public');
 		} else if (Request::input("decryptData") == "0"){
       $dirLocal = public_path('../vp/users/'.$user->username.'-'.$user->id); 
-      if (!file_exists($dir)) {
+      if (!file_exists($dirLocal)) {
         mkdir($dirLocal,0741,true);
       }
 			Image::make(Request::input("imgData"))->save($dirLocal."/".$filename.".jpg");
