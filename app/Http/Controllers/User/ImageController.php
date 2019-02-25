@@ -112,7 +112,7 @@ class ImageController extends Controller
       }
 			Image::make(Request::input("imgData"))->save($dirLocal."/".$filename.".jpg");
       // $urls3 = Storage::disk('s3')->putFile($dir, Request::input("imgData"),'public');
-      $urls3 = Storage::disk('s3')->putFile($dir, new File($dirLocal."/".$filename.".jpg"),'public');
+      $urls3 = Storage::disk('s3')->putFile($dir, new File("/".$dirLocal."/".$filename.".jpg"),'public');
       // $urls3 = Storage::disk('s3')->putFile($dir, $request->file('imgData'),'public');
 		}
 		$imageM = new ImageModel;
