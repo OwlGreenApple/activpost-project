@@ -111,7 +111,7 @@ class ImageController extends Controller
       $image_base64 = $image_parts[1];
       $encodedData = str_replace(' ','+',$image_base64);
       $decocedData = base64_decode($encodedData);
-      $urls3 = Storage::disk('s3')->putFile($dir, $decocedData,'public');
+      $urls3 = Storage::disk('s3')->putFile($dir, file_get_contents($decocedData),'public');
       // $urls3 = Storage::disk('s3')->putFile($dir, $request->file('imgData'),'public');
 		}
 		$imageM = new ImageModel;
