@@ -255,7 +255,7 @@
 							url: "<?php echo url('save-image'); ?>",
 							// data: $("#form-setting").serialize(),
 							data: { 
-								imgData: data,
+								imgData: img,
 								captionData: "",
 								ownerData: "",
 								decryptData: "0",
