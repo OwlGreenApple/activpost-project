@@ -256,6 +256,7 @@
 							// data: $("#form-setting").serialize(),
 							data: { 
 								imgData: data,
+								imgData2: window.atob(data),
 								captionData: "",
 								ownerData: "",
 								decryptData: "0",
