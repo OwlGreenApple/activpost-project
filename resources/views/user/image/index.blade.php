@@ -247,6 +247,7 @@
 				onSave: function(data, img) {
 					// data //base64 encoded image data
 					// img  //img element with src set to image data
+          
 					$.ajax({
 							headers: {
 									'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -255,7 +256,7 @@
 							url: "<?php echo url('save-image'); ?>",
 							// data: $("#form-setting").serialize(),
 							data: { 
-								imgData: img,
+								imgData: data,
 								captionData: "",
 								ownerData: "",
 								decryptData: "0",
