@@ -107,8 +107,9 @@ class ImageController extends Controller
       $urls3 = Storage::disk('s3')->putFile($dir, file_get_contents($url),'public');
 		} else if (Request::input("decryptData") == "0"){
 			// Image::make(Request::input("imgData"))->save($dir."/".$filename.".jpg");
-      $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', Request::input("imgData")));
-      return $data;
+      $image_parts = explode(";base64,", Request::input("imgData"));
+      $image_base64 = $image_parts[1];
+      $data = base64_decode($image_base64);
       $urls3 = Storage::disk('s3')->putFile($dir, $data,'public');
       // $urls3 = Storage::disk('s3')->putFile($dir, $request->file('imgData'),'public');
 		}
