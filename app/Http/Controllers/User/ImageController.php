@@ -98,13 +98,19 @@ class ImageController extends Controller
       $urls3 = Storage::disk('s3')->putFile($dir, file_get_contents($url),'public');
 		} else if (Request::input("decryptData") == "0"){
 			// Image::make(Request::input("imgData"))->save($dir."/".$filename.".jpg");
-      $urls3 = Storage::disk('s3')->putFile($dir, Request::input("imgData"),'public');
+      //decode base64 string
+      list($baseType, $image) = explode(';', Request::input("imgData"));
+      list(, $image) = explode(',', $image);
+      $image = base64_decode($image);
+      // $urls3 = Storage::disk('s3')->putFile($dir, $image,'public');
+      $urls3 = Storage::disk('s3')->put($dir."/".$filename.".jpg", $image,'public');
 		}
 		$imageM = new ImageModel;
 		$imageM->is_schedule = 0;
 		$imageM->user_id = $user->id;
 		// $imageM->file = $filename.".jpg";
-		$imageM->file = $urls3;
+		// $imageM->file = $urls3;
+    $imageM->file = $dir."/".$filename.".jpg";
     $imageM->is_s3 = 1;
 		if ( (Request::input("captionData")=="") && (Request::input("ownerData")=="") ) {
 			$imageM->is_use_caption = 0;
