@@ -156,7 +156,7 @@
 </div>
 
 <script type="text/javascript">
-  function _decode( s ) {
+  function decode( s ) {
     var pads = 0,
       i,
       b10,
