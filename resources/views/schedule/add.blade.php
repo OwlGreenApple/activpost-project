@@ -343,7 +343,7 @@
 												if (!is_null($arr_repost)){ echo $arr_repost['url'];} 
 												if ($sid<>0) { 
                           if ($schedule->is_s3) {
-                            echo Storage::disk('s3')->url($schedule->image);
+                            echo rawurldecode(Storage::disk('s3')->url($schedule->image));
                           }
                           else {
                             echo $schedule->image; 
