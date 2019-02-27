@@ -371,7 +371,7 @@ class ScheduleController extends Controller
       if (Storage::disk('s3')->exists($schedule->image) ) {
         Storage::disk('s3')->delete($schedule->image);
       }
-      $url = Storage::disk('s3')->put($dirs3."/".$request->slug.".jpg", file_get_contents(Request::input("imguri")), 'public');
+      $url = Storage::disk('s3')->put($dirs3."/".$request->slug.".jpg", file_get_contents(html_entity_decode(Request::input("imguri"))), 'public');
 			
       // $schedule->image = $url;
       $schedule->image = $dirs3."/".$request->slug.".jpg";
