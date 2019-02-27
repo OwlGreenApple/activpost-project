@@ -369,7 +369,7 @@ class ScheduleController extends Controller
 			$schedule = Schedule::findOrFail($request->id);
 			// Image::make(Request::input("imguri"))->save($dir."/".$request->slug.".jpg");
       if (Storage::disk('s3')->exists($schedule->image) ) {
-        Storage::disk('s3')->delete($schedule->image);
+        // Storage::disk('s3')->delete($schedule->image);
       }
       $url = Storage::disk('s3')->put($dirs3."/".$request->slug.".jpg", file_get_contents(Request::input("imguri")), 'public');
 			
