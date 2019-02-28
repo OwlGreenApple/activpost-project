@@ -48,10 +48,10 @@ class ScheduleController extends Controller
       $user->save();
     }
     
-		$from = new Carbon("first day of this month")->setTimezone('Asia/Jakarta');
-		$to = new Carbon("last day of this month")->setTimezone('Asia/Jakarta');
+		$from = new Carbon("first day of this month");
+		$to = new Carbon("last day of this month");
 		
-		$pivot = Carbon::now()->subDays(7);
+		$pivot = Carbon::now()->setTimezone('Asia/Jakarta')->subDays(7);
 		$data = Schedule::orderBy("publish_at")
 									->where("user_id","=",$user->id)
 									->where('schedules.status','<',2)
