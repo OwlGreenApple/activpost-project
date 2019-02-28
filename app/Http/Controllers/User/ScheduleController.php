@@ -350,7 +350,7 @@ class ScheduleController extends Controller
 			// edit schedule
 			$schedule = Schedule::findOrFail($request->id);
 			// Image::make(Request::input("imguri"))->save($dir."/".$request->slug.".jpg");
-      Storage::disk('s3')->delete($schedule->image);
+      // Storage::disk('s3')->delete($schedule->image);
       $url = Storage::disk('s3')->put($dirs3."/".$request->slug.".jpg", file_get_contents(Request::input("imguri")), 'public');
 
       $schedule->image = $dirs3."/".$request->slug.".jpg";
