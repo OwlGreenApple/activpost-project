@@ -42,14 +42,14 @@ class ScheduleController extends Controller
 			return "Please Confirm Your Email";
 		}
     if ($user->active_time  > 0){
-      $dt = Carbon::now();
+      $dt = Carbon::now()->setTimezone('Asia/Jakarta');
       $user->running_time = $dt->toDateTimeString();
       $user->is_started = 1;
       $user->save();
     }
     
-		$from = new Carbon("first day of this month");
-		$to = new Carbon("last day of this month");
+		$from = new Carbon("first day of this month")->setTimezone('Asia/Jakarta');
+		$to = new Carbon("last day of this month")->setTimezone('Asia/Jakarta');
 		
 		$pivot = Carbon::now()->subDays(7);
 		$data = Schedule::orderBy("publish_at")
@@ -194,7 +194,7 @@ class ScheduleController extends Controller
 		
 		$imageM = ImageModel::where("user_id","=",$user->id)->orderBy('images.id', 'desc')->get();
 		
-		$max_date = Carbon::now()->addSeconds($user->active_time)->format('Y-m-d H:i');
+		$max_date = Carbon::now()->setTimezone('Asia/Jakarta')->addSeconds($user->active_time)->format('Y-m-d H:i');
 		
 		return view('schedule.add',compact('sid','accounts','collections_captions','hashtags_collections','imageM','user','arr_repost','max_date'));
 	}
@@ -254,7 +254,7 @@ class ScheduleController extends Controller
 				$arr["message"]="Delete at harus lebih besar dari publish at";
 				return $arr;
 			}
-      $max_date = Carbon::now()->addSeconds($user->active_time);
+      $max_date = Carbon::now()->setTimezone('Asia/Jakarta')->addSeconds($user->active_time);
 			$dtpublish = Carbon::createFromFormat('Y-m-d H:i', $request->publish_at);
 			if ( $max_date->lt($dtpublish) ) {
 				$arr["type"]="error";
@@ -321,7 +321,7 @@ class ScheduleController extends Controller
 		}*/
 		
 		//check klo publish_at lebih kecil dari now 
-		$now = Carbon::now();
+		$now = Carbon::now()->setTimezone('Asia/Jakarta');
 		if ($request->hidden_method=="schedule") {
 			$dt1 = Carbon::createFromFormat('Y-m-d H:i', $request->publish_at);
 			if ( $dt1->lt($now) ) {
@@ -401,7 +401,7 @@ class ScheduleController extends Controller
 			$schedule->publish_at = strtotime($request->publish_at);
 		}
 		if ($request->hidden_method=="now")  {
-			$schedule->publish_at = Carbon::now();
+			$schedule->publish_at = Carbon::now()->setTimezone('Asia/Jakarta');
 		}
 		
 		if ($request->checkbox_delete) {
