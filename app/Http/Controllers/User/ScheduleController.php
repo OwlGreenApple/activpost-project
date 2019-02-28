@@ -42,7 +42,7 @@ class ScheduleController extends Controller
 			return "Please Confirm Your Email";
 		}
     if ($user->active_time  > 0){
-      $dt = Carbon::now()->setTimezone('Asia/Jakarta');
+      $dt = Carbon::now('Asia/Jakarta');
       $user->running_time = $dt->toDateTimeString();
       $user->is_started = 1;
       $user->save();
@@ -51,7 +51,7 @@ class ScheduleController extends Controller
 		$from = new Carbon("first day of this month");
 		$to = new Carbon("last day of this month");
 		
-		$pivot = Carbon::now()->setTimezone('Asia/Jakarta')->subDays(7);
+		$pivot = Carbon::now('Asia/Jakarta')->subDays(7);
 		$data = Schedule::orderBy("publish_at")
 									->where("user_id","=",$user->id)
 									->where('schedules.status','<',2)
