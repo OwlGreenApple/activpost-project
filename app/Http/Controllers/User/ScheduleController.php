@@ -132,6 +132,7 @@ class ScheduleController extends Controller
 
 	public function repost($imageid = null)
 	{
+    date_default_timezone_set("Asia/Jakarta");
 		$user = Auth::user();
 		if (!$user->is_confirmed) {
 			return "Please Confirm Your Email";
@@ -194,7 +195,7 @@ class ScheduleController extends Controller
 		
 		$imageM = ImageModel::where("user_id","=",$user->id)->orderBy('images.id', 'desc')->get();
 		
-		$max_date = Carbon::now('Asia/Jakarta')->addSeconds($user->active_time)->format('Y-m-d H:i');
+		$max_date = Carbon::now()->addSeconds($user->active_time)->format('Y-m-d H:i');
 		
 		return view('schedule.add',compact('sid','accounts','collections_captions','hashtags_collections','imageM','user','arr_repost','max_date'));
 	}
