@@ -42,7 +42,7 @@ class ScheduleController extends Controller
 			return "Please Confirm Your Email";
 		}
     if ($user->active_time  > 0){
-      $dt = Carbon::now()->setTimezone('Asia/Jakarta');
+      $dt = Carbon::now();
       $user->running_time = $dt->toDateTimeString();
       $user->is_started = 1;
       $user->save();
@@ -51,7 +51,7 @@ class ScheduleController extends Controller
 		$from = new Carbon("first day of this month");
 		$to = new Carbon("last day of this month");
 		
-		$pivot = Carbon::now()->setTimezone('Asia/Jakarta')->subDays(7);
+		$pivot = Carbon::now()->subDays(7);
 		$data = Schedule::orderBy("publish_at")
 									->where("user_id","=",$user->id)
 									->where('schedules.status','<',2)
@@ -132,7 +132,6 @@ class ScheduleController extends Controller
 
 	public function repost($imageid = null)
 	{
-    date_default_timezone_set("Asia/Jakarta");
 		$user = Auth::user();
 		if (!$user->is_confirmed) {
 			return "Please Confirm Your Email";
@@ -255,7 +254,7 @@ class ScheduleController extends Controller
 				$arr["message"]="Delete at harus lebih besar dari publish at";
 				return $arr;
 			}
-      $max_date = Carbon::now()->setTimezone('Asia/Jakarta')->addSeconds($user->active_time);
+      $max_date = Carbon::now()->addSeconds($user->active_time);
 			$dtpublish = Carbon::createFromFormat('Y-m-d H:i', $request->publish_at);
 			if ( $max_date->lt($dtpublish) ) {
 				$arr["type"]="error";
@@ -322,7 +321,7 @@ class ScheduleController extends Controller
 		}*/
 		
 		//check klo publish_at lebih kecil dari now 
-		$now = Carbon::now()->setTimezone('Asia/Jakarta');
+		$now = Carbon::now();
 		if ($request->hidden_method=="schedule") {
 			$dt1 = Carbon::createFromFormat('Y-m-d H:i', $request->publish_at);
 			if ( $dt1->lt($now) ) {
@@ -402,7 +401,7 @@ class ScheduleController extends Controller
 			$schedule->publish_at = strtotime($request->publish_at);
 		}
 		if ($request->hidden_method=="now")  {
-			$schedule->publish_at = Carbon::now()->setTimezone('Asia/Jakarta');
+			$schedule->publish_at = Carbon::now();
 		}
 		
 		if ($request->checkbox_delete) {
