@@ -46,6 +46,12 @@ class ScheduleController extends Controller
       $user->running_time = $dt->toDateTimeString();
       $user->is_started = 1;
       $user->save();
+      
+      $accounts = Account::where()->get();
+      foreach ($accounts as $account) {
+        $account->is_started = 1;
+        $account->save();
+      }
     }
     
 		$from = new Carbon("first day of this month");
