@@ -47,7 +47,7 @@ class ScheduleController extends Controller
       $user->is_started = 1;
       $user->save();
       
-      $accounts = Account::where()->get();
+      $accounts = Account::where("user_id",$user->id)->get();
       foreach ($accounts as $account) {
         $account->is_started = 1;
         $account->save();
