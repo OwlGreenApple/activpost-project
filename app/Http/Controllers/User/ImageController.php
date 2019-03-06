@@ -70,7 +70,7 @@ class ImageController extends Controller
 		
 		//slug file name 
 		$last_hit = ImageModel::where("user_id","=",$user->id)
-								->where("file","like","slug%")
+								->where("file","like","%slug%")
 								->orderBy('id', 'desc')->first();
 		if (is_null($last_hit)) {
 			$slug = "slug-00000";
