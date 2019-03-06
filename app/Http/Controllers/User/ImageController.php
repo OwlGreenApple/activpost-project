@@ -77,7 +77,8 @@ class ImageController extends Controller
 		} else {
 			$temp_arr1 = explode(".", $last_hit->file );
 			$temp_arr2 = explode("-", $temp_arr1[0] );
-			$ctr = intval($temp_arr2[1]); $ctr++;
+      $temp_arr2 = array_reverse($temp_arr2);
+			$ctr = intval($temp_arr2[0]); $ctr++;
 			$slug = "slug-".str_pad($ctr, 5, "0", STR_PAD_LEFT);
 		}
 		
