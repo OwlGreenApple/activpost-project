@@ -75,7 +75,7 @@ class ImageController extends Controller
 		if (is_null($last_hit)) {
 			$slug = "slug-00000";
 		} else {
-			$temp_arr1 = explode(".", $last_hit->file );
+			$temp_arr1 = explode(".jpg", $last_hit->file );
 			$temp_arr2 = explode("-", $temp_arr1[0] );
       $reversed = array_reverse($temp_arr2);
 			$ctr = intval($reversed[0]); $ctr++;
