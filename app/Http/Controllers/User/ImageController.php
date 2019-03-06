@@ -64,14 +64,15 @@ class ImageController extends Controller
 		
 		//slug file name 
 		$last_hit = ImageModel::where("user_id","=",$user->id)
-								->where("file","like","slug%")
+								->where("file","like","%slug%")
 								->orderBy('id', 'desc')->first();
 		if (is_null($last_hit)) {
 			$slug = "slug-00000";
 		} else {
-			$temp_arr1 = explode(".", $last_hit->file );
+			$temp_arr1 = explode(".jpg", $last_hit->file );
 			$temp_arr2 = explode("-", $temp_arr1[0] );
-			$ctr = intval($temp_arr2[1]); $ctr++;
+      $reversed = array_reverse($temp_arr2);
+			$ctr = intval($reversed[0]); $ctr++;
 			$slug = "slug-".str_pad($ctr, 5, "0", STR_PAD_LEFT);
 		}
 		
@@ -96,7 +97,7 @@ class ImageController extends Controller
 			$img = $dir."/".$filename.".jpg";
 			// file_put_contents($img, file_get_contents($url));			
       // $urls3 = Storage::disk('s3')->putFile($dir, file_get_contents($url),'public');
-      $urls3 = Storage::disk('s3')->put($dir, file_get_contents($url),'public');
+      $urls3 = Storage::disk('s3')->put($dir."/".$filename.".jpg", file_get_contents($url),'public');
 		} else if (Request::input("decryptData") == "0"){
 			// Image::make(Request::input("imgData"))->save($dir."/".$filename.".jpg");
       //decode base64 string
