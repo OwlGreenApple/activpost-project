@@ -284,8 +284,9 @@ class ScheduleController extends Controller
 			foreach ($request->accounts as $account){
         //check 1 hari cuman bole 9 post per akun 
         $sa_count = ScheduleAccount::
-                    where("account_id",$account)
-                    ->whereDate('publish_at', '=', date('Y-m-d'))
+                    join("schedules","schedules.id","=","schedule_account.schedule_id")
+                    ->where("account_id",$account)
+                    ->whereDate('schedule_account.publish_at', '=', date('Y-m-d'))
                     ->where('slug', 'not LIKE', '%StoryFile%')
                     ->count();
         if ($sa_count>9){
@@ -1093,8 +1094,9 @@ $offset = ($page * $perPage) - $perPage;
       foreach ($request->accounts as $account){
         //check 1 hari cuman bole 9 post per akun 
         $sa_count = ScheduleAccount::
-                    where("account_id",$account)
-                    ->whereDate('publish_at', '=', date('Y-m-d'))
+                    join("schedules","schedules.id","=","schedule_account.schedule_id")
+                    ->where("account_id",$account)
+                    ->whereDate('schedule_account.publish_at', '=', date('Y-m-d'))
                     ->where('slug', 'not LIKE', '%StoryFile%')
                     ->count();
         if ($sa_count>9){
