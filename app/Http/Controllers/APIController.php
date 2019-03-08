@@ -31,6 +31,15 @@ class APIController extends Controller
 		$user = Users::find($request->user_id);
 		$sc = Schedule::find($request->schedule_id);
 		
+    if(env('APP_PROJECT')=='Amelia'){
+      $sa_count = ScheduleAccount::where("account_id",$request->account_id)
+                  ->whereDate('published_time', '=', date('Y-m-d'))
+                  ->count();
+      if ($sa_count>9){
+        return "1 Hari posting sudah 9";
+      }
+    }
+		
 		if (!is_null($account)) {
 			if ( (!$account->is_started) || (!$account->is_active) ) {
 				return "account not started or not active ";

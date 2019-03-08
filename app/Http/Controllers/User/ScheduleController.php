@@ -281,16 +281,27 @@ class ScheduleController extends Controller
 			$dt1 = Carbon::now()->subMinutes(30);
 			$dt2 = Carbon::now()->addMinutes(30);
 		}*/
-		/*remark ngga perlu pake start
 			foreach ($request->accounts as $account){
-				$check = Account::find($account);
+        //check 1 hari cuman bole 9 post per akun 
+        $sa_count = ScheduleAccount::
+                    join("schedules","schedules.id","=","schedule_account.schedule_id")
+                    ->where("account_id",$account)
+                    ->whereDate('publish_at', '=', date('Y-m-d'))
+                    ->count();
+        if ($sa_count>9){
+          $arr["type"] = "error";
+          $arr["message"] = "Untuk tiap akun maksimal 1 hari posting 9 post";
+          return $arr;
+        }
+
+				/*$check = Account::find($account);
 				if (!is_null($check)) {
 					if (!$check->is_started){
 						$arr["type"] = "pending";
 						return $arr;
 					}
 				}
-				/*$check = Schedule::join("schedule_account","schedule_account.schedule_id","=","schedules.id")
+				$check = Schedule::join("schedule_account","schedule_account.schedule_id","=","schedules.id")
 									->where("user_id","=",$user->id)
 									->where("account_id","=",$account)
 									// ->where("schedules.publish_at",">=",$dt1->toDateString()." ".$dt1->format('H').":00:00" )
@@ -301,9 +312,9 @@ class ScheduleController extends Controller
 					$arr["type"]="error";
 					$arr["message"] = "Schedule Post maksimum 3 Post tiap jamnya";
 					return $arr;
-				}
+				}*/
 			}
-		*/
+		
 		// cek klo belum distart OLD
 		/*if (!$user->is_started) {
 			$arr["type"] = "pending";
@@ -1080,14 +1091,26 @@ $offset = ($page * $perPage) - $perPage;
       $dt2 = Carbon::now()->addMinutes(30);
     }*/
       foreach ($request->accounts as $account){
-        $check = Account::find($account);
+        //check 1 hari cuman bole 9 post per akun 
+        $sa_count = ScheduleAccount::
+                    join("schedules","schedules.id","=","schedule_account.schedule_id")
+                    ->where("account_id",$account)
+                    ->whereDate('publish_at', '=', date('Y-m-d'))
+                    ->count();
+        if ($sa_count>9){
+          $arr["type"] = "error";
+          $arr["message"] = "Untuk tiap akun maksimal 1 hari posting 9 post";
+          return $arr;
+        }
+
+        /*$check = Account::find($account);
         if (!is_null($check)) {
           if (!$check->is_started){
             $arr["type"] = "pending";
             return $arr;
           }
         }
-        /*$check = Schedule::join("schedule_account","schedule_account.schedule_id","=","schedules.id")
+        $check = Schedule::join("schedule_account","schedule_account.schedule_id","=","schedules.id")
                   ->where("user_id","=",$user->id)
                   ->where("account_id","=",$account)
                   // ->where("schedules.publish_at",">=",$dt1->toDateString()." ".$dt1->format('H').":00:00" )
@@ -1432,14 +1455,26 @@ $offset = ($page * $perPage) - $perPage;
       $dt2 = Carbon::now()->addMinutes(30);
     }*/
       foreach ($request->accounts as $account){
-        $check = Account::find($account);
+        //check 1 hari cuman bole 9 post per akun 
+        $sa_count = ScheduleAccount::
+                    join("schedules","schedules.id","=","schedule_account.schedule_id")
+                    ->where("account_id",$account)
+                    ->whereDate('publish_at', '=', date('Y-m-d'))
+                    ->count();
+        if ($sa_count>9){
+          $arr["type"] = "error";
+          $arr["message"] = "Untuk tiap akun maksimal 1 hari posting 9 post";
+          return $arr;
+        }
+
+        /*$check = Account::find($account);
         if (!is_null($check)) {
           if (!$check->is_started){
             $arr["type"] = "pending";
             return $arr;
           }
         }
-        /*$check = Schedule::join("schedule_account","schedule_account.schedule_id","=","schedules.id")
+        $check = Schedule::join("schedule_account","schedule_account.schedule_id","=","schedules.id")
                   ->where("user_id","=",$user->id)
                   ->where("account_id","=",$account)
                   // ->where("schedules.publish_at",">=",$dt1->toDateString()." ".$dt1->format('H').":00:00" )
