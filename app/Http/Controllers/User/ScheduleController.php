@@ -258,17 +258,6 @@ class ScheduleController extends Controller
 			$dt2 = Carbon::now()->addMinutes(30);
 		}*/
 			foreach ($request->accounts as $account){
-        //check 1 hari cuman bole 9 post per akun 
-        $sa_count = ScheduleAccount::
-                    join("schedules","schedules.id","=","schedule_account.schedule_id")
-                    ->where("account_id",$account)
-                    ->whereDate('publish_at', '=', date('Y-m-d'))
-                    ->count();
-        if ($sa_count>9){
-          $arr["type"] = "error";
-          $arr["message"] = "Untuk tiap akun maksimal 1 hari posting 9 post";
-          return $arr;
-        }
 				$check = Account::find($account);
 				if (!is_null($check)) {
 					if (!$check->is_started){
