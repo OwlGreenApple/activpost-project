@@ -34,6 +34,7 @@ class APIController extends Controller
     if(env('APP_PROJECT')=='Amelia'){
       $sa_count = ScheduleAccount::where("account_id",$request->account_id)
                   ->whereDate('published_time', '=', date('Y-m-d'))
+                  ->where('slug', 'not LIKE', '%StoryFile%')
                   ->count();
       if ($sa_count>9){
         return "1 Hari posting sudah 9";

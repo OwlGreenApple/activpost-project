@@ -286,6 +286,7 @@ class ScheduleController extends Controller
         $sa_count = ScheduleAccount::
                     where("account_id",$account)
                     ->whereDate('publish_at', '=', date('Y-m-d'))
+                    ->where('slug', 'not LIKE', '%StoryFile%')
                     ->count();
         if ($sa_count>9){
           $arr["type"] = "error";
@@ -1094,6 +1095,7 @@ $offset = ($page * $perPage) - $perPage;
         $sa_count = ScheduleAccount::
                     where("account_id",$account)
                     ->whereDate('publish_at', '=', date('Y-m-d'))
+                    ->where('slug', 'not LIKE', '%StoryFile%')
                     ->count();
         if ($sa_count>9){
           $arr["type"] = "error";
@@ -1452,19 +1454,10 @@ $offset = ($page * $perPage) - $perPage;
       $dt1 = Carbon::now()->subMinutes(30);
       $dt2 = Carbon::now()->addMinutes(30);
     }*/
-      foreach ($request->accounts as $account){
+      /*foreach ($request->accounts as $account){
         //check 1 hari cuman bole 9 post per akun 
-        $sa_count = ScheduleAccount::
-                    where("account_id",$account)
-                    ->whereDate('publish_at', '=', date('Y-m-d'))
-                    ->count();
-        if ($sa_count>9){
-          $arr["type"] = "error";
-          $arr["message"] = "Untuk tiap akun maksimal 1 hari posting 9 post";
-          return $arr;
-        }
 
-        /*$check = Account::find($account);
+        $check = Account::find($account);
         if (!is_null($check)) {
           if (!$check->is_started){
             $arr["type"] = "pending";
@@ -1482,8 +1475,8 @@ $offset = ($page * $perPage) - $perPage;
           $arr["type"]="error";
           $arr["message"] = "Schedule Post maksimum 3 Post tiap jamnya";
           return $arr;
-        }*/
-      }
+        }
+      }*/
   
     //check klo publish_at lebih kecil dari now 
     $now = Carbon::now();
