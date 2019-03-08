@@ -32,9 +32,11 @@ class APIController extends Controller
 		$sc = Schedule::find($request->schedule_id);
 		
     if(env('APP_PROJECT')=='Amelia'){
-      $sa_count = ScheduleAccount::where("account_id",$request->account_id)
+      $sa_count = ScheduleAccount::
+                  join("schedules","schedules.id","=","schedule_account.schedule_id")
+                  ->where("account_id",$request->account_id)
                   ->whereDate('published_time', '=', date('Y-m-d'))
-                  ->where('slug', 'not LIKE', '%StoryFile%')
+                  ->where('schedules.slug', 'not LIKE', '%StoryFile%')
                   ->count();
       if ($sa_count>9){
         return "1 Hari posting sudah 9";
