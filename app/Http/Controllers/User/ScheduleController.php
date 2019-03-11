@@ -286,7 +286,8 @@ class ScheduleController extends Controller
         $sa_count = ScheduleAccount::
                     join("schedules","schedules.id","=","schedule_account.schedule_id")
                     ->where("account_id",$account)
-                    ->whereDate('schedules.publish_at', '=', date('Y-m-d'))
+                    // ->whereDate('schedules.publish_at', '=', date('Y-m-d'))
+                    ->whereDate('schedules.publish_at', '=', Carbon::createFromFormat('Y-m-d H:i', $request->publish_at)->toDateString())
                     ->where('slug', 'not LIKE', '%StoryFile%')
                     ->count();
         if ($sa_count>=9){
@@ -1096,7 +1097,8 @@ $offset = ($page * $perPage) - $perPage;
         $sa_count = ScheduleAccount::
                     join("schedules","schedules.id","=","schedule_account.schedule_id")
                     ->where("account_id",$account)
-                    ->whereDate('schedules.publish_at', '=', date('Y-m-d'))
+                    // ->whereDate('schedules.publish_at', '=', date('Y-m-d'))
+                    ->whereDate('schedules.publish_at', '=', Carbon::createFromFormat('Y-m-d H:i', $request->publish_at)->toDateString())
                     ->where('slug', 'not LIKE', '%StoryFile%')
                     ->count();
         if ($sa_count>=9){
