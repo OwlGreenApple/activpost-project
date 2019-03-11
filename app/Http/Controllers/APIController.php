@@ -38,7 +38,7 @@ class APIController extends Controller
                   ->whereDate('published_time', '=', date('Y-m-d'))
                   ->where('schedules.slug', 'not LIKE', '%StoryFile%')
                   ->count();
-      if ($sa_count>9){
+      if ($sa_count>=9){
         return "1 Hari posting sudah 9";
       }
     }

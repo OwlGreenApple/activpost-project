@@ -286,10 +286,10 @@ class ScheduleController extends Controller
         $sa_count = ScheduleAccount::
                     join("schedules","schedules.id","=","schedule_account.schedule_id")
                     ->where("account_id",$account)
-                    ->whereDate('schedule_account.publish_at', '=', date('Y-m-d'))
+                    ->whereDate('schedules.publish_at', '=', date('Y-m-d'))
                     ->where('slug', 'not LIKE', '%StoryFile%')
                     ->count();
-        if ($sa_count>9){
+        if ($sa_count>=9){
           $arr["type"] = "error";
           $arr["message"] = "Untuk tiap akun maksimal 1 hari posting 9 post";
           return $arr;
@@ -1096,10 +1096,10 @@ $offset = ($page * $perPage) - $perPage;
         $sa_count = ScheduleAccount::
                     join("schedules","schedules.id","=","schedule_account.schedule_id")
                     ->where("account_id",$account)
-                    ->whereDate('schedule_account.publish_at', '=', date('Y-m-d'))
+                    ->whereDate('schedules.publish_at', '=', date('Y-m-d'))
                     ->where('slug', 'not LIKE', '%StoryFile%')
                     ->count();
-        if ($sa_count>9){
+        if ($sa_count>=9){
           $arr["type"] = "error";
           $arr["message"] = "Untuk tiap akun maksimal 1 hari posting 9 post";
           return $arr;
