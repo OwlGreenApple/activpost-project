@@ -978,7 +978,7 @@ $offset = ($page * $perPage) - $perPage;
   {
     $user = Auth::user();
 		
-    if($request->duration_video>=61){
+    if($request->duration_video>=60){
       $arr["type"] = "error";
       $arr["message"] = "Durasi video untuk upload post maksimal 1 menit";  
       return $arr;
