@@ -282,18 +282,20 @@ class ScheduleController extends Controller
 			$dt2 = Carbon::now()->addMinutes(30);
 		}*/
 			foreach ($request->accounts as $account){
-        //check 1 hari cuman bole 9 post per akun 
-        $sa_count = ScheduleAccount::
-                    join("schedules","schedules.id","=","schedule_account.schedule_id")
-                    ->where("account_id",$account)
-                    // ->whereDate('schedules.publish_at', '=', date('Y-m-d'))
-                    ->whereDate('schedules.publish_at', '=', Carbon::createFromFormat('Y-m-d H:i', $request->publish_at)->toDateString())
-                    ->where('slug', 'not LIKE', '%StoryFile%')
-                    ->count();
-        if ($sa_count>=9){
-          $arr["type"] = "error";
-          $arr["message"] = "Untuk tiap akun maksimal 1 hari posting 9 post";
-          return $arr;
+        if ($request->id == 0) {
+          //check 1 hari cuman bole 9 post per akun 
+          $sa_count = ScheduleAccount::
+                      join("schedules","schedules.id","=","schedule_account.schedule_id")
+                      ->where("account_id",$account)
+                      // ->whereDate('schedules.publish_at', '=', date('Y-m-d'))
+                      ->whereDate('schedules.publish_at', '=', Carbon::createFromFormat('Y-m-d H:i', $request->publish_at)->toDateString())
+                      ->where('slug', 'not LIKE', '%StoryFile%')
+                      ->count();
+          if ($sa_count>=9){
+            $arr["type"] = "error";
+            $arr["message"] = "Untuk tiap akun maksimal 1 hari posting 9 post";
+            return $arr;
+          }
         }
 
 				/*$check = Account::find($account);
@@ -1093,18 +1095,20 @@ $offset = ($page * $perPage) - $perPage;
       $dt2 = Carbon::now()->addMinutes(30);
     }*/
       foreach ($request->accounts as $account){
-        //check 1 hari cuman bole 9 post per akun 
-        $sa_count = ScheduleAccount::
-                    join("schedules","schedules.id","=","schedule_account.schedule_id")
-                    ->where("account_id",$account)
-                    // ->whereDate('schedules.publish_at', '=', date('Y-m-d'))
-                    ->whereDate('schedules.publish_at', '=', Carbon::createFromFormat('Y-m-d H:i', $request->publish_at)->toDateString())
-                    ->where('slug', 'not LIKE', '%StoryFile%')
-                    ->count();
-        if ($sa_count>=9){
-          $arr["type"] = "error";
-          $arr["message"] = "Untuk tiap akun maksimal 1 hari posting 9 post";
-          return $arr;
+        if ($request->id == 0) {
+          //check 1 hari cuman bole 9 post per akun 
+          $sa_count = ScheduleAccount::
+                      join("schedules","schedules.id","=","schedule_account.schedule_id")
+                      ->where("account_id",$account)
+                      // ->whereDate('schedules.publish_at', '=', date('Y-m-d'))
+                      ->whereDate('schedules.publish_at', '=', Carbon::createFromFormat('Y-m-d H:i', $request->publish_at)->toDateString())
+                      ->where('slug', 'not LIKE', '%StoryFile%')
+                      ->count();
+          if ($sa_count>=9){
+            $arr["type"] = "error";
+            $arr["message"] = "Untuk tiap akun maksimal 1 hari posting 9 post";
+            return $arr;
+          }
         }
 
         /*$check = Account::find($account);
