@@ -30,7 +30,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-      $schedule->command('count:userstime')->hourly()->withoutOverlapping();
+      // $schedule->command('count:userstime')->hourly()->withoutOverlapping();
+      $schedule->command('count:userstime')->cron('0 */2 * * *')->withoutOverlapping();
       /*
 			// $schedule->command('send:instagram')->withoutOverlapping()->timezone(''.env('IG_TIMEZONE').'');
       $schedule->command('send:instagram')->timezone(''.env('IG_TIMEZONE').'');
