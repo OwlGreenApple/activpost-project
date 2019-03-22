@@ -33,33 +33,19 @@ class UserController extends Controller
    */
   public function index(){
     
-     $now = Carbon::now();
-     $user = Auth::user();
-     $user->last_seen = $now->toDateTimeString();
-     $user->save();
-      /*
-       if ($user->is_admin == 1) {
-
-          echo "string :". $user->is_admin;
-
-       }elseif ($user->is_admin == 0) {
-
-          echo "string :". $user->is_admin;
-       }
-
-       */
+    $now = Carbon::now();
+    $user = Auth::user();
+    $user->last_seen = $now->toDateTimeString();
+    $user->save();
 
     if($user->is_admin == 1)
     {
-
-      $accounts = Account::where("user_id","=",$user->id)
-                ->orderBy('username','asc')->paginate(15);
-     
-
-      $usern = Users::paginate(15);
+      // $accounts = Account::where("user_id","=",$user->id)
+                // ->orderBy('username','asc')->paginate(15);
+      // $usern = Users::paginate(15);
   
-      return view('admin.index',compact('accounts','user','usern'));
-
+      // return view('admin.index',compact('accounts','user','usern'));
+      return view('admin.index');
     }elseif ($user->is_admin == 0) 
     {
       $accounts = Account::where("user_id","=",$user->id)
@@ -281,56 +267,21 @@ class UserController extends Controller
 
   public function search(req $request)
   {
-      $user = Auth::user();
-      //$query  = $request->get('q');
+    $user = Auth::user();
 
-      if ($user->is_admin == 1) {
-       $q = $request->q;
-  /*
-       $accounts = Account::where("user_id","=",$user->id)
-                ->orderBy('username','asc')->paginate(15);
-    */
+    if ($user->is_admin == 1) {
+      $q = $request->q;
+      
       $usern = Users::leftJoin('accounts', 'accounts.user_id', '=', 'users.id' )  
-                          ->where('is_admin',0)
-                          ->where('users.email', 'LIKE', '%'.$q.'%')
-                          ->orWhere('accounts.username', 'LIKE', '%'.$q.'%')
-                          ->select('users.username as username1', 'users.name', 'users.email', 'users.active_time', 'users.id')
-                          //->orWhere('users.email', '=', $q)
-                          //->select('users.*')
-                          ->paginate(15);
-                          /*
-        $usern = Account::join('users', 'accounts.user_id', '=','users.id')
-                          ->where('accounts.username', 'LIKE', '%'.$q.'%')
-                          ->orWhere('users.email', 'LIKE', '%'.$q.'%')
-                          ->select('users.username as username1', 'accounts.username as username2')
-                          ->paginate(15);*/
-        /*
-        $album  =   Users::->where('users_id',$user_id)
-                    ->leftJoin('photos',function($query){
-                            $query->on('photos.albums_id','=','albums.id')
-                            ->on('photos.status','=',1);
-                    })
-        ->where('albums.status','=',1)->first();
-
-        DB::table('users')
-        ->join('contacts', function ($join) {
-            $join->on('users.id', '=', 'contacts.user_id')
-                 ->where('contacts.user_id', '>', 5);
-        })
-        ->get();
-        
-       $pagination = $usern->appends ( array (
-        'q' => $request->q 
-    ) );
-          */
-     
-
+                      ->where('is_admin',0)
+                      ->where('users.email', 'LIKE', '%'.$q.'%')
+                      ->orWhere('accounts.username', 'LIKE', '%'.$q.'%')
+                      ->select('users.username as username1', 'users.name', 'users.email', 'users.active_time', 'users.id')
+                      ->groupBy('users.username as username1', 'users.name', 'users.email', 'users.active_time', 'users.id')
+                      ->paginate(15);
         return view('admin.search',compact('accounts','user','usern'));
-
       }else{
-
         return Redirect::to('https://activpost.net/not-authorized/');
-
       }
       
 

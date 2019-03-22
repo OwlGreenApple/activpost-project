@@ -154,7 +154,8 @@ $('.ls-modal3').on('click', function(e){
           {
           },
           success: function(result) {
-						location.reload();
+						// location.reload();
+            alert("akun berhasil direfresh");
           }
       });
 		});

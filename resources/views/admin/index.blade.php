@@ -160,59 +160,9 @@
             <tbody>
 
 
-    <?php $no = $usern->firstItem()  ; ?>
-    <?php $dt = count($usern) ?>
-    @if ($dt > 0)
-    @foreach ($usern as $usersn)
-    <tr>
-        <td>{{$no ++}}</td>
-        <td>{{$usersn->username}}</td>
-        <td>{{$usersn->name}}</td>
-        <td>{{$usersn->email}}</td>
-       
-        <td <?= (0 == $usersn->is_started) ? 'style="font-weight: bold;color:#ec1810;"' : 'style="font-weight: bold;color:#2b9984;"';?>><?= (0 == $usersn->is_started) ? 'Stoped' : 'Started';?></td>
-        <td>        
-     
-{{secondsToday($usersn->active_time)}}  D {{secondsTohour($usersn->active_time)}} H {{secondsTominets($usersn->active_time)}} M
-
-        </td>
-        <td>
-  
-
-        <a href="{{action('Admin\UserController@show',['id'=>$usersn->id])}}" data-toggle="modal" id="button-add" class="btn btn-info ls-modal" >View Log</a>
-
-         <a href="{{action('Admin\UserController@showedit',['id'=>$usersn->id])}}" data-toggle="modal" id="button-add" class="btn btn-warning ls-modal2" >Edit Time</a>
-
-         <a href="{{action('Admin\UserController@delete',['id'=>$usersn->id])}}" id="button-add" class="btn btn-danger" >Clear Data</a> 
-
-         <a href="{{action('Admin\UserController@showmaxaccount',['id'=>$usersn->id])}}" id="button-add" class="btn btn-primary ls-modal3" >Max Account</a> 
-
-         <a href="{{action('Admin\UserController@showemail',['id'=>$usersn->id])}}" data-toggle="modal" id="button-add" class="btn btn-warning ls-modal5" >Edit Email</a>
-
-         <a href="{{action('Admin\UserController@loginuser',['id'=>$usersn->id])}}" id="button-add" class="btn btn-primary" >Login User</a>
-               
-         <button class="btn btn-primary btn-refund" data-toggle="modal" data-target="#modalRefund" data-id="{{$usersn->id}}">
-          Refund  
-         </button>
-
-         <button class="btn btn-info btn-time-log" data-toggle="modal" data-target="#myModal6" data-id="{{$usersn->id}}">
-            Time Log
-          </button>
-
-        </td>
-
-
-        </td>
-
-    </tr>
-    @endforeach
-
-    @else
-      <div style="font-weight: bold;"> Data Tidak Ditemuka</div>
-    @endif
+        <div style="font-weight: bold;"> Data Tidak Ditemuka</div>
         </tbody>
         </table>
-     {!! $usern->render() !!}
 
         </div>
 
