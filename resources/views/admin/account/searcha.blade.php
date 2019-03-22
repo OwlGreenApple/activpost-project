@@ -136,9 +136,11 @@ $('.ls-modal3').on('click', function(e){
           dataType: 'text',
           beforeSend: function()
           {
+            $("#div-loading").show();
           },
           success: function(result) {
-						location.reload();
+            $("#div-loading").hide();
+						// location.reload();
           }
       });
 		});
