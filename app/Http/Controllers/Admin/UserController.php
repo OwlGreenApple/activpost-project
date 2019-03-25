@@ -277,8 +277,8 @@ class UserController extends Controller
                       ->where('users.email', 'LIKE', '%'.$q.'%')
                       ->orWhere('accounts.username', 'LIKE', '%'.$q.'%')
                       ->select('users.username as username1', 'users.name', 'users.email', 'users.active_time', 'users.id')
-                      ->groupBy('users.username', 'users.name', 'users.email', 'users.active_time', 'users.id')
-                      ->paginate(15);
+                      // ->groupBy('users.username', 'users.name', 'users.email', 'users.active_time', 'users.id')
+                      ->paginate(15); ////INI MASI SLOW
         return view('admin.search',compact('accounts','user','usern'));
       }else{
         return Redirect::to('https://activpost.net/not-authorized/');
