@@ -285,14 +285,15 @@ class UserController extends Controller
 
       if ($user->is_admin == 1) {
         $q = $request->q;
-        $usern = Users::leftJoin('accounts', 'accounts.user_id', '=', 'users.id' )  
-                          ->where('is_admin',0)
-                          ->where('users.email', 'LIKE', '%'.$q.'%')
-                          ->orWhere('accounts.username', 'LIKE', '%'.$q.'%')
-                          ->select('users.username as username1', 'users.name', 'users.email', 'users.active_time', 'users.id')
-                          // ->groupBy('username1', 'users.name', 'users.email', 'users.active_time', 'users.id')
-                          ->paginate(15);
-        return view('admin.search',compact('accounts','user','usern'));
+        $usern = Users::
+                      // leftJoin('accounts', 'accounts.user_id', '=', 'users.id' )  
+                      where('is_admin',0)
+                      ->where('users.email', 'LIKE', '%'.$q.'%')
+                      // ->orWhere('accounts.username', 'LIKE', '%'.$q.'%')
+                      ->select('users.username as username1', 'users.name', 'users.email', 'users.active_time', 'users.id')
+                      // ->groupBy('users.username', 'users.name', 'users.email', 'users.active_time', 'users.id')
+                      ->paginate(15); ////INI MASI SLOW
+        return view('admin.search',compact('user','usern'));
       }else{
         return Redirect::to('https://activpost.net/not-authorized/');
       }
