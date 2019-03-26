@@ -30,6 +30,7 @@
         <?php 
 				$file = $arr->slug;
 				if($arr->media_type=='photo') {
+          $url = "";
 					//check jika diawali 
 					if(strpos($arr->slug, 'PublishFile')===0){
             if ($arr->is_s3) {
