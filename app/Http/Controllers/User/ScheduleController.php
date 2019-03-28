@@ -283,12 +283,18 @@ class ScheduleController extends Controller
 		}*/
 			foreach ($request->accounts as $account){
         if ($request->id == 0) {
+          if ($request->hidden_method=="schedule")  {
+            $publish_at = Carbon::createFromFormat('Y-m-d H:i', $request->publish_at)->toDateString();
+          }
+          if ($request->hidden_method=="now")  {
+            $publish_at = Carbon::now()->toDateString();
+          }
           //check 1 hari cuman bole 9 post per akun 
           $sa_count = ScheduleAccount::
                       join("schedules","schedules.id","=","schedule_account.schedule_id")
                       ->where("account_id",$account)
                       // ->whereDate('schedules.publish_at', '=', date('Y-m-d'))
-                      ->whereDate('schedules.publish_at', '=', Carbon::createFromFormat('Y-m-d H:i', $request->publish_at)->toDateString())
+                      ->whereDate('schedules.publish_at', '=', $publish_at)
                       ->where('slug', 'not LIKE', '%StoryFile%')
                       ->count();
           if ($sa_count>=9){
