@@ -73,9 +73,6 @@ class UserTime extends Command
           //print ke text file email user yang waktu nya null 
           $message .= $user->username." running_time is null;";
         }
-        if ($user->email== "dealmobil8384@gmail.com" ){
-          Log::error("active time :".$update_user->active_time." is started: ".$update_user->is_started." running time:".$runTime->toDateTimeString()." now:".$now->toDateTimeString());
-        }
 			}
       if ($message<> "" ){
         Log::error($message);
