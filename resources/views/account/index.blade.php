@@ -689,7 +689,7 @@ use Celebpost\Models\Proxies;
 
 
 		{{-- Add Modal --}}
-		<div class="modal fade" id="add">
+		<div class="modal fade" id="add" style="margin-bottom:90px;">
 			<div class="modal-dialog">
 					<div class="modal-content">
 							<form id="addaccount" role="form">
