@@ -123,9 +123,6 @@ class APIController extends Controller
 							}
 						}
 						$i->login($username, $password, 300);
-            if ($username=="emblem.gunung.store"){
-              Log::info('A');
-            }
 						// $logs = $sc->slug.'-'.$sc->media_type.", Login akun\n";
 						// fwrite($myfile, $logs);
 					} 
@@ -196,9 +193,6 @@ class APIController extends Controller
 						// continue;
 						return "Error Bad request(login)";
 					}
-          if ($username=="emblem.gunung.store"){
-            Log::info('B');
-          }
           
 					if ($is_error) {
 							$check_sa->status = 5;
@@ -231,9 +225,6 @@ class APIController extends Controller
 					}
 					// Upload
 					try {
-          if ($username=="emblem.gunung.store"){
-            Log::info('C');
-          }
 						if ($sc->media_type == "photo") {
 							$caption = str_replace("\r\n", "\n", $caption);
 							
@@ -296,9 +287,6 @@ class APIController extends Controller
 							// $logs = $sc->slug.'-'.$sc->media_type.", Pasca posting\n";
 							// fwrite($myfile, $logs);
 						}
-          if ($username=="emblem.gunung.store"){
-            Log::info('D');
-          }
 					} 
 					catch (Exception $e) {
 						$smsg = $e->getMessage();
@@ -375,9 +363,6 @@ class APIController extends Controller
 						return "Error  badrequest (posting)";
 					}
 				
-          if ($username=="emblem.gunung.store"){
-            Log::info('E');
-          }
 					$dt = Carbon::now();
 					$check_sa->published_time = strtotime($dt->toDateTimeString());
 					$check_sa->status = 2;
@@ -430,10 +415,6 @@ class APIController extends Controller
 					}
 					//end
 
-          if ($username=="emblem.gunung.store"){
-            Log::info('F');
-          }
-					
           //
           if ($sc->is_s3) {
             $photo = Storage::disk('local')->put('post-temp/'.$user->username.'-'.$user->id.'/', $fileContents);
