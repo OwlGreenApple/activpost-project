@@ -423,7 +423,7 @@ class APIController extends Controller
 						ob_start();
 						$result = ob_get_clean();    
             $dirs3 = 'debug-log/'.$user->username.'-'.$user->id.'/'; 
-            $url = Storage::disk('s3')->put($dirs3."/".Carbon::now()->toDateTimeString().".jpg", $result, 'public');
+            $url = Storage::disk('s3')->put($dirs3."/".Carbon::now()->toDateTimeString().".txt", $result, 'public');
           }
           
 				}
