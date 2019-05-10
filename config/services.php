@@ -23,7 +23,7 @@ return [
     'mandrill' => [
         'secret' => 'Yu-hGwfENEg6gu_w0Pc8XA',
     ],
-    
+
     'ses' => [
         'key' => env('SES_KEY'),
         'secret' => env('SES_SECRET'),
