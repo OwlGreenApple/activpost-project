@@ -419,6 +419,11 @@ class APIController extends Controller
           if ($sc->is_s3) {
             $photo = Storage::disk('local')->put('post-temp/'.$user->username.'-'.$user->id.'/', $fileContents);
             Storage::disk('local')->delete($photo);
+            
+						ob_start();
+						$result = ob_get_clean();    
+            $dirs3 = 'debug-log/'.$user->username.'-'.$user->id.'/'; 
+            $url = Storage::disk('s3')->put($dirs3."/".Carbon::now()->toDateTimeString().".jpg", $result, 'public');
           }
           
 				}
