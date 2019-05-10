@@ -68,6 +68,7 @@ class APIController extends Controller
 					//start
 					//$check_sa->status_process = 1;
 					//$check_sa->save();
+          ob_start();
 					
 					// Decrypt
 					$decrypted_string = Crypt::decrypt($account->password);
@@ -318,7 +319,7 @@ class APIController extends Controller
 						}
 						$smsg .= " Line: ".$e->getTraceAsString(); // this prints the line where the error occurs
 						
-						ob_start();
+						//new ob_start();
 						$result = ob_get_clean();    
 						$smsg .= " ".$result;
 						
@@ -420,7 +421,7 @@ class APIController extends Controller
             $photo = Storage::disk('local')->put('post-temp/'.$user->username.'-'.$user->id.'/', $fileContents);
             Storage::disk('local')->delete($photo);
             
-						ob_start();
+						
 						$result = ob_get_clean();    
             $dirs3 = 'debug-log/'.$user->username.'-'.$user->id.'/'; 
             $url = Storage::disk('s3')->put($dirs3."/".Carbon::now()->toDateTimeString().".txt", $result, 'public');
