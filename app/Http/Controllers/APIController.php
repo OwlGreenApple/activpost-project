@@ -100,7 +100,7 @@ class APIController extends Controller
 					
 					$caption = $sc->description;
 					
-					$i = new Instagram(true,true,[
+					$i = new Instagram(false,false,[
 						"storage"       => "mysql",
 						"dbhost"       => Config::get('database.connections.mysql_celebgramme.host'),
 						"dbname"   => Config::get('database.connections.mysql_celebgramme.database'),
