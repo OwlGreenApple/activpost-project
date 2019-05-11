@@ -100,7 +100,7 @@ class APIController extends Controller
 					
 					$caption = $sc->description;
 					
-					$i = new Instagram(false,false,[
+					$i = new Instagram(true,true,[
 						"storage"       => "mysql",
 						"dbhost"       => Config::get('database.connections.mysql_celebgramme.host'),
 						"dbname"   => Config::get('database.connections.mysql_celebgramme.database'),
@@ -273,11 +273,6 @@ class APIController extends Controller
 								// fwrite($myfile, $logs);
 								
                 $photoVar = new \InstagramAPI\Media\Video\InstagramVideo($photo, ['targetFeed' => \InstagramAPI\Constants::FEED_TIMELINE]);
-                // if ($sc->id==678321){
-                  echo "a";
-                  var_dump($photoVar->getFile());
-                  exit;
-                // }
 								$instagram = $i->timeline->uploadVideo($photoVar->getFile(), ['caption' => $caption, 'thumbnail_timestamp' => $sc->thumbnail_video]);
 
 								// $logs = $sc->slug.'-'.$sc->media_type.", Posting video\n";
