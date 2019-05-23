@@ -227,6 +227,7 @@ class APIController extends Controller
 					// Upload
 					try {
 						if ($sc->media_type == "photo") {
+              sleep(3);
 							$caption = str_replace("\r\n", "\n", $caption);
 							
 							if(strpos($sc->slug, 'StoryFile')===0){
@@ -256,6 +257,7 @@ class APIController extends Controller
 							$update_account->save();
 						} 
 						else if ($sc->media_type == "video") {
+              sleep(10);
 							// $i->uploadVideo($photo, $caption);
 							$caption = str_replace("\r\n", "\n", $caption);
 							
