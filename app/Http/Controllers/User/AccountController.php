@@ -314,6 +314,7 @@ class AccountController extends Controller
 			// }
 			// $i->setUser($username, $password);
 			
+        $i->login($username, $password, 300);
 				$account->user_id = $user->id;
 				$account->is_active = 1;
 				$account->save();
@@ -325,7 +326,6 @@ class AccountController extends Controller
           $user->save();
         }
 				
-        $i->login($username, $password, 300);
 				// Output
 			return response()->json([
 					'login_status' => 200,
