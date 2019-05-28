@@ -66,8 +66,8 @@ class APIController extends Controller
 				}
 				if ($check_sa->status < 2) {
 					//start
-					//$check_sa->status_process = 1;
-					//$check_sa->save();
+					$check_sa->status_process = 1;
+					$check_sa->save();
           // ob_start();
 					
 					// Decrypt
