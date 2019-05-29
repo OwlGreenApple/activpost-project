@@ -401,6 +401,10 @@ class APIController extends Controller
 						$update_schedule = Schedule::find($sc->id);
 						$update_schedule->status = 2;
 						$update_schedule->save();
+            
+            if ($sc->is_s3) {
+              Storage::disk('local')->delete($path);
+            }
 						
 						if(($update_schedule->media_type=='video') || (strpos($update_schedule->slug, 'StoryFile')===0 && ($update_schedule->media_type == "video"))){
               if ($sc->is_s3) {
@@ -431,16 +435,16 @@ class APIController extends Controller
 					//end
 
           //
-          if ($sc->is_s3) {
+          // if ($sc->is_s3) {
             // $photo = Storage::disk('local')->put('post-temp/'.$user->username.'-'.$user->id.'/', $fileContents);
             // Storage::disk('local')->delete($photo);
-            Storage::disk('local')->delete($path);
+            
             
 						
 						// $result = ob_get_clean();    
             // $dirs3 = 'debug-log/'.$user->username.'-'.$user->id.'/'; 
             // $url = Storage::disk('s3')->put($dirs3."/".Carbon::now()->toDateTimeString().".txt", $result, 'public');
-          }
+          // }
           
 				}
 			}
