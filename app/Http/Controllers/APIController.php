@@ -95,8 +95,8 @@ class APIController extends Controller
             $path = 'post-temp/'.$user->id.'-'.$sc->id.'/temp.'.$ext;
             if (!Storage::disk('local')->exists($path)) {
               Storage::disk('local')->put($path, file_get_contents($fileContents));
-              $photo = storage_path('app/'.$path);
             }
+            $photo = storage_path('app/'.$path);
 
           }
           else {
