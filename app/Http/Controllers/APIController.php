@@ -66,8 +66,8 @@ class APIController extends Controller
 				}
 				if ($check_sa->status < 2) {
 					//start
-					$check_sa->status_process = 1;
-					$check_sa->save();
+					// $check_sa->status_process = 1;
+					// $check_sa->save();
           // ob_start();
 					
 					// Decrypt
@@ -80,6 +80,7 @@ class APIController extends Controller
 					// $dir = public_path('images/uploads/'.$user->username.'-'.$user->id); 
 					// $dir = base_path('../public_html/dashboard/images/uploads/'.$user->username.'-'.$user->id); 
           if ($sc->is_s3) {
+            /*old 
             $fileContents = Storage::disk('s3')->url($sc->image);
             $ext = substr(strrchr($fileContents,'.'),1);
             $path = 'post-temp/'.$user->username.'-'.$user->id.'/temp.'.$ext;
@@ -88,6 +89,15 @@ class APIController extends Controller
             }
             Storage::disk('local')->put($path, file_get_contents($fileContents));
             $photo = storage_path('app/post-temp/'.$user->username.'-'.$user->id.'/temp.'.$ext);
+            */
+            $fileContents = Storage::disk('s3')->url($sc->image);
+            $ext = substr(strrchr($fileContents,'.'),1);
+            $path = 'post-temp/'.$user->id.'-'.$sc->id.'/temp.'.$ext;
+            if (!Storage::disk('local')->exists($path)) {
+              Storage::disk('local')->put($path, file_get_contents($fileContents));
+              $photo = storage_path('app/'.$path);
+            }
+
           }
           else {
             $dir = base_path('../public_html/vp/uploads/'.$user->username.'-'.$user->id); 
@@ -98,6 +108,8 @@ class APIController extends Controller
             }
           }
 					
+					$check_sa->status_process = 1;
+					$check_sa->save();
 					$caption = $sc->description;
 					
 					$i = new Instagram(true,true,[
@@ -420,8 +432,9 @@ class APIController extends Controller
 
           //
           if ($sc->is_s3) {
-            $photo = Storage::disk('local')->put('post-temp/'.$user->username.'-'.$user->id.'/', $fileContents);
-            Storage::disk('local')->delete($photo);
+            // $photo = Storage::disk('local')->put('post-temp/'.$user->username.'-'.$user->id.'/', $fileContents);
+            // Storage::disk('local')->delete($photo);
+            Storage::disk('local')->delete($path);
             
 						
 						// $result = ob_get_clean();    
