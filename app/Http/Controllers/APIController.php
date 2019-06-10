@@ -239,7 +239,7 @@ class APIController extends Controller
 					// Upload
 					try {
 						if ($sc->media_type == "photo") {
-              sleep(10);
+              sleep(30);
 							$caption = str_replace("\r\n", "\n", $caption);
 							
 							if(strpos($sc->slug, 'StoryFile')===0){
@@ -402,7 +402,7 @@ class APIController extends Controller
 						$update_schedule->status = 2;
 						$update_schedule->save();
             
-            /*if ($sc->is_s3) {
+            /*temporary if ($sc->is_s3) {
               Storage::disk('local')->delete($path);
             }*/
 						
