@@ -402,9 +402,9 @@ class APIController extends Controller
 						$update_schedule->status = 2;
 						$update_schedule->save();
             
-            if ($sc->is_s3) {
+            /*if ($sc->is_s3) {
               Storage::disk('local')->delete($path);
-            }
+            }*/
 						
 						if(($update_schedule->media_type=='video') || (strpos($update_schedule->slug, 'StoryFile')===0 && ($update_schedule->media_type == "video"))){
               if ($sc->is_s3) {
