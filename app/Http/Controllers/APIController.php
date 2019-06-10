@@ -108,8 +108,8 @@ class APIController extends Controller
             }
           }
 					
-					$check_sa->status_process = 1;
-					$check_sa->save();
+					// $check_sa->status_process = 1;
+					// $check_sa->save();
 					$caption = $sc->description;
 					
 					$i = new Instagram(true,true,[
@@ -239,7 +239,7 @@ class APIController extends Controller
 					// Upload
 					try {
 						if ($sc->media_type == "photo") {
-              sleep(3);
+              sleep(10);
 							$caption = str_replace("\r\n", "\n", $caption);
 							
 							if(strpos($sc->slug, 'StoryFile')===0){
@@ -269,7 +269,7 @@ class APIController extends Controller
 							$update_account->save();
 						} 
 						else if ($sc->media_type == "video") {
-              sleep(10);
+              sleep(30);
 							// $i->uploadVideo($photo, $caption);
 							$caption = str_replace("\r\n", "\n", $caption);
 							
