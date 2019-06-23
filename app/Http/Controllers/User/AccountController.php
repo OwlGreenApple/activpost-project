@@ -199,7 +199,7 @@ class AccountController extends Controller
 		
 		$cookiefile = base_path('storage/ig-cookies/'.$username.'/').'cookies-celebpost-temp.txt';
 
-    if(env('APP_ENV')=='production'){
+    /*if(env('APP_ENV')=='production'){
 			if ($user->is_member_rico==0) {
 				$url = "https://activfans.com/dashboard/get-proxy-id/".$username;
 			}
@@ -225,7 +225,10 @@ class AccountController extends Controller
     } else {
       $proxy_id = 1; 
       $is_on_celebgramme = 0; 
-    }
+    }*/
+    $arr_proxy_temp = $this->get_proxy_id($username);
+    $proxy_id = $arr_proxy_temp["proxy_id"]; 
+    $is_on_celebgramme = 0; 
 
 		$account->proxy_id = $proxy_id;
 		$account->is_on_celebgramme = $is_on_celebgramme;
@@ -915,6 +918,48 @@ class AccountController extends Controller
 					'status' => "success",
 					'msg' => ''
 			]);
+	}
+
+	public function get_proxy_id($insta_username){	
+		//data id yang pake proxy di celebpost
+		$array_clp = array();
+		$accounts = Account::select('proxy_id')
+								->where('proxy_id','<>',0)->get();
+		foreach($accounts as $data) {
+			$array_clp[] = $data->proxy_id;
+		}
+
+	
+    //carikan proxy baru, yang available 
+    $availableProxy = Proxies::
+                    select('id')
+                    ->whereNotIn('id',$array_clp)
+                    ->get();
+    $arrAvailableProxy = array();
+    foreach($availableProxy as $data) {
+      $dataNew = array();
+      $dataNew["id"] = $data->id;
+      $arrAvailableProxy[] = $dataNew;	
+    }
+    if (count($arrAvailableProxy)>0) {
+      $proxy_id = $arrAvailableProxy[array_rand($arrAvailableProxy)]["id"];
+    } else {
+      //sementara supaya jalan karena testing ga ada proxy 
+      $proxy_id = $arrAvailableProxy[array_rand($arrAvailableProxy)]["id"];
+      
+    }
+    $arr["proxy_id"] = $proxy_id;
+			
+	
+		$full_proxy =  Proxies::find($arr["proxy_id"]);
+		if (!is_null($full_proxy)) {
+			$arr["port"] = $full_proxy->port;
+			$arr["cred"] = $full_proxy->cred;
+			$arr["proxy"] = $full_proxy->proxy;
+			$arr["auth"] = $full_proxy->auth;
+		}
+	
+		return $arr;
 	}
 	
 }
