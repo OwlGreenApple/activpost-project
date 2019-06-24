@@ -924,6 +924,7 @@ class AccountController extends Controller
 		//data id yang pake proxy di celebpost
 		$array_clp = array();
 		$accounts = Account::select('proxy_id')
+                ->where("is_started",1)
 								->where('proxy_id','<>',0)->get();
 		foreach($accounts as $data) {
 			$array_clp[] = $data->proxy_id;
