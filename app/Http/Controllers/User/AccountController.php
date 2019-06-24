@@ -934,6 +934,7 @@ class AccountController extends Controller
     $availableProxy = Proxies::
                     select('id')
                     ->whereNotIn('id',$array_clp)
+                    ->where("proxy","208.115.112.100")
                     ->get();
     $arrAvailableProxy = array();
     foreach($availableProxy as $data) {
