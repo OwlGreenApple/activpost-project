@@ -199,7 +199,7 @@ class AccountController extends Controller
 		
 		$cookiefile = base_path('storage/ig-cookies/'.$username.'/').'cookies-celebpost-temp.txt';
 
-    /*if(env('APP_ENV')=='production'){
+    if(env('APP_ENV')=='production'){
 			if ($user->is_member_rico==0) {
 				$url = "https://activfans.com/dashboard/get-proxy-id/".$username;
 			}
@@ -225,10 +225,10 @@ class AccountController extends Controller
     } else {
       $proxy_id = 1; 
       $is_on_celebgramme = 0; 
-    }*/
-    $arr_proxy_temp = $this->get_proxy_id($username);
+    }
+    /*$arr_proxy_temp = $this->get_proxy_id($username);
     $proxy_id = $arr_proxy_temp["proxy_id"]; 
-    $is_on_celebgramme = 0; 
+    $is_on_celebgramme = 0; */
 
 		$account->proxy_id = $proxy_id;
 		$account->is_on_celebgramme = $is_on_celebgramme;
