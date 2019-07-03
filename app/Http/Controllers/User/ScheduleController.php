@@ -43,7 +43,7 @@ class ScheduleController extends Controller
 		$from = new Carbon("first day of this month");
 		$to = new Carbon("last day of this month");
 		
-		$pivot = Carbon::now()->subDays(30);
+		$pivot = Carbon::now()->subDays(60);
 		$data = Schedule::orderBy("publish_at")
 									->where("user_id","=",$user->id)
 									->where('schedules.status','<',2)
@@ -57,7 +57,7 @@ class ScheduleController extends Controller
 	public function load_main_schedule()
   {
 		$user = Auth::user();
-		$pivot = Carbon::now()->subDays(30);
+		$pivot = Carbon::now()->subDays(60);
 
 		$schedules = Schedule::orderBy("publish_at")
 									->where("user_id","=",$user->id)
