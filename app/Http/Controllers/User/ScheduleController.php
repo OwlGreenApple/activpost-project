@@ -73,7 +73,7 @@ class ScheduleController extends Controller
 	public function load_main_schedule()
   {
 		$user = Auth::user();
-		$pivot = Carbon::now()->subDays(7);
+		$pivot = Carbon::now()->subDays(30);
 
 		$schedules = Schedule::orderBy("publish_at")
 									->where("user_id","=",$user->id)
