@@ -21,98 +21,67 @@ class ResearchController extends Controller
 	{
 		$user = Auth::user();
 		$arr_proxys[] = [
-			"proxy"=>"id.smartproxy.io",
-			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
-			"port"=>"11000",
+			"proxy"=>"51.15.5.159",
+			// "cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"2016",
 			"no"=>"1",
 		];
 		$arr_proxys[] = [
-			"proxy"=>"id.smartproxy.io",
-			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
-			"port"=>"11001",
+			"proxy"=>"51.15.5.159",
+			// "cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"2017",
 			"no"=>"2",
 		];
 		$arr_proxys[] = [
-			"proxy"=>"id.smartproxy.io",
-			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
-			"port"=>"11002",
+			"proxy"=>"51.15.5.159",
+			// "cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"2018",
 			"no"=>"3",
 		];
 		
 		$arr_proxys[] = [
-			"proxy"=>"id.smartproxy.io",
-			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
-			"port"=>"11003",
+			"proxy"=>"51.15.5.159",
+			// "cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"2019",
 			"no"=>"4",
 		];
 		$arr_proxys[] = [
-			"proxy"=>"id.smartproxy.io",
-			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
-			"port"=>"11004",
+			"proxy"=>"51.15.5.159",
+			// "cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"2020",
 			"no"=>"5",
 		];
 		$arr_proxys[] = [
-			"proxy"=>"id.smartproxy.io",
-			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
-			"port"=>"11005",
+			"proxy"=>"51.15.5.159",
+			// "cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"2021",
 			"no"=>"6",
 		];
 		
 		$arr_proxys[] = [
-			"proxy"=>"id.smartproxy.io",
-			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
-			"port"=>"11006",
+			"proxy"=>"51.15.5.159",
+			// "cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"2022",
 			"no"=>"7",
 		];
 		$arr_proxys[] = [
-			"proxy"=>"id.smartproxy.io",
-			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
-			"port"=>"11007",
+			"proxy"=>"51.15.5.159",
+			// "cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"2023",
 			"no"=>"8",
 		];
 		$arr_proxys[] = [
-			"proxy"=>"id.smartproxy.io",
-			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
-			"port"=>"11008",
+			"proxy"=>"51.15.5.159",
+			// "cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"2024",
 			"no"=>"9",
 		];
 		
 		$arr_proxys[] = [
-			"proxy"=>"id.smartproxy.io",
-			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
-			"port"=>"11009",
+			"proxy"=>"51.15.5.159",
+			// "cred"=>"michaelsugih:TUhmQPS2erGtEe2",
+			"port"=>"2025",
 			"no"=>"10",
-		];
-		$arr_proxys[] = [
-			"proxy"=>"id.smartproxy.io",
-			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
-			"port"=>"11010",
-			"no"=>"11",
-		];
-		$arr_proxys[] = [
-			"proxy"=>"id.smartproxy.io",
-			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
-			"port"=>"11011",
-			"no"=>"12",
-		];
-		
-		$arr_proxys[] = [
-			"proxy"=>"id.smartproxy.io",
-			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
-			"port"=>"11012",
-			"no"=>"13",
-		];
-		$arr_proxys[] = [
-			"proxy"=>"id.smartproxy.io",
-			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
-			"port"=>"11013",
-			"no"=>"14",
-		];
-		$arr_proxys[] = [
-			"proxy"=>"id.smartproxy.io",
-			"cred"=>"michaelsugih:TUhmQPS2erGtEe2",
-			"port"=>"11014",
-			"no"=>"15",
 		];
 		
 		$arr_proxy = $arr_proxys[array_rand($arr_proxys)];
@@ -136,7 +105,7 @@ class ResearchController extends Controller
 
 		curl_setopt($c, CURLOPT_PROXY, $arr_proxy["proxy"]);
 		curl_setopt($c, CURLOPT_PROXYPORT, $arr_proxy["port"]);
-		curl_setopt($c, CURLOPT_PROXYUSERPWD, $arr_proxy["cred"]);
+		// curl_setopt($c, CURLOPT_PROXYUSERPWD, $arr_proxy["cred"]);
 		curl_setopt($c, CURLOPT_PROXYTYPE, 'HTTP');
 		curl_setopt($c, CURLOPT_URL, $url);
 		curl_setopt($c, CURLOPT_REFERER, $url);
