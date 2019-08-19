@@ -159,7 +159,6 @@ class ResearchController extends Controller
 			
 			unlink($cookiefile);
 		} else {
-      return $arr;
 			//error proxy
 			File::delete(storage_path('ig-cookies/'.$user->id));
 			$arr["type"]= "error";
