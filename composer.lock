@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b096bf000184f0ab7b2677dcccad5ad5",
+    "content-hash": "a90409f1187e99c640799bb1b9248d0c",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1830,12 +1830,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mgp25/Instagram-API.git",
-                "reference": "2b6791852d28985295314ff9c5c0c280844e5d0c"
+                "reference": "c8409a510d12a46c8c18a82af9c62f46f73ef1e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mgp25/Instagram-API/zipball/2b6791852d28985295314ff9c5c0c280844e5d0c",
-                "reference": "2b6791852d28985295314ff9c5c0c280844e5d0c",
+                "url": "https://api.github.com/repos/mgp25/Instagram-API/zipball/c8409a510d12a46c8c18a82af9c62f46f73ef1e4",
+                "reference": "c8409a510d12a46c8c18a82af9c62f46f73ef1e4",
                 "shasum": ""
             },
             "require": {
@@ -1860,7 +1860,7 @@
                 "winbox/args": "1.0.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.8.0",
+                "friendsofphp/php-cs-fixer": "^2.11.0",
                 "monolog/monolog": "^1.23",
                 "phpunit/phpunit": "^5.7 || ^6.2",
                 "react/http": "^0.7.2"
@@ -1898,7 +1898,7 @@
                 "php",
                 "private"
             ],
-            "time": "2018-11-05T02:05:30+00:00"
+            "time": "2019-09-19T21:42:53+00:00"
         },
         {
             "name": "monolog/monolog",

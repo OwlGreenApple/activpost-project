@@ -302,9 +302,10 @@
 
                       ?>
                 
-                        <li @if(Request::is('account')) class="active" @endif><a href="{{ url('/account') }}"><span class="glyphicon glyphicon-plus"></span> Accounts</a></li>
+                        <li @if(Request::is('account')) class="active" @endif><a href="{{ url('/account') }}"><span class="glyphicon glyphicon-plus"></span> Accounts</a></li>  
 
-												
+                        <li @if(Request::is('searchig')) class="active" @endif><a href="{{ url('/searchig') }}"><span class="glyphicon glyphicon-search"></span> Search</a></li>
+
                         <li @if(Request::is('search-hashtags')) class="active" @endif>
 												<a href="<?php if ( ($check_num_account>0) && ($user->is_confirmed) ) { echo url('/search-hashtags'); } else { echo '#'; }?> " class="<?php if ( ($check_num_account==0) || (!$user->is_confirmed) ) { echo 'disabled'; } ?>">Research #</a></li>
                         

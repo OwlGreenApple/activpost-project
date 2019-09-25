@@ -196,6 +196,10 @@ Route::group(['middleware' => 'auth'], function () {
   Route::get('maintenance/optimize', 'User\MaintenanceController@optimize');
   Route::get('maintenance/delsche', 'User\MaintenanceController@delsche');
 
+  //Search IG
+  Route::get('searchig', 'User\SearchController@index')->name('searchig');
+  Route::get('getHashtag','User\SearchController@getHashtag')->name('getHashtag');
+
   if(env('APP_PROJECT')=='Celebgramme'){
     Route::get('order', 'User\OrderController@index');
     Route::post('add-order', 'User\OrderController@addorder');
