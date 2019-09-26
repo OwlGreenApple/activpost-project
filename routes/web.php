@@ -198,7 +198,12 @@ Route::group(['middleware' => 'auth'], function () {
 
   //Search IG
   Route::get('searchig', 'User\SearchController@index')->name('searchig');
-  Route::get('getHashtag','User\SearchController@getHashtag')->name('getHashtag');
+  Route::post('gethashtag','User\SearchController@getHashtag')->name('gethashtag');
+  Route::get('getuser','User\SearchController@getUser')->name('getuser');
+  Route::get('getplace','User\SearchController@getPlace')->name('getplace');
+
+  Route::post('igtest','User\SearchController@getData')->name('igtest');
+  Route::get('ctest','User\SearchController@checkCacheTest')->name('ctest');
 
   if(env('APP_PROJECT')=='Celebgramme'){
     Route::get('order', 'User\OrderController@index');

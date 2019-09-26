@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddThumbnailVideoToScheduleTable extends Migration
+class CreateCachesTables extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,12 @@ class AddThumbnailVideoToScheduleTable extends Migration
      */
     public function up()
     {
-        Schema::table('schedules', function (Blueprint $table) {
-          $table->double('thumbnail_video')->default(0);
+        Schema::create('caches', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('type');
+            $table->string('keyword');
+            $table->text('data');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +29,6 @@ class AddThumbnailVideoToScheduleTable extends Migration
      */
     public function down()
     {
-        Schema::table('schedules', function (Blueprint $table) {
-            //
-        });
+        //
     }
 }

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('content')
+
 <style>
 	#igtabs {
 
@@ -63,6 +65,11 @@ a {cursor:pointer;}
       outline:none;
 }
 
+.igimage {
+	width  :100%;
+	max-width : 30px;
+}
+
 .content-tab {
     clear:both;           
     width:100%; 
@@ -82,8 +89,6 @@ a {cursor:pointer;}
 	border-bottom : 1px solid #999;
 }
 </style>
-
-@section('content')
 
 <div class="container">
 
@@ -115,6 +120,9 @@ a {cursor:pointer;}
 	$(document).ready(function() {    
 		getTabs();
 		searchIg();
+		//searchIgHashtag();
+		//searchIgUser();
+		//searchIgPlace();
 	});
 
 
@@ -138,27 +146,29 @@ a {cursor:pointer;}
 	function searchIg(){
 		$("#search").submit(function(e){
 			e.preventDefault();
-			var people = '';
 			var hashtag = '';
+			var people = '';
 			var place = '';
 			var query = $("#searchig").val();
+			$("#ighashtag").html('');
+			$("#iguser").html('');
+			$("#igplace").html('');
+			$.ajaxSetup({
+		        headers: {
+	              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		        }
+		     });
 			$.ajax({
-				type : 'GET',
-				url : '{{route("getHashtag")}}',
+				type : 'POST',
+				url : '{{route("igtest")}}',
 				data : {"q":query},
 				dataType : 'json',
 				success : function(result){
-
-					/* people */
-					$.each(result.people_username,function(key, value){
-						people += '<div class="col-result row"><div class="col-lg-3">image</div><div class="col-lg-6"><div>Username</div><small>Full Name</small></div><div class="col-lg-3></div>"<div class="clearfix"></div></div>';
-					});
-					$("#iguser").html(people);
-
 					/* hashtag */
 					$.each(result.hashtag,function(key, value){
 						hashtag += '<div class="col-result row"><div class="col-lg-6">'+value+'</div><div id="pos-'+key+'" class="col-lg-6"></div><div class="clearfix"></div></div>';
 					});
+
 					$("#ighashtag").html(hashtag);
 
 					//post count
@@ -166,6 +176,122 @@ a {cursor:pointer;}
 						$("#pos-"+key).html('<b>'+value+'</b>');
 					});
 
+					/* people */
+					$.each(result.people_username,function(key, value){
+						people += '<div class="col-result row"><div class="col-lg-3" id="img-'+key+'"></div><div class="col-lg-6"><div><a target="_blank" href="https://www.instagram.com/'+value+'">'+value+'</a></div><small id="fnm-'+key+'"></small></div><div class="col-lg-3">follower</div><div class="clearfix"></div></div>';
+					});
+					$("#iguser").html(people);
+
+					//image
+					$.each(result.people_image,function(key, value){
+						$("#img-"+key).html('<img class="igimage" src="'+value+'"/>');
+					});
+
+					//full name
+					$.each(result.people_name,function(key, value){
+						$("#fnm-"+key).text(value);
+					});
+
+					/* place */
+					$.each(result.location_name,function(key, value){
+						place+= '<div class="col-result"><div><a target="_blank" id="pk-'+key+'">'+value+ '</a></div><small id="addr-'+key+'"></small></div>';
+					});
+					$("#igplace").html(place);
+
+					//address
+					$.each(result.location_address,function(key, value){
+						$("#addr-"+key).text(value);
+					});
+
+					//link
+					$.each(result.location_pk,function(key, value){
+						$("#pk-"+key).attr('href','https://www.instagram.com/explore/locations/'+value)
+					});
+
+				}
+			});
+		});
+	}
+
+
+	function searchIgHashtag(){
+		$("#search").submit(function(e){
+			e.preventDefault();
+			var hashtag = '';
+			var query = $("#searchig").val();
+			$("#ighashtag").html('');
+			$.ajaxSetup({
+		        headers: {
+	              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		        }
+		     });
+			$.ajax({
+				type : 'POST',
+				url : '{{route("gethashtag")}}',
+				data : {"q":query},
+				dataType : 'json',
+				success : function(result){
+					/* hashtag */
+					$.each(result.hashtag,function(key, value){
+						hashtag += '<div class="col-result row"><div class="col-lg-6">'+value+'</div><div id="pos-'+key+'" class="col-lg-6"></div><div class="clearfix"></div></div>';
+					});
+
+					$("#ighashtag").html(hashtag);
+
+					//post count
+					$.each(result.post,function(key, value){
+						$("#pos-"+key).html('<b>'+value+'</b>');
+					});
+				}
+			});
+		});
+	}
+
+	function searchIgUser(){
+		$("#search").submit(function(e){
+			e.preventDefault();
+			var people = '';
+			var query = $("#searchig").val();
+			$("#iguser").html('');
+			$.ajax({
+				type : 'GET',
+				url : '{{route("getuser")}}',
+				data : {"q":query},
+				dataType : 'json',
+				success : function(result){
+
+					/* people */
+					$.each(result.people_username,function(key, value){
+						people += '<div class="col-result row"><div class="col-lg-3" id="img-'+key+'"></div><div class="col-lg-6"><div><a target="_blank" href="https://www.instagram.com/'+value+'">'+value+'</a></div><small id="fnm-'+key+'"></small></div><div class="col-lg-3">follower</div><div class="clearfix"></div></div>';
+					});
+					$("#iguser").html(people);
+
+					//image
+					$.each(result.people_image,function(key, value){
+						$("#img-"+key).html('<img class="igimage" src="'+value+'"/>');
+					});
+
+					//full name
+					$.each(result.people_name,function(key, value){
+						$("#fnm-"+key).text(value);
+					});
+				}
+			});
+		});
+	}
+
+	function searchIgPlace(){
+		$("#search").submit(function(e){
+			e.preventDefault();
+			var place = '';
+			var query = $("#searchig").val();
+			$("#igplace").html('');
+			$.ajax({
+				type : 'GET',
+				url : '{{route("getplace")}}',
+				data : {"q":query},
+				dataType : 'json',
+				success : function(result){
 					/* place */
 					$.each(result.location_name,function(key, value){
 						place+= '<div class="col-result"><div><a target="_blank" id="pk-'+key+'">'+value+ '</a></div><small id="addr-'+key+'"></small></div>';

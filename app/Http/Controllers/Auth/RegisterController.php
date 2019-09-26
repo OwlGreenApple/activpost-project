@@ -126,12 +126,14 @@ class RegisterController extends Controller
 				"email" => $data["email"],
 				"password" => $data["password"],
 			];
-			Mail::send('emails.register.confirm-email', $data, function ($message) use ($data) {
-				$message->from('no-reply@activpost.net', 'Activpost');
-				$message->to($data['email']);
-				$message->subject('[Activpost] Verify Email');
-			});
-			
+
+			if(env('APP_ENV') == 'production'){
+				Mail::send('emails.register.confirm-email', $data, function ($message) use ($data) {
+					$message->from('no-reply@activpost.net', 'Activpost');
+					$message->to($data['email']);
+					$message->subject('[Activpost] Verify Email');
+				});
+			}
 			
 			if ( $req->session()->has('checkout_data') ) {
 				$checkout_data = $req->session()->get('checkout_data');
@@ -203,12 +205,13 @@ class RegisterController extends Controller
 											"email" => $torder->email,
 								];
 
-				Mail::send('emails.register.email-order', $data, function ($message) use ($data) {
-					$message->from('no-reply@activpost.net', 'Activpost'); 
-					$message->to($data['email']);
-					$message->subject('[Activpost] ORDER '.str_replace('OCPS', '', $data['no_order']));
-				});
-				
+				if(env('APP_ENV') == 'production'){
+					Mail::send('emails.register.email-order', $data, function ($message) use ($data) {
+						$message->from('no-reply@activpost.net', 'Activpost'); 
+						$message->to($data['email']);
+						$message->subject('[Activpost] ORDER '.str_replace('OCPS', '', $data['no_order']));
+					});
+				}
 				
 				
         // return redirect('/home');
