@@ -421,17 +421,32 @@ class SearchController extends Controller
 	}
 
 	 public function checkCacheTest(){
-		$cache = caches::select('data')->where('id','=',1)->first();
-		dd($cache->data);
+		$cache = caches::select('data')->first();
+		$db = json_decode($cache->data,true);
+		
+		dd($db['hashtagig']['hashtag']);
     }
 
     public function saveCacheTest($query,$data){
-    	//convert json to string
-		$json_save = json_encode($data,JSON_FORCE_OBJECT );
+    	//hashtag
+    	$save['hashtagig']['hashtag'] = $data['hashtag'];
+    	$save['hashtagig']['post'] = $data['post'];
+
+    	//user
+    	$save['userig']['people_username'] = $data['people_username'];
+    	$save['userig']['people_image'] = $data['people_image'];
+    	$save['userig']['people_name'] = $data['people_name'];
+
+    	//place
+    	$save['placeig']['location_name'] = $data['location_name'];
+    	$save['placeig']['location_address'] = $data['location_address'];
+    	$save['placeig']['location_pk'] = $data['location_pk'];
+
+    	$json = json_encode($save);
 		$caches = new caches;
 		$caches->type = 'nodata';
 		$caches->keyword = $query;
-		$caches->data = $json_save;
+		$caches->data = $json;
 		$caches->save();
     }
 
