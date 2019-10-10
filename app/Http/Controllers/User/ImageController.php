@@ -225,7 +225,8 @@ class ImageController extends Controller
 		
 		$filename = "temp.jpg";
 		// $dir = public_path('images/uploads/'.$user->username.'-'.$user->id); 
-		$dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
+		// $dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
+		$dir = public_path('../vp/uploads/'.$user->id); 
 		if (!file_exists($dir)) {
 			mkdir($dir,0741,true);
 		}
