@@ -238,7 +238,8 @@ class ImageController extends Controller
 		$filename = "temp.jpg";
 
 		// $dir = public_path('images/uploads/'.$user->username.'-'.$user->id); 
-		$dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
+		// $dir = public_path('../vp/uploads/'.$user->username.'-'.$user->id); 
+		$dir = public_path('../vp/uploads/'.$user->id); 
 		if (!file_exists($dir)) {
 			mkdir($dir,0741,true);
 		}
@@ -271,7 +272,8 @@ class ImageController extends Controller
 		$arr["type"] = "success";
 		$arr["message"] = "Data berhasil disimpan";
 		// $arr["url"] = asset('images/uploads/'.$user->username.'-'.$user->id."/temp.jpg");
-		$arr["url"] = asset('../vp/uploads/'.$user->username.'-'.$user->id."/temp.jpg");
+		// $arr["url"] = asset('../vp/uploads/'.$user->username.'-'.$user->id."/temp.jpg");
+		$arr["url"] = asset('../vp/uploads/'.$user->id."/temp.jpg");
 		return $arr;
 	}		
 
