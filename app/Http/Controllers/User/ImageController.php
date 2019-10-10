@@ -258,7 +258,7 @@ class ImageController extends Controller
 		$arr["message"] = "Data berhasil disimpan";
 		// $arr["url"] = asset('images/uploads/'.$user->username.'-'.$user->id."/temp.jpg");
 		// $arr["url"] = asset('../vp/uploads/'.$user->username.'-'.$user->id."/temp.jpg");
-		$arr["url"] = 'http://127.0.0.1/vp/uploads/'.$user->id."/temp.jpg";
+		$arr["url"] = 'https://activpost.net/vp/uploads/'.$user->id."/temp.jpg";
 		return $arr;
 	}		
 	public function multiple_upload()
