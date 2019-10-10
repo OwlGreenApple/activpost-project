@@ -517,7 +517,8 @@ class ScheduleController extends Controller
 			$uptogd = $name . '.' . $extension;
 			// $uri = asset('images/uploads/'.$uptogd);
 			// $uri = asset('../vp/uploads/'.$uptogd);
-			$uri = url('../vp/uploads/'.$uptogd);
+			// $uri = url('../vp/uploads/'.$uptogd);
+			$uri = '127.0.0.1/vp/uploads/'.$uptogd;
 			// Update
 			$schedule = Schedule::findOrFail($request->id);
 			$schedule->image = $uri;
