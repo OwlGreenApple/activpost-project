@@ -2,6 +2,98 @@
 
 @section('content')
 
+<style>
+	#igtabs {
+
+   width: 100%;
+    height:30px; 
+   border-bottom: solid 1px #CCC;
+   padding-right: 2px;
+   margin-top: 30px;
+   
+
+}
+a {cursor:pointer;}
+
+#igtabs li {
+    float:left; 
+    list-style:none; 
+    border-top:1px solid #ccc; 
+    border-left:1px solid #ccc; 
+    border-right:1px solid #ccc; 
+    margin-right:5px; 
+    border-top-left-radius:3px;  
+    border-top-right-radius:3px;
+      outline:none;
+}
+
+#igtabs li a {
+
+    font-family:Arial, Helvetica, sans-serif; 
+    font-size: small;
+    font-weight: bold; 
+    color: #5685bc;;
+   padding-top: 5px;
+   padding-left: 7px;
+   padding-right: 7px;
+    padding-bottom: 8px; 
+    display:block; 
+    background: #FFF;
+    border-top-left-radius:3px; 
+    border-top-right-radius:3px; 
+    text-decoration:none;
+    outline:none;
+  
+}
+
+#igtabs li a.inactive{
+    padding-top:5px;
+    padding-bottom:8px;
+  padding-left: 8px;
+  padding-right: 8px;
+    color:#666666;
+    background: #EEE;
+   outline:none;
+   border-bottom: solid 1px #CCC;
+
+}
+
+#igtabs li a:hover, #igtabs li a.inactive:hover {
+
+
+    color: #5685bc;
+      outline:none;
+}
+
+.igimage {
+	width  :100%;
+	max-width : 30px;
+}
+
+.hashtag_input {
+	cursor : pointer;
+}
+
+.content-tab {
+    clear:both;           
+    width:100%; 
+    text-align:left;
+}
+
+.content-tab h2 { margin-left: 15px;  margin-right: 15px;  margin-bottom: 10px; color: #5685bc; }
+
+.content-tab p { margin-left: 15px; margin-right: 15px;  margin-top: 10px; margin-bottom: 10px; line-height: 1.3; font-size: small; }
+
+.content-tab ul { margin-left: 25px; font-size: small; line-height: 1.4; list-style-type: disc; }
+
+.content-tab li { padding-bottom: 5px; margin-left: 5px;}
+
+.col-result {
+	padding : 10px;
+	border-bottom : 1px solid #999;
+}
+</style>
+
 <div class="container">
 
 	<ul id="igtabs">
@@ -25,16 +117,57 @@
   	<div class="content-tab" id="igtabs3C">
   		<div id="igplace"></div>
   	</div>
-
+  	<button id="test">Virol</button>
 </div>
 
 <script type="text/javascript">
 	$(document).ready(function() {    
-		getTabs();
-		searchIg();
-		putHashTag();
+		//getTabs();
+		//searchIg();
+		//putHashTag();
+		testvirol();
 	});
 
+	function testvirol()
+	{
+		$("#test").click(function(){
+			/*$.ajax({
+				type: "GET",
+			    url: "https://i.instagram.com/api/v1/tags/search",
+			    data: {'q':'burger'},
+			    dataType : 'json',
+			    success: function (result, status, xhr) {
+			        console.log(result);
+			    },
+			})*/
+			/*$.ajax({
+				type: "GET",
+			    url: "https://i.instagram.com/api/v1/tags/search",
+			    data: {'timezone_offset':25200, 'lat':-7.306216299999999,'lng':112.6906303,'q':'buku'},
+			    dataType : 'json',
+			    success: function (result, status, xhr) {
+			        console.log(result);
+			    },
+			})
+			*/
+
+			/* Test if cors is disable */
+			$.ajax({
+				crossDomain:true,
+				headers: {'X-Requested-With': 'XMLHttpRequest'},
+				type: "GET",
+			    url: "https://i.instagram.com/api/v1/users/search",
+			    data: {
+			    	q : 'bola',
+			    },
+			    dataType : 'json',
+			    success: function (result, status, xhr) {
+			        console.log(xhr);
+			    },
+			})
+			
+		});
+	}
 
 	function getTabs(){
 		$('#igtabs li a:not(:first)').addClass('inactive');
@@ -88,7 +221,7 @@
 
 					/* people */
 					$.each(result.people_username,function(key, value){
-						people += '<div class="col-result row"><div class="col-lg-3" id="img-'+key+'"></div><div class="col-lg-6"><div><a target="_blank" href="https://www.instagram.com/'+value+'">'+value+'</a></div><small id="fnm-'+key+'"></small></div><div class="col-lg-3" id="igt-'+key+'"></div><div class="clearfix"></div></div>';
+						people += '<div class="col-result row"><div class="col-lg-3" id="img-'+key+'"></div><div class="col-lg-6"><div><a target="_blank" href="https://www.instagram.com/'+value+'">'+value+'</a></div><small id="fnm-'+key+'"></small></div><div class="col-lg-3">follower</div><div class="clearfix"></div></div>';
 					});
 					$("#iguser").html(people);
 
@@ -100,11 +233,6 @@
 					//full name
 					$.each(result.people_name,function(key, value){
 						$("#fnm-"+key).text(value);
-					});
-
-					//id for insight
-					$.each(result.people_id,function(key, value){
-						$("#igt-"+key).html('<a class="btn btn-default" href="{{url("insightigdata")}}/'+value+'">Insight</a>');
 					});
 
 					/* place */
