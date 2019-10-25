@@ -11,7 +11,7 @@
 
     <!-- Scripts -->
     <!--<script src="{{ asset('/js/app.js') }}"></script> -->
-		<script type="text/javascript" src="{{ asset('/js/jquery-3.2.1.min.js') }}"></script>
+		<script type="text/javascript" src="{{ asset('/js/jquery-1.11.3.js') }}"></script>
 		<script type="text/javascript" src="{{ asset('/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('/js/matchheigth.js') }}"></script>
     <script src="{{ asset('/js/moment.min.js') }}"></script>
