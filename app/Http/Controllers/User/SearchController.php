@@ -69,10 +69,8 @@ class SearchController extends Controller
 			if(empty($query)){
 				$data = array();
 			} else {
-				$people = $i->people->search('tokyo resto')->getUsers();
+				$people = $i->people->search($query)->getUsers();
 			}
-			
-			$people = $i->people->search('tokyo resto')->getUsers();
 
 			if(count($people) > 0){
 				$p = 0;
@@ -221,9 +219,7 @@ class SearchController extends Controller
 
 			$i->login("bungariaanastasya", "qweasdzxc123", 300);
 
-			//$userId = $i->people->getUserIdForName('bungariaanastasya');
 			$maxId = null;
-
 			$timeline = $i->timeline->getUserFeed($userId,$maxId);
 			$countTimeline = count($timeline->getItems());
 			$today = Date('d-m-Y');
@@ -243,14 +239,33 @@ class SearchController extends Controller
 
 					if(is_null($item->getImageVersions2()))
 					{
-						$img = null;
+						$img = $item->getCarouselMedia()[0]->getImageVersions2()->getCandidates()[1]->getUrl();
 					}
 					else
 					{
 						$img = $item->getImageVersions2()->getCandidates()[1]->getUrl();
 					}
+
+					if(is_null($item->getCaption()))
+					{
+						$caption = null;
+					}
+					else
+					{
+						$caption = $item->getCaption()->getText();
+					}
+
+					if($caption !== null)
+					{
+						preg_match_all("/(#\w+)/", $caption, $hashtagpost);
+						$hashtagposts[] = $hashtagpost[0];
+					}
+					else
+					{
+						$hashtagposts[] = array();
+					}
 			
-					/*$posts[] = array(
+					$posts[] = array(
 						'profile'=> $item->getUser()->getProfilePicUrl(),
 						'username' =>$item->getUser()->getUsername(),
 						'fullname' =>$item->getUser()->getFullName(),
@@ -259,21 +274,36 @@ class SearchController extends Controller
 						'likes' =>$item->getLikeCount(),
 						'img' => $img,
 						'time'=> $time,
-						//'caption'=>$item->getCaption()->getText()
+						'caption'=>$caption
 					);
-					*/
-					$posts[] = $item;
-					
 	        	}
 			} 
 			else
 			{
-				$data = array();
+				$posts = array();
 			}
-		
-			dd($posts[0]->getCarouselMedia()->getImageVersions2()->getCandidates()[1]->getUrl());
-			die('');
-			return view('user.search-ig.insightig',['data'=>$posts]);
+
+			#hashtag post
+			$count = count($hashtagposts);
+			if($count > 0)
+			{
+				foreach($hashtagposts as $arr)
+				{
+					foreach ($arr as $value) {
+						$hashtags_temp[] = $value;
+					}
+				}
+
+				$hashtags = array_unique($hashtags_temp);
+			}
+			else
+			{
+				$hashtags = array();
+			}
+
+			//print('<pre>'.print_r($hashtags,true).'</pre>');
+
+			return view('user.search-ig.insightig',['data'=>$posts,'hashtags'=>$hashtags]);
 
 		}  	
 			catch (\InstagramAPI\Exception\IncorrectPasswordException $e) {
@@ -313,6 +343,12 @@ class SearchController extends Controller
 			}
 		echo $error_message;
 	}
+
+	function test_odd(int $var)
+	  {
+	  return($var & 1);
+	  }
+
 
 	function datediff($interval, $datefrom, $dateto, $using_timestamps = false)
 	{

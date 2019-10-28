@@ -90,6 +90,8 @@
 					$.each(result.people_username,function(key, value){
 						people += '<div class="col-result row"><div class="col-lg-3" id="img-'+key+'"></div><div class="col-lg-6"><div><a target="_blank" href="https://www.instagram.com/'+value+'">'+value+'</a></div><small id="fnm-'+key+'"></small></div><div class="col-lg-3" id="igt-'+key+'"></div><div class="clearfix"></div></div>';
 					});
+
+					console.log(people);
 					$("#iguser").html(people);
 
 					//image

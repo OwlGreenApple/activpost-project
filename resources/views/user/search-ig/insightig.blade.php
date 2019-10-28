@@ -15,22 +15,25 @@
   			@if(count($data) > 0)
   				@foreach($data as $rows)
   					<div class="col-sm-3 col-ig">
-  						<div class="ig-cover">
-  							<div class="col-md-3 fix-frame "><img class="igimgprofile" src="{{$rows['profile']}}"/></div>
-	  						<div style="margin-right : 9px" class="col-md-7 fix-frame">
-	  							<div><b>{{$rows['username']}}</b></div>
-	  							<div>{{$rows['fullname']}}</div>
+  						<div class="col-ig-wrapper">
+	  						<div class="ig-cover">
+	  							<div class="col-md-3 fix-frame "><img class="igimgprofile" src="{{$rows['profile']}}"/></div>
+		  						<div style="margin-right : 9px" class="col-md-7 fix-frame">
+		  							<div><b><a target="_blank" href="https://www.instagram.com/{{$rows['username']}}">{{$rows['username']}}</a></b></div>
+		  							<div>{{$rows['fullname']}}</div>
+		  						</div>
+		  						<div class="col-md-1 fix-frame ">{{$rows['time']}}</div>
+		  						<div class="clearfix"></div>
+		  					</div>
+	  						<div class="igimgfix">
+	  							<a target="_blank" href="{{$rows['code']}}"><img class="igimg" src="{{$rows['img']}}"/></a>
 	  						</div>
-	  						<div class="col-md-1 fix-frame ">{{$rows['time']}}</div>
-	  						<div class="clearfix"></div>
-	  					</div>
-  						<div class="igimgfix">
-  							<a target="_blank" href="{{$rows['code']}}"><img class="igimg" src="{{$rows['img']}}"/></a>
-  						</div>
-  						<div class="ig-cover">
-	  						<div class="col-lg-4"><span class="glyphicon glyphicon-heart-empty">{{$rows['likes']}}</span></div>
-	  						<div class="col-lg-4"><span class="glyphicon glyphicon-comment"></span>{{$rows['comments']}}</div>
-	  						<div class="clearfix"></div>
+	  						<div class="ig-cover ig-caption">{{$rows['caption']}}</div>
+	  						<div class="ig-cover">
+		  						<div class="col-lg-4"><span class="glyphicon glyphicon-heart-empty">{{$rows['likes']}}</span></div>
+		  						<div class="col-lg-4"><span class="glyphicon glyphicon-comment"></span>{{$rows['comments']}}</div>
+		  						<div class="clearfix"></div>
+		  					</div>
 	  					</div>
   					</div>
   					
@@ -39,7 +42,25 @@
   		</div>
   	</div>
  	<div class="content-tab" id="igtabs2C">
- 		<div id="ighashtag"></div>
+ 		<div id="ighashtag">
+ 			<div class="table-responsive">
+                    <table class="table table-striped" id="hashtag-table">
+                        <thead>
+                            <th>Hashtag</th>
+                        </thead>
+                        <tbody>
+                            @if(count($hashtags) > 0)
+	                            @foreach($hashtags as $row)
+	                                <tr>
+	                                    <td>{{$row}}</td>
+	                                </tr>
+	                            @endforeach
+                            @endif
+                        </tbody>
+                    </table>
+                     </div>
+                     <!-- end table -->
+ 		</div>
  	</div>
   	<div class="content-tab" id="igtabs3C">
   		<div id="igplace"></div>
@@ -50,10 +71,16 @@
 <script type="text/javascript">
 	$(document).ready(function() {    
 		getTabs();
+		table();
 		//searchIg();
 		//putHashTag();
 	});
 
+	function table(){
+        $("#hashtag-table").dataTable({
+            'pageLength':10,
+        });
+    }
 
 	function getTabs(){
 		$('#igtabs li a:not(:first)').addClass('inactive');
