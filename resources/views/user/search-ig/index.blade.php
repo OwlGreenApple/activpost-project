@@ -60,20 +60,25 @@
 			var people = '';
 			var place = '';
 			var query = $("#searchig").val();
-			$("#ighashtag").html('');
-			$("#iguser").html('');
-			$("#igplace").html('');
+			$("#ighashtag, #iguser, #igplace").html('');
+
 			$.ajaxSetup({
 		        headers: {
 	              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		        }
 		     });
 			$.ajax({
+				beforeSend: function() {
+				  $("#div-loading").css({'display':'block'});
+			      //$("#ighashtag, #iguser, #igplace").html("<img src='{{ asset('/images/loading.gif') }}'/>");
+			    },
 				type : 'POST',
 				url : '{{route("igdata")}}',
 				data : {"q":query},
 				dataType : 'json',
 				success : function(result){
+					$("#div-loading").css({'display':'none'});
+
 					/* hashtag */
 					$.each(result.hashtag,function(key, value){
 						hashtag += '<div class="col-result row"><div class="col-lg-6"><a class="hashtag_input">'+value+'</a></div><div id="pos-'+key+'" class="col-lg-6"></div><div class="clearfix"></div></div>';
@@ -91,7 +96,6 @@
 						people += '<div class="col-result row"><div class="col-lg-3" id="img-'+key+'"></div><div class="col-lg-6"><div><a target="_blank" href="https://www.instagram.com/'+value+'">'+value+'</a></div><small id="fnm-'+key+'"></small></div><div class="col-lg-3" id="igt-'+key+'"></div><div class="clearfix"></div></div>';
 					});
 
-					console.log(people);
 					$("#iguser").html(people);
 
 					//image
@@ -106,7 +110,7 @@
 
 					//id for insight
 					$.each(result.people_id,function(key, value){
-						$("#igt-"+key).html('<a class="btn btn-default" href="{{url("insightigdata")}}/'+value+'">Insight</a>');
+						$("#igt-"+key).html('<a target="_blank" class="btn btn-default" href="{{url("insightigdata")}}/'+value+'">Insight</a>');
 					});
 
 					/* place */

@@ -104,7 +104,7 @@ class SearchController extends Controller
 				$data = array();
 			}
 
-			//$this->saveCache($query,$data);
+			$this->saveCache($query,$data);
 
 			return response()->json($data);
 
@@ -180,7 +180,7 @@ class SearchController extends Controller
 		*/
     }
 
-    public function saveCache($query,$data){
+    private function saveCache($query,$data){
     	//hashtag
     	$save['hashtagig']['hashtag'] = $data['hashtag'];
     	$save['hashtagig']['post'] = $data['post'];
@@ -198,13 +198,21 @@ class SearchController extends Controller
 
     	$json = json_encode($save);
 		$caches = new caches;
-		$caches->type = 'nodata';
 		$caches->keyword = $query;
 		$caches->data = $json;
 		$caches->save();
     }
 
     /* insight */
+
+    public function getInsight($userId)
+    {
+		if($this->checkCacheInsight($userId) == false){
+			return $this->getDataInsight($userId);
+		} else {
+		    return $this->checkCacheInsight($userId);
+		}
+    }
 
     public function getDataInsight($userId){
 		try {
@@ -219,64 +227,100 @@ class SearchController extends Controller
 
 			$i->login("bungariaanastasya", "qweasdzxc123", 300);
 
-			$maxId = null;
-			$timeline = $i->timeline->getUserFeed($userId,$maxId);
-			$countTimeline = count($timeline->getItems());
-			$today = Date('d-m-Y');
+			//$people = $i->people->getInfoById($userId);
 
+			$maxId = null;
+			$today = Date('d-m-Y');
+			$timeline = $i->timeline->getUserFeed($userId,$maxId);
+			$nextMaxId = $timeline->getNextMaxId();
+			$countTimeline = count($timeline->getItems());
+			$maxid[0] = $maxId;
+			$maxid[] = $nextMaxId;
+
+			#get max id for pagination
+			/*if($nextMaxId <> null)
+			{
+				for($x=0;$x<=5;$x++)
+				{
+					$timeline = $i->timeline->getUserFeed($userId,$nextMaxId);
+					$nextMaxId = $timeline->getNextMaxId();
+
+					if($nextMaxId <> null)
+					{
+						$maxid[] = $nextMaxId;
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+			*/
+			
 			if($countTimeline > 0)
 			{
-				foreach ($timeline->getItems() as $item) 
-				{   
-					$taken = Date('d-m-Y',$item->getTakenAt());
-					$time =  $this->datediff('ww',$taken,$today,false).'w';
+				#foreach($maxid as $idmax)
+				#{
+					#$timeline = $i->timeline->getUserFeed($userId,$idmax);
 
-					if($time > 52)
-					{
-						$time =  $this->datediff('yyyy',$taken,$today,false).'y';
-					}
+					#foreach insight
+
+					foreach ($timeline->getItems() as $item) 
+					{   
+						$taken = Date('d-m-Y',$item->getTakenAt());
+						$time =  $this->datediff('ww',$taken,$today,false).'w';
+
+						if($time > 52)
+						{
+							$time =  $this->datediff('yyyy',$taken,$today,false).'y';
+						}
 
 
-					if(is_null($item->getImageVersions2()))
-					{
-						$img = $item->getCarouselMedia()[0]->getImageVersions2()->getCandidates()[1]->getUrl();
-					}
-					else
-					{
-						$img = $item->getImageVersions2()->getCandidates()[1]->getUrl();
-					}
+						if(is_null($item->getImageVersions2()))
+						{
+							$img = $item->getCarouselMedia()[0]->getImageVersions2()->getCandidates()[1]->getUrl();
+						}
+						else
+						{
+							$img = $item->getImageVersions2()->getCandidates()[1]->getUrl();
+						}
 
-					if(is_null($item->getCaption()))
-					{
-						$caption = null;
-					}
-					else
-					{
-						$caption = $item->getCaption()->getText();
-					}
+						if(is_null($item->getCaption()))
+						{
+							$caption = null;
+						}
+						else
+						{
+							$caption = $item->getCaption()->getText();
+						}
 
-					if($caption !== null)
-					{
-						preg_match_all("/(#\w+)/", $caption, $hashtagpost);
-						$hashtagposts[] = $hashtagpost[0];
-					}
-					else
-					{
-						$hashtagposts[] = array();
-					}
-			
-					$posts[] = array(
-						'profile'=> $item->getUser()->getProfilePicUrl(),
-						'username' =>$item->getUser()->getUsername(),
-						'fullname' =>$item->getUser()->getFullName(),
-						'code' => 'https://www.instagram.com/p/'.$item->getCode().'/',
-						'comments' =>$item->getCommentCount(),
-						'likes' =>$item->getLikeCount(),
-						'img' => $img,
-						'time'=> $time,
-						'caption'=>$caption
-					);
-	        	}
+						if($caption !== null)
+						{
+							preg_match_all("/(#\w+)/", $caption, $hashtagpost);
+							$hashtagposts[] = $hashtagpost[0];
+						}
+						else
+						{
+							$hashtagposts[] = array();
+						}
+				
+						$posts[] = array(
+							'profile'=> $item->getUser()->getProfilePicUrl(),
+							'username' =>$item->getUser()->getUsername(),
+							'fullname' =>$item->getUser()->getFullName(),
+							'code' => 'https://www.instagram.com/p/'.$item->getCode().'/',
+							'comments' =>$item->getCommentCount(),
+							'likes' =>$item->getLikeCount(),
+							'img' => $img,
+							'time'=> $time,
+							'caption'=>$caption
+						);
+			    	}
+
+					#end foreach insight
+
+				 # end foreach maxid  
+				#}
 			} 
 			else
 			{
@@ -284,6 +328,7 @@ class SearchController extends Controller
 			}
 
 			#hashtag post
+			$hashtags_temp = array();
 			$count = count($hashtagposts);
 			if($count > 0)
 			{
@@ -294,14 +339,36 @@ class SearchController extends Controller
 					}
 				}
 
-				$hashtags = array_unique($hashtags_temp);
+				$hashtag_name = array_unique($hashtags_temp);
+			}
+			else
+			{
+				$hashtag_name = array();
+			}
+
+			#hashtag column
+			if(count($hashtag_name) > 0)
+			{
+				foreach($hashtag_name as $hashtag)
+				{
+					$hashtagkey = str_replace('#','',$hashtag);
+					$hashtagpopularity = $i->hashtag->getInfo($hashtagkey)->getMediaCount();
+
+					$hashtags[] = array(
+						'hashtagname'=>$hashtag,
+						'hashtagpopularity'=>$hashtagpopularity,
+					);
+				}
 			}
 			else
 			{
 				$hashtags = array();
 			}
-
 			//print('<pre>'.print_r($hashtags,true).'</pre>');
+
+			$data['post'] = $posts;
+			$data['hashtags'] = $hashtags;
+			$this->saveCacheInsight($userId,$data);
 
 			return view('user.search-ig.insightig',['data'=>$posts,'hashtags'=>$hashtags]);
 
@@ -343,12 +410,6 @@ class SearchController extends Controller
 			}
 		echo $error_message;
 	}
-
-	function test_odd(int $var)
-	  {
-	  return($var & 1);
-	  }
-
 
 	function datediff($interval, $datefrom, $dateto, $using_timestamps = false)
 	{
@@ -457,6 +518,39 @@ class SearchController extends Controller
 
 	    return $datediff;
 	}
+
+	 public function checkCacheInsight($userId){
+		$cache = caches::where([['keyword','=',$userId]])->first();
+		if(!is_null($cache)){
+			$getdata = $cache->data;
+			$db = json_decode($getdata,true);
+
+			//post
+    		$posts = $db['postinsight'];
+
+	    	//hashtag
+	    	$hashtags = $db['hashtaginsight'];
+
+			return view('user.search-ig.insightig',['data'=>$posts,'hashtags'=>$hashtags]);
+		} else {
+			return false;
+		}
+    }
+
+	 private function saveCacheInsight($userId,$data)
+	 {
+    	//post
+    	$save['postinsight'] = $data['post'];
+
+    	//hashtag
+    	$save['hashtaginsight'] = $data['hashtags'];
+
+    	$json = json_encode($save);
+		$caches = new caches;
+		$caches->keyword = $userId;
+		$caches->data = $json;
+		$caches->save();
+    }
 
 
 /* end search controller */

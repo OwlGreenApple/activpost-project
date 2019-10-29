@@ -47,12 +47,14 @@
                     <table class="table table-striped" id="hashtag-table">
                         <thead>
                             <th>Hashtag</th>
+                            <th>Hashtag Popularity</th>
                         </thead>
                         <tbody>
                             @if(count($hashtags) > 0)
 	                            @foreach($hashtags as $row)
 	                                <tr>
-	                                    <td>{{$row}}</td>
+	                                    <td>{{$row['hashtagname']}}</td>
+	                                    <td><a target="_blank" href="https://www.instagram.com/explore/tags/{{str_replace('#','',$row['hashtagname'])}}/">{{number_format($row['hashtagpopularity'])}}</a></td>
 	                                </tr>
 	                            @endforeach
                             @endif
