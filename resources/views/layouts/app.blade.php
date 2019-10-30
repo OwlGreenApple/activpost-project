@@ -45,6 +45,7 @@
 		<script type="text/javascript" src="{{ asset('/emoji/js/emojionearea.js') }}"></script>
     <script src="{{ asset('DataTables/DataTables/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/datetime-moment.js') }}"></script>
+    <script src="{{ asset('js/jquery.canvasjs.min.js') }}"></script>
     <?php 
       if(Auth::check()){
         if(Auth::user()->is_member_rico || Auth::user()->is_admin) { 
@@ -85,7 +86,8 @@
 		<!-- emoji -->
 		<link href="{{ asset('/emoji/css/emojionearea.min.css') }}" rel="stylesheet">	
     <link href="{{ asset('DataTables/DataTables/css/jquery.dataTables.min.css') }}" rel="stylesheet"></link>
-    
+    <!-- percentage-circle -->
+    <link href="{{ asset('/css/circle-percentage.css') }}" rel="stylesheet" />
     
     <style type="text/css">
         .navbar-brand {
@@ -109,6 +111,7 @@
             'csrfToken' => csrf_token(),
         ]); ?>
     </script>
+
     <script type="text/javascript">
         $(window).on('load', function() { 
           $("#div-loading").hide();
@@ -154,9 +157,6 @@
         
 </script>
 
-
-
-    
 </head>
 <body>
     <script type="text/javascript">

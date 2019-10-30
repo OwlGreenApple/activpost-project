@@ -214,7 +214,8 @@ class SearchController extends Controller
 		}
     }
 
-    public function getDataInsight($userId){
+    public function getDataInsight($userId)
+    {
 		try {
 			$error_message="";
 			$i = new Instagram(false,false,[
@@ -227,7 +228,8 @@ class SearchController extends Controller
 
 			$i->login("bungariaanastasya", "qweasdzxc123", 300);
 
-			//$people = $i->people->getInfoById($userId);
+			$totalpost = $i->people->getInfoById($userId)->getUser()->getMediaCount();
+			$follower = $i->people->getInfoById($userId)->getUser()->getFollowerCount();
 
 			$maxId = null;
 			$today = Date('d-m-Y');
@@ -315,6 +317,21 @@ class SearchController extends Controller
 							'time'=> $time,
 							'caption'=>$caption
 						);
+
+						#data for graph
+
+						$division = $follower * 20;
+						$engagement = ($item->getCommentCount()+$item->getLikeCount()) / $division;
+
+						//print('<pre>'.print_r($engagement,true).' '.print_r($taken,true).'</pre>');
+						$dataPoints[] = array(
+						 	"x" => $taken,  //date when posting created
+						 	"y" => $engagement, // engagement rate
+						 	"z" => 10,  	// size of bubble
+						 	"image" => $img, //image of post code
+						 	"link" => 'https://www.instagram.com/p/'.$item->getCode().'/', //go to post link when user click on bubble
+						);
+
 			    	}
 
 					#end foreach insight
@@ -327,6 +344,9 @@ class SearchController extends Controller
 				$posts = array();
 			}
 
+			#graph data
+			$datagraph = json_encode($dataPoints,JSON_NUMERIC_CHECK);
+
 			#hashtag post
 			$hashtags_temp = array();
 			$count = count($hashtagposts);
@@ -338,25 +358,27 @@ class SearchController extends Controller
 						$hashtags_temp[] = $value;
 					}
 				}
-
-				$hashtag_name = array_unique($hashtags_temp);
+				$hashtag_name = array_count_values($hashtags_temp);
 			}
 			else
 			{
-				$hashtag_name = array();
+				$hashtag_name =  array();
 			}
 
 			#hashtag column
 			if(count($hashtag_name) > 0)
 			{
-				foreach($hashtag_name as $hashtag)
+				foreach($hashtag_name as $hashtag=>$totalhashtag)
 				{
 					$hashtagkey = str_replace('#','',$hashtag);
 					$hashtagpopularity = $i->hashtag->getInfo($hashtagkey)->getMediaCount();
-
+					$percenthashtag = ($totalhashtag/$totalpost) * 100;
+					
 					$hashtags[] = array(
 						'hashtagname'=>$hashtag,
 						'hashtagpopularity'=>$hashtagpopularity,
+						'hashtaginpost'=>$totalhashtag,
+						'hashtagpercent'=> round($percenthashtag)
 					);
 				}
 			}
@@ -364,13 +386,15 @@ class SearchController extends Controller
 			{
 				$hashtags = array();
 			}
-			//print('<pre>'.print_r($hashtags,true).'</pre>');
+			
+			//print('<pre>'.print_r(round($percenthashtag),true).'</pre>');
+			//die('');
 
 			$data['post'] = $posts;
 			$data['hashtags'] = $hashtags;
 			$this->saveCacheInsight($userId,$data);
 
-			return view('user.search-ig.insightig',['data'=>$posts,'hashtags'=>$hashtags]);
+			return view('user.search-ig.insightig',['data'=>$posts,'hashtags'=>$hashtags,'graph'=>$datagraph]);
 
 		}  	
 			catch (\InstagramAPI\Exception\IncorrectPasswordException $e) {

@@ -48,6 +48,8 @@
                         <thead>
                             <th>Hashtag</th>
                             <th>Hashtag Popularity</th>
+                            <th>Hashtag In Post</th>
+                            <th>% Usage In Post</th>
                         </thead>
                         <tbody>
                             @if(count($hashtags) > 0)
@@ -55,6 +57,16 @@
 	                                <tr>
 	                                    <td>{{$row['hashtagname']}}</td>
 	                                    <td><a target="_blank" href="https://www.instagram.com/explore/tags/{{str_replace('#','',$row['hashtagname'])}}/">{{number_format($row['hashtagpopularity'])}}</a></td>
+	                                    <td><a>{{number_format($row['hashtaginpost'])}}</a></td>
+	                                    <td>
+	                                    	 <div class="c100 p{{$row['hashtaginpost']}} tiny orange">
+										        <span>{{$row['hashtaginpost']}}%</span>
+										        <div class="slice">
+										            <div class="bar"></div>
+										            <div class="fill"></div>
+										        </div>
+										    </div>
+	                                    </td>
 	                                </tr>
 	                            @endforeach
                             @endif
@@ -65,20 +77,88 @@
  		</div>
  	</div>
   	<div class="content-tab" id="igtabs3C">
-  		<div id="igplace"></div>
+  		<div id="igplace" class="col-md-12">
+  			 <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+  		</div>
   	</div>
 
 </div>
 
 <script type="text/javascript">
+$(function () {
+	$("#chartContainer").CanvasJSChart({ //Pass chart options
+		title:{
+       		text: ""
+      	},
+	  	toolTip:{
+	       backgroundColor: "rgba(0,0,0,.8)",
+	       fontColor: "yellow",
+	    },
+	    legend: {
+           cursor:"pointer",
+       	   horizontalAlign: "left",
+           verticalAlign: "bottom",
+           fontSize: 15,
+	       itemclick: function(e){
+	          alert( "Legend item clicked with type : " + e.dataSeries.type );
+	       }
+     	},
+     	axisX:{      
+            valueFormatString: "DD-MMM-YYYY" ,
+            labelAngle: -50
+        },
+		data: [
+			{
+			cursor:"pointer",
+			color: "LightSeaGreen",
+			type: "bubble", //change it to column, spline, line, pie, etc
+			name: "series1",
+        	legendText: "Apples",
+	        showInLegend: true,
+	        legendMarkerType: "circle",
+	 		toolTipContent: "<strong>{name}</strong> <br/> Fetility Rate: {y}<br/> Life Expectancy: {x} yrs<br/> Population: {z} mn",
+			dataPoints: {!! $graph !!}
+			}
+			/*,{
+			color: "orange",
+			type: "bubble", //change it to column, spline, line, pie, etc
+			name: "series2",
+        	legendText: "orange",
+	        showInLegend: true,
+	        legendMarkerType: "circle",
+	 		toolTipContent: "<strong>{name}</strong> <br/> Fetility Rate: {y}<br/> Life Expectancy: {x} yrs<br/> Population: {z} mn",
+			dataPoints: [
+			     { x: 64.8, y: 2.66, z:50, name: "India", click : onClick},
+			     { x: 73.1, y: 1.61, z:50, name: "China"},
+			     { x: 78.1, y: 2.00, z:50, name: "US" },
+			     { x: 72.5, y: 1.86, z:50, name: "Brazil"},
+			     { x: 76.5, y: 2.36, z:50, name: "Mexico"},
+			     { x: 82.9, y: 1.37, z:50, name: "Japan" },
+			     { x: 79.8, y: 1.36, z:50, name:"Australia" },
+			     { x: 72.7, y: 2.78, z:50, name: "Egypt"},
+			     { x: 80.1, y: 1.94, z:50, name:"UK" },
+			     { x: 81.5, y: 1.93, z:50, name:"Australia" },
+		     ]
+			}
+			*/
+		]
+	});
+
+});
+
+function onClick(e) {
+	alert(  e.dataSeries.type + ", dataPoint { x:" + e.dataPoint.x + ", y: "+ e.dataPoint.y + " }" );
+}
+
+</script>
+<script type="text/javascript">
 	$(document).ready(function() {    
 		getTabs();
 		table();
-		//searchIg();
-		//putHashTag();
 	});
 
-	function table(){
+	function table()
+	{
         $("#hashtag-table").dataTable({
             'pageLength':10,
         });
@@ -98,83 +178,6 @@
 		    $('.content-tab').hide();
 		    $('#'+ t + 'C').fadeIn('slow');
 		 }
-		});
-	}
-
-	function searchIg(){
-		$("#search").submit(function(e){
-			e.preventDefault();
-			var hashtag = '';
-			var people = '';
-			var place = '';
-			var query = $("#searchig").val();
-			$("#ighashtag").html('');
-			$("#iguser").html('');
-			$("#igplace").html('');
-			$.ajaxSetup({
-		        headers: {
-	              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		        }
-		     });
-			$.ajax({
-				type : 'POST',
-				url : '{{route("igdata")}}',
-				data : {"q":query},
-				dataType : 'json',
-				success : function(result){
-					/* hashtag */
-					$.each(result.hashtag,function(key, value){
-						hashtag += '<div class="col-result row"><div class="col-lg-6"><a class="hashtag_input">'+value+'</a></div><div id="pos-'+key+'" class="col-lg-6"></div><div class="clearfix"></div></div>';
-					});
-
-					$("#ighashtag").html(hashtag);
-
-					//post count
-					$.each(result.post,function(key, value){
-						$("#pos-"+key).html('<b>'+value+'</b>');
-					});
-
-					/* people */
-					$.each(result.people_username,function(key, value){
-						people += '<div class="col-result row"><div class="col-lg-3" id="img-'+key+'"></div><div class="col-lg-6"><div><a target="_blank" href="https://www.instagram.com/'+value+'">'+value+'</a></div><small id="fnm-'+key+'"></small></div><div class="col-lg-3">follower</div><div class="clearfix"></div></div>';
-					});
-					$("#iguser").html(people);
-
-					//image
-					$.each(result.people_image,function(key, value){
-						$("#img-"+key).html('<img class="igimage" src="'+value+'"/>');
-					});
-
-					//full name
-					$.each(result.people_name,function(key, value){
-						$("#fnm-"+key).text(value);
-					});
-
-					/* place */
-					$.each(result.location_name,function(key, value){
-						place+= '<div class="col-result"><div><a target="_blank" id="pk-'+key+'">'+value+ '</a></div><small id="addr-'+key+'"></small></div>';
-					});
-					$("#igplace").html(place);
-
-					//address
-					$.each(result.location_address,function(key, value){
-						$("#addr-"+key).text(value);
-					});
-
-					//link
-					$.each(result.location_pk,function(key, value){
-						$("#pk-"+key).attr('href','https://www.instagram.com/explore/locations/'+value)
-					});
-
-				}
-			});
-		});
-	}
-
-	function putHashTag(){
-		$("body").on("click",".hashtag_input",function(){
-			var value = $(this).text();
-			$("#searchig").val(value);
 		});
 	}
 
