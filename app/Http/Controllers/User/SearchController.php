@@ -62,7 +62,7 @@ class SearchController extends Controller
 					 $data['hashtag'][$key] = $rows['name'];
 				}
 			} else {
-				$data = array();
+				$data['post'] = $data['hashtag'] = array();
 			}
 
 			//user
@@ -82,7 +82,7 @@ class SearchController extends Controller
 					$p++;
 				}
 			} else {
-				$data = array();
+				$data['people_username'] = $data['people_image'] = $data['people_name'] = $data['people_id'] = array();
 			}
 
 			//location see model/location.php
@@ -101,7 +101,7 @@ class SearchController extends Controller
 					$l++;
 				}
 			} else {
-				$data = array();
+				$data['location_name'] = $data['location_address'] = $data['location_pk'] = array();
 			}
 
 			$this->saveCache($query,$data);
@@ -238,6 +238,7 @@ class SearchController extends Controller
 			$countTimeline = count($timeline->getItems());
 			$maxid[0] = $maxId;
 			$maxid[] = $nextMaxId;
+			$dataPoints['Image'] = $dataPoints['Album'] = $dataPoints['Video'] = array();
 
 			#get max id for pagination
 			/*if($nextMaxId <> null)
@@ -269,6 +270,7 @@ class SearchController extends Controller
 
 					foreach ($timeline->getItems() as $item) 
 					{   
+
 						$taken = Date('d-m-Y',$item->getTakenAt());
 						$time =  $this->datediff('ww',$taken,$today,false).'w';
 
@@ -318,20 +320,41 @@ class SearchController extends Controller
 							'caption'=>$caption
 						);
 
-						#data for graph
+						#media type
+						/*
+							1 = image
+							2 = video / igtv
+							8 = album
+						*/
+						$mediatype = $item->getMediaType();
 
+						if($mediatype == 8)
+						{
+							$typemedia = 'Album';
+						}
+						else if($mediatype == 2)
+						{
+							$typemedia = 'Video';
+						}
+						else
+						{
+							$typemedia = 'Image';
+						}
+						#data for graph
 						$division = $follower * 20;
 						$engagement = ($item->getCommentCount()+$item->getLikeCount()) / $division;
 
 						//print('<pre>'.print_r($engagement,true).' '.print_r($taken,true).'</pre>');
-						$dataPoints[] = array(
-						 	"x" => $taken,  //date when posting created
-						 	"y" => $engagement, // engagement rate
-						 	"z" => 10,  	// size of bubble
-						 	"image" => $img, //image of post code
-						 	"link" => 'https://www.instagram.com/p/'.$item->getCode().'/', //go to post link when user click on bubble
-						);
+						$converting_date = Date('Y-m-d',strtotime($taken)); // convert to new format so that not causing 'invalid date' on javascript
 
+						$dataPoints[$typemedia][] = array(
+						 	"x" => $converting_date,  //date when posting created
+						 	"y" => $engagement, // engagement rate
+						 	"z" => 1,  	// size of bubble
+						 	"type"=> $typemedia,
+						 	"image" => $img, //image of post code
+						 	"link" => 'https://www.instagram.com/p/'.$item->getCode().'/' //go to post link when user click on bubble
+						);
 			    	}
 
 					#end foreach insight
@@ -345,7 +368,7 @@ class SearchController extends Controller
 			}
 
 			#graph data
-			$datagraph = json_encode($dataPoints,JSON_NUMERIC_CHECK);
+			$datagraph = $dataPoints;
 
 			#hashtag post
 			$hashtags_temp = array();

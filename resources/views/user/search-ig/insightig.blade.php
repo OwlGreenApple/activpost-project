@@ -77,78 +77,206 @@
  		</div>
  	</div>
   	<div class="content-tab" id="igtabs3C">
-  		<div id="igplace" class="col-md-12">
-  			 <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+  		<div id="igplace">
+  			<div class="col-md-12 row" style="margin-bottom : 30px">
+  				<div class="col-md-6 graph-bg">
+  					<h3>Frequently Post</h3>
+  					<h5>Post By Type</h5>
+  					<div id="pieType" style="height: 300px; width: 100%;"></div>
+  				</div>
+  				<div class="col-md-6 graph-bg">
+  					<div id="bar" style="height: 300px; width: 100%;"></div>
+  				</div>
+  			</div>
+
+  			<div class="col-md-12 mt-3 graph-bg ">
+  			 	<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+  			</div>
   		</div>
   	</div>
 
 </div>
 
 <script type="text/javascript">
+
 $(function () {
+
+	var album = [];
+	$.each(<?php echo json_encode($graph['Album'], JSON_NUMERIC_CHECK); ?>, function( i, item ) {
+		album.push({'x': new Date(item.x), 'y':item.y, 'z':item.z,'type':item.type ,'image':item.image, 'link':item.link});
+ 	});
+
+	var image = [];
+	$.each(<?php echo json_encode($graph['Image'], JSON_NUMERIC_CHECK); ?>, function( i, item ) {
+		image.push({'x': new Date(item.x), 'y':item.y, 'z':item.z,'type':item.type ,'image':item.image, 'link':item.link});
+ 	});
+
+ 	var video = [];
+	$.each(<?php echo json_encode($graph['Video'], JSON_NUMERIC_CHECK); ?>, function( i, item ) {
+		video.push({'x': new Date(item.x), 'y':item.y, 'z':item.z,'type':item.type ,'image':item.image, 'link':item.link});
+ 	});
+
 	$("#chartContainer").CanvasJSChart({ //Pass chart options
 		title:{
        		text: ""
       	},
 	  	toolTip:{
-	       backgroundColor: "rgba(0,0,0,.8)",
-	       fontColor: "yellow",
+	       backgroundColor: "rgba(0,0,0,.5)",
+	       fontColor: "white",
 	    },
 	    legend: {
            cursor:"pointer",
-       	   horizontalAlign: "left",
-           verticalAlign: "bottom",
+       	   horizontalAlign: "center",
+           verticalAlign: "top",
            fontSize: 15,
-	       itemclick: function(e){
+	       /*itemclick: function(e){
 	          alert( "Legend item clicked with type : " + e.dataSeries.type );
-	       }
+	       }*/
      	},
      	axisX:{      
             valueFormatString: "DD-MMM-YYYY" ,
-            labelAngle: -50
+            labelAngle: 0
         },
 		data: [
+			//Image
 			{
-			cursor:"pointer",
-			color: "LightSeaGreen",
-			type: "bubble", //change it to column, spline, line, pie, etc
-			name: "series1",
-        	legendText: "Apples",
-	        showInLegend: true,
-	        legendMarkerType: "circle",
-	 		toolTipContent: "<strong>{name}</strong> <br/> Fetility Rate: {y}<br/> Life Expectancy: {x} yrs<br/> Population: {z} mn",
-			dataPoints: {!! $graph !!}
+				cursor:"pointer",
+				color: "blue",
+				type: "bubble", //change it to column, spline, line, pie, etc
+				name: "image",
+	        	legendText: "Image",
+		        showInLegend: true,
+		        legendMarkerType: "circle",
+		 		toolTipContent: "<div class='\"'row fixtooltip'\"'><div class='\"'col-md-4 fixcol'\"'><img src={image} style='\"'width:100px'\"' /></div><div class='\"'col-md-8 fixcol'\"'>Engagement Rate: {y}<br/> Posted on: {x}<br /> Type : {type}<br/> Click to jump the post</div></div>",
+				dataPoints: image,
+				click : onClick
+			},
+			//Album
+			{
+				cursor:"pointer",
+				color: "orange",
+				type: "bubble", //change it to column, spline, line, pie, etc
+				name: "album",
+	        	legendText: "Album",
+		        showInLegend: true,
+		        legendMarkerType: "circle",
+		 		toolTipContent: "<div class='\"'row fixtooltip'\"'><div class='\"'col-md-4 fixcol'\"'><img src={image} style='\"'width:100px'\"' /></div><div class='\"'col-md-8 fixcol'\"'>Engagement Rate: {y}<br/> Posted on: {x}<br /> Type : {type}<br/> Click to jump the post</div></div>",
+				dataPoints: album,
+				click : onClick
+			},
+			//Video
+			{
+				cursor:"pointer",
+				color: "green",
+				type: "bubble", //change it to column, spline, line, pie, etc
+				name: "video",
+	        	legendText: "Video",
+		        showInLegend: true,
+		        legendMarkerType: "circle",
+		 		toolTipContent: "<div class='\"'row fixtooltip'\"'><div class='\"'col-md-4 fixcol'\"'><img src={image} style='\"'width:100px'\"' /></div><div class='\"'col-md-8 fixcol'\"'>Engagement Rate: {y}<br/> Posted on: {x}<br /> Type : {type}<br/> Click to jump the post</div></div>",
+				dataPoints: video,
+				click : onClick
 			}
-			/*,{
-			color: "orange",
-			type: "bubble", //change it to column, spline, line, pie, etc
-			name: "series2",
-        	legendText: "orange",
-	        showInLegend: true,
-	        legendMarkerType: "circle",
-	 		toolTipContent: "<strong>{name}</strong> <br/> Fetility Rate: {y}<br/> Life Expectancy: {x} yrs<br/> Population: {z} mn",
-			dataPoints: [
-			     { x: 64.8, y: 2.66, z:50, name: "India", click : onClick},
-			     { x: 73.1, y: 1.61, z:50, name: "China"},
-			     { x: 78.1, y: 2.00, z:50, name: "US" },
-			     { x: 72.5, y: 1.86, z:50, name: "Brazil"},
-			     { x: 76.5, y: 2.36, z:50, name: "Mexico"},
-			     { x: 82.9, y: 1.37, z:50, name: "Japan" },
-			     { x: 79.8, y: 1.36, z:50, name:"Australia" },
-			     { x: 72.7, y: 2.78, z:50, name: "Egypt"},
-			     { x: 80.1, y: 1.94, z:50, name:"UK" },
-			     { x: 81.5, y: 1.93, z:50, name:"Australia" },
-		     ]
-			}
-			*/
 		]
 	});
 
 });
 
 function onClick(e) {
-	alert(  e.dataSeries.type + ", dataPoint { x:" + e.dataPoint.x + ", y: "+ e.dataPoint.y + " }" );
+	window.open( e.dataPoint.link, '_blank');
+	//alert(  e.dataSeries.type + ", dataPoint { x:" + e.dataPoint.x + ", y: "+ e.dataPoint.y + " }" );
 }
+
+
+/* pie diagram */
+$(function() {
+	$("#pieType").CanvasJSChart({ //Pass chart options
+        data: [{
+			type: "pie",
+			startAngle: 240,
+			yValueFormatString: "##0.00\"%\"",
+			indexLabel: "{label} {y}",
+			dataPoints: [
+				{y: 79.45, label: "Google"},
+				{y: 7.31, label: "Bing"},
+				{y: 7.06, label: "Baidu"},
+				{y: 4.91, label: "Yahoo"},
+				{y: 1.26, label: "Others"}
+			]
+		}]
+
+	});
+});
+
+/* Bar diagram */
+$(function(){
+	$("#bar").CanvasJSChart({
+		animationEnabled: true,
+		title:{
+			text: "Crude Oil Reserves vs Production, 2016"
+		},	
+		axisY: {
+			title: "Billions of Barrels",
+			titleFontColor: "#4F81BC",
+			lineColor: "#4F81BC",
+			labelFontColor: "#4F81BC",
+			tickColor: "#4F81BC"
+		},
+		axisY2: {
+			title: "Millions of Barrels/day",
+			titleFontColor: "#C0504E",
+			lineColor: "#C0504E",
+			labelFontColor: "#C0504E",
+			tickColor: "#C0504E"
+		},	
+		toolTip: {
+			shared: true
+		},
+		legend: {
+			cursor:"pointer",
+			itemclick: toggleDataSeries
+		},
+		data: [{
+			type: "column",
+			name: "Proven Oil Reserves (bn)",
+			legendText: "Proven Oil Reserves",
+			showInLegend: true, 
+			dataPoints:[
+				{ label: "Saudi", y: 266.21 },
+				{ label: "Venezuela", y: 302.25 },
+				{ label: "Iran", y: 157.20 },
+				{ label: "Iraq", y: 148.77 },
+				{ label: "Kuwait", y: 101.50 },
+				{ label: "UAE", y: 97.8 }
+			]
+		},
+		{
+			type: "column",	
+			name: "Oil Production (million/day)",
+			legendText: "Oil Production",
+			axisYType: "secondary",
+			showInLegend: true,
+			dataPoints:[
+				{ label: "Saudi", y: 10.46 },
+				{ label: "Venezuela", y: 2.27 },
+				{ label: "Iran", y: 3.99 },
+				{ label: "Iraq", y: 4.45 },
+				{ label: "Kuwait", y: 2.92 },
+				{ label: "UAE", y: 3.1 }
+			]
+		}]
+	})
+
+	function toggleDataSeries(e) {
+		if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+			e.dataSeries.visible = false;
+		}
+		else {
+			e.dataSeries.visible = true;
+		}
+	}
+
+});
 
 </script>
 <script type="text/javascript">
