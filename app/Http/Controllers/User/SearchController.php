@@ -216,6 +216,7 @@ class SearchController extends Controller
 
     public function getDataInsight($userId)
     {
+
 		try {
 			$error_message="";
 			$i = new Instagram(false,false,[
@@ -238,7 +239,8 @@ class SearchController extends Controller
 			$countTimeline = count($timeline->getItems());
 			$maxid[0] = $maxId;
 			$maxid[] = $nextMaxId;
-			$dataPoints['Image'] = $dataPoints['Album'] = $dataPoints['Video'] = array();
+			$totalhours = $totalweek = $hashtag_popularity = $average = $dataPoints['Image'] = $dataPoints['Album'] = $dataPoints['Video'] = array();
+			$viewVideoCount = 0;
 
 			#get max id for pagination
 			/*if($nextMaxId <> null)
@@ -341,8 +343,8 @@ class SearchController extends Controller
 							$typemedia = 'Image';
 						}
 						#data for graph
-						$division = $follower * 20;
-						$engagement = ($item->getCommentCount()+$item->getLikeCount()) / $division;
+						$viewVideoCount = $item->getViewCount();
+						$engagement = $item->getCommentCount()+$item->getLikeCount();
 
 						//print('<pre>'.print_r($engagement,true).' '.print_r($taken,true).'</pre>');
 						$converting_date = Date('Y-m-d',strtotime($taken)); // convert to new format so that not causing 'invalid date' on javascript
@@ -350,11 +352,18 @@ class SearchController extends Controller
 						$dataPoints[$typemedia][] = array(
 						 	"x" => $converting_date,  //date when posting created
 						 	"y" => $engagement, // engagement rate
-						 	"z" => 1,  	// size of bubble
+						 	"z" => $engagement,  // size of bubble
 						 	"type"=> $typemedia,
 						 	"image" => $img, //image of post code
-						 	"link" => 'https://www.instagram.com/p/'.$item->getCode().'/' //go to post link when user click on bubble
+						 	"link" => 'https://www.instagram.com/p/'.$item->getCode().'/', //go to post link when user click on bubble
+						 	"like" => $item->getLikeCount(),
+						 	"comments" => $item->getCommentCount(),
 						);
+
+						#average post by week
+						$totalweek[] = Date('D',$item->getTakenAt());
+						$totalhours[] = Date('H:00',$item->getTakenAt());
+
 			    	}
 
 					#end foreach insight
@@ -367,8 +376,75 @@ class SearchController extends Controller
 				$posts = array();
 			}
 
+			#average post by day
+			$totalclock = array_count_values($totalhours);
+
+			/*if(!isset($totalclock['00'])){$totalclock['00'] = 0;}
+			if(!isset($totalclock['03'])){$totalclock['03'] = 0;}
+			if(!isset($totalclock['06'])){$totalclock['06'] = 0;}
+			if(!isset($totalclock['09'])){$totalclock['09'] = 0;}
+			if(!isset($totalclock['12'])){$totalclock['12'] = 0;}
+			if(!isset($totalclock['15'])){$totalclock['15'] = 0;}
+			if(!isset($totalclock['18'])){$totalclock['18'] = 0;}
+			if(!isset($totalclock['21'])){$totalclock['21'] = 0;}
+			*/
+
+			
+			#average post by day
+			$totalday = array_count_values($totalweek);
+
+			if(!isset($totalday['Mon'])){$totalday['Mon'] = 0;}
+			if(!isset($totalday['Tue'])){$totalday['Tue'] = 0;}
+			if(!isset($totalday['Wed'])){$totalday['Wed'] = 0;}
+			if(!isset($totalday['Thu'])){$totalday['Thu'] = 0;}
+			if(!isset($totalday['Fri'])){$totalday['Fri'] = 0;}
+			if(!isset($totalday['Sat'])){$totalday['Sat'] = 0;}
+			if(!isset($totalday['Sun'])){$totalday['Sun'] = 0;}
+
 			#graph data
 			$datagraph = $dataPoints;
+
+			#piegraphdata
+			$piedata['image'] = count($datagraph['Image']);
+			$piedata['album'] = count($datagraph['Album']);
+			$piedata['video'] = count($datagraph['Video']);
+
+			#bar column graph data
+
+			#image like and comment
+			$totalimagelike = 0;
+			$totalimagecomments = 0;
+			foreach($datagraph['Image'] as $rows)
+			{
+				$totalimagelike += $rows['like'];
+				$totalimagecomments += $rows['comments'];
+			}
+
+			$average['imagelike'] = $this->divisionLikeComments($totalimagelike,$piedata['image']);
+			$average['imagecomments'] = $this->divisionLikeComments($totalimagecomments,$piedata['image']);
+
+			#album like and comment
+			$totalalbumlike = 0;
+			$totalalbumcomments = 0;
+			foreach($datagraph['Album'] as $rows)
+			{
+				$totalalbumlike += $rows['like'];
+				$totalalbumcomments += $rows['comments'];
+			}
+
+			$average['albumlike'] = $this->divisionLikeComments($totalalbumlike,$piedata['album']);
+			$average['albumcomments'] = $this->divisionLikeComments($totalalbumcomments,$piedata['album']);
+
+			#video like and comment
+			$totalvideolike = $totalvideocomments = 0;
+			foreach($datagraph['Album'] as $rows)
+			{
+				$totalvideolike += $rows['like'];
+				$totalvideocomments += $rows['comments'];
+			}
+
+			$average['videolike'] = $this->divisionLikeComments($totalalbumlike,$piedata['video']);
+			$average['videocomments'] = $this->divisionLikeComments($totalalbumcomments,$piedata['video']);
 
 			#hashtag post
 			$hashtags_temp = array();
@@ -403,6 +479,10 @@ class SearchController extends Controller
 						'hashtaginpost'=>$totalhashtag,
 						'hashtagpercent'=> round($percenthashtag)
 					);
+					#for graph 'Number of Hashtags per Post'
+					$hashtag_per_post[] = $totalhashtag;
+					#hashtag by popularity
+					$hashtag_popularity[] = $hashtagpopularity;
 				}
 			}
 			else
@@ -410,14 +490,61 @@ class SearchController extends Controller
 				$hashtags = array();
 			}
 			
+			#hashtag by popularity
+			$arr = $hashtag_popularity;		
+			$hash = $hash['specific'] = $hash['medium'] = $hash['popular'] = $hash['very_popular'] = $hash['x_popular'] = array();
+
+	    	$hash['specific'] = array_filter($arr, function($value) {
+	    		if($value < pow(10,5))
+	    		{
+	    			return $value;
+	    		}
+			});
+
+			$hash['medium'] = array_filter($arr, function($value) {
+	    		if($value >= pow(10,5) && $value < pow(10,6))
+	    		{
+	    			return $value;
+	    		}
+			});
+
+			$hash['popular'] = array_filter($arr, function($value) {
+	    		if($value >= pow(10,6) && $value < pow(10,7))
+	    		{
+	    			return $value;
+	    		}
+			});
+
+			$hash['very_popular'] = array_filter($arr, function($value) {
+	    		if($value >= pow(10,7) && $value < pow(10,8))
+	    		{
+	    			return $value;
+	    		}
+			});
+
+			$hash['x_popular'] = array_filter($arr, function($value) {
+	    		if($value > pow(10,8))
+	    		{
+	    			return $value;
+	    		}
+			});
+		
+			$hash['specific'] = count($hash['specific']);
+			$hash['medium'] = count($hash['medium']);
+			$hash['popular'] = count($hash['popular']);
+			$hash['very_popular'] = count($hash['very_popular']);
+			$hash['x_popular'] = count($hash['x_popular']);
+
+			#for graph 'Number of Hashtags per Post'
+			$totalhashtaginpost = array_count_values($hashtag_per_post);
+
 			//print('<pre>'.print_r(round($percenthashtag),true).'</pre>');
-			//die('');
 
 			$data['post'] = $posts;
 			$data['hashtags'] = $hashtags;
 			$this->saveCacheInsight($userId,$data);
 
-			return view('user.search-ig.insightig',['data'=>$posts,'hashtags'=>$hashtags,'graph'=>$datagraph]);
+			return view('user.search-ig.insightig',['data'=>$posts,'hashtags'=>$hashtags,'graph'=>$datagraph,'piedata'=>$piedata, 'avgdata'=>$average, 'totalhashtaginpost'=>$totalhashtaginpost, 'hashtagspopularity'=>$hash, 'totaldaypost'=>$totalday, 'totalclock'=>$totalclock]);
 
 		}  	
 			catch (\InstagramAPI\Exception\IncorrectPasswordException $e) {
@@ -456,6 +583,12 @@ class SearchController extends Controller
 				}
 			}
 		echo $error_message;
+	}
+
+	function divisionLikeComments($totalsubject,$totalpost)
+	{
+		$result = round($totalsubject/max($totalpost,1));
+		return $result;
 	}
 
 	function datediff($interval, $datefrom, $dateto, $using_timestamps = false)
@@ -588,7 +721,6 @@ class SearchController extends Controller
 	 {
     	//post
     	$save['postinsight'] = $data['post'];
-
     	//hashtag
     	$save['hashtaginsight'] = $data['hashtags'];
 

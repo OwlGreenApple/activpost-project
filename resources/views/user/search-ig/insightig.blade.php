@@ -85,10 +85,12 @@
   				<div class="col-md-6 graph-bg">
   					<h3>Posting Time</h3>
   					<h5>Posts distribution by hours</h5>
+  					<div id="avghour" style="height: 300px; width: 100%;"></div>
   				</div>
   				<div class="col-md-6 graph-bg">
   					<h3>Average Post</h3>
   					<h5>Posts distribution by day of the week</h5>
+  					<div id="avgweek" style="height: 300px; width: 100%;"></div>
   				</div>
   			</div>
 
@@ -122,8 +124,8 @@
   				</div>
   			</div>
 
-  			<div class="col-md-12 mt-3 graph-bg ">
-  				<h4>Post per activity</h4>
+  			<div class="col-md-12 mt-3 graph-bg">
+  				<h4>Post Performance</h4>
   			 	<div id="chartContainer" style="height: 300px; width: 100%;"></div>
   			</div>
   		</div>
@@ -132,7 +134,7 @@
 </div>
 
 <script type="text/javascript">
-
+/* Performance post */
 $(function () {
 
 	var album = [];
@@ -222,72 +224,37 @@ function onClick(e) {
 }
 
 
-/* pie diagram */
+/* Frequently Post */
 $(function() {
 	$("#pieType").CanvasJSChart({ //Pass chart options
         data: [{
 			type: "pie",
 			startAngle: 240,
-			yValueFormatString: "##0.00\"%\"",
+			//yValueFormatString: "##0.00\"%\"",
 			indexLabel: "{label} {y}",
 			dataPoints: [
-				{y: 79.45, label: "Google"},
-				{y: 7.31, label: "Bing"},
-				{y: 7.06, label: "Baidu"},
-				{y: 4.91, label: "Yahoo"},
-				{y: 1.26, label: "Others"}
+				{y: <?php echo $piedata['image'];?>, label: "Image", color : "blue"},
+				{y: <?php echo $piedata['album'];?>, label: "Album", color : "orange"},
+				{y: <?php echo $piedata['video'];?>, label: "Video", color : "green"},
 			]
 		}]
 
 	});
 });
 
-/* column diagram */
-$(function() {
-	$("#column").CanvasJSChart({ //Pass chart options
-       animationEnabled: true,
-		theme: "light2", // "light1", "light2", "dark1", "dark2"
-		title:{
-			text: "Top Oil Reserves"
-		},
-		axisY: {
-			title: "Reserves(MMbbl)"
-		},
-		data: [{        
-			type: "column",  
-			showInLegend: true, 
-			legendMarkerColor: "grey",
-			legendText: "MMbbl = one million barrels",
-			dataPoints: [      
-				{ y: 300878, label: "Venezuela" },
-				{ y: 266455,  label: "Saudi" },
-				{ y: 169709,  label: "Canada" },
-				{ y: 158400,  label: "Iran" },
-				{ y: 142503,  label: "Iraq" },
-				{ y: 101500, label: "Kuwait" },
-				{ y: 97800,  label: "UAE" },
-				{ y: 80000,  label: "Russia" }
-			]
-		}]
-	});
-});
-
-/* Bar diagram */
+/* Most Engaging Content Type */
 $(function(){
 	$("#bar").CanvasJSChart({
 		animationEnabled: true,
-		title:{
-			text: "Crude Oil Reserves vs Production, 2016"
-		},	
 		axisY: {
-			title: "Billions of Barrels",
+			title: "Average Likes",
 			titleFontColor: "#4F81BC",
 			lineColor: "#4F81BC",
 			labelFontColor: "#4F81BC",
 			tickColor: "#4F81BC"
 		},
 		axisY2: {
-			title: "Millions of Barrels/day",
+			title: "Average Comments",
 			titleFontColor: "#C0504E",
 			lineColor: "#C0504E",
 			labelFontColor: "#C0504E",
@@ -302,31 +269,25 @@ $(function(){
 		},
 		data: [{
 			type: "column",
-			name: "Proven Oil Reserves (bn)",
-			legendText: "Proven Oil Reserves",
+			name: "Avg Like",
+			legendText: "Average Likes",
 			showInLegend: true, 
 			dataPoints:[
-				{ label: "Saudi", y: 266.21 },
-				{ label: "Venezuela", y: 302.25 },
-				{ label: "Iran", y: 157.20 },
-				{ label: "Iraq", y: 148.77 },
-				{ label: "Kuwait", y: 101.50 },
-				{ label: "UAE", y: 97.8 }
+				{ label: "Image", y: <?php echo $avgdata['imagelike'] ;?> },
+				{ label: "Album", y: <?php echo $avgdata['albumlike'] ;?> },
+				{ label: "Video", y: <?php echo $avgdata['videolike'] ;?> },
 			]
 		},
 		{
 			type: "column",	
-			name: "Oil Production (million/day)",
-			legendText: "Oil Production",
+			name: "Average Comments",
+			legendText: "Average Comments",
 			axisYType: "secondary",
 			showInLegend: true,
 			dataPoints:[
-				{ label: "Saudi", y: 10.46 },
-				{ label: "Venezuela", y: 2.27 },
-				{ label: "Iran", y: 3.99 },
-				{ label: "Iraq", y: 4.45 },
-				{ label: "Kuwait", y: 2.92 },
-				{ label: "UAE", y: 3.1 }
+				{ label: "Image", y: <?php echo $avgdata['imagecomments'] ;?> },
+				{ label: "Album", y: <?php echo $avgdata['albumcomments'] ;?> },
+				{ label: "Video", y: <?php echo $avgdata['videocomments'] ;?> },
 			]
 		}]
 	})
@@ -342,49 +303,132 @@ $(function(){
 
 });
 
-/* Bar chart diagram */
+/* Number of Hashtags per Post */
 $(function(){
+
+	var hashtagpost = [];
+	$.each(<?php echo json_encode( $totalhashtaginpost, JSON_NUMERIC_CHECK);?>,function(i, item){
+		hashtagpost.push({'y': item,'label': i});
+	});
+
 	$("#barchart").CanvasJSChart({
 		animationEnabled: true,
-	
-		title:{
-			text:"Fortune 500 Companies by Country"
-		},
 		axisX:{
+			title: "Hashtags",
 			interval: 1
 		},
 		axisY2:{
-			interlacedColor: "rgba(1,77,101,.2)",
-			gridColor: "rgba(1,77,101,.1)",
-			title: "Number of Companies"
+			//interlacedColor: "rgba(1,77,101,.2)",
+			//gridColor: "rgba(1,77,101,.1)",
+			title: "Total Post"
 		},
 		data: [{
 			type: "bar",
 			name: "companies",
 			axisYType: "secondary",
-			color: "#014D65",
-			dataPoints: [
-				{ y: 3, label: "Sweden" },
-				{ y: 7, label: "Taiwan" },
-				{ y: 5, label: "Russia" },
-				{ y: 9, label: "Spain" },
-				{ y: 7, label: "Brazil" },
-				{ y: 7, label: "India" },
-				{ y: 9, label: "Italy" },
-				{ y: 8, label: "Australia" },
-				{ y: 11, label: "Canada" },
-				{ y: 15, label: "South Korea" },
-				{ y: 12, label: "Netherlands" },
-				{ y: 15, label: "Switzerland" },
-				{ y: 25, label: "Britain" },
-				{ y: 28, label: "Germany" },
-				{ y: 29, label: "France" },
-				{ y: 52, label: "Japan" },
-				{ y: 103, label: "China" },
-				{ y: 134, label: "US" }
-			]
+			color: "green",
+			toolTipContent: "Hashtags : {y}<br/> Total Post : {label}",
+			dataPoints: hashtagpost
 		}]
 	})
+});
+
+/* Hashtags Variation By Popularity Hashtag */
+$(function() {
+	$("#column").CanvasJSChart({ //Pass chart options
+       animationEnabled: true,
+		theme: "light2", // "light1", "light2", "dark1", "dark2"
+		axisY: {
+			title: "Hashtags"
+		},
+		axisX: {
+			title: "Popularity"
+		},
+		data: [{        
+			type: "column",  
+			showInLegend: false, 
+			//legendMarkerColor: "transparent",
+			//legendText: "Popularity",
+			color : "blue",
+			dataPoints: [      
+				{ y: <?php echo $hashtagspopularity['x_popular']; ?>, label: "Extremely Popular" },
+				{ y: <?php echo $hashtagspopularity['very_popular']; ?>,  label: "Very Popular" },
+				{ y: <?php echo $hashtagspopularity['popular']; ?>,  label: "Popular" },
+				{ y: <?php echo $hashtagspopularity['medium']; ?>,  label: "Medium" },
+				{ y: <?php echo $hashtagspopularity['specific']; ?>,  label: "Specific" },
+			]
+		}]
+	});
+});
+
+/* Average Post By week */
+$(function() {
+	$("#avgweek").CanvasJSChart({ //Pass chart options
+       animationEnabled: true,
+		theme: "light2", // "light1", "light2", "dark1", "dark2"
+		axisY: {
+			title: "Posts",
+		},
+		data: [{        
+			type: "column",  
+			showInLegend: false, 
+			//legendMarkerColor: "transparent",
+			//legendText: "Popularity",
+			color : "orange",
+			dataPoints: [      
+				{ y: <?php echo $totaldaypost['Mon']; ?>, label: "Mon" },
+				{ y: <?php echo $totaldaypost['Tue']; ?>,  label: "Tue" },
+				{ y: <?php echo $totaldaypost['Wed']; ?>,  label: "Wed" },
+				{ y: <?php echo $totaldaypost['Thu']; ?>,  label: "Thu" },
+				{ y: <?php echo $totaldaypost['Fri']; ?>,  label: "Fri" },
+				{ y: <?php echo $totaldaypost['Sat']; ?>,  label: "Sat" },
+				{ y: <?php echo $totaldaypost['Sun']; ?>,  label: "Sun" },
+			]
+		}]
+	});
+});
+
+/* Average Post By Hour */
+
+$(function() {
+	var totalclock = [];
+	var parse, hour, minute;
+	$.each(<?php echo json_encode($totalclock, JSON_NUMERIC_CHECK); ?>, function( hour, total ) {
+		parse = hour.split(':');
+		hour = parseInt(parse[0],10);
+		minute = parseInt(parse[1],10);
+		totalclock.push({'x': new Date(0000,00,00,hour,minute), 'y':total});
+ 	});
+
+	$("#avghour").CanvasJSChart({ //Pass chart options
+       animationEnabled: true,
+		theme: "light2", // "light1", "light2", "dark1", "dark2"
+		axisY: {
+			title: "Post"
+		},
+		axisX: {
+			valueFormatString: "HH:mm"
+		},
+		toolTip: {
+	      	contentFormatter : function(e){
+			  var content = "";
+	          for (var i = 0; i < e.entries.length; i++){
+	            content = 'Hour : '+CanvasJS.formatDate(e.entries[i].dataPoint.x, "HH-mm")+'<br/> Total Post : '+e.entries[i].dataPoint.y;       
+	          }       
+	          return content;
+			}
+	     },
+		data: [{        
+			type: "column",  
+			showInLegend: false, 
+			//toolTipContent: "Total Post : {y}",
+			//legendMarkerColor: "transparent",
+			//legendText: "Popularity",
+			color : "#999",
+			dataPoints: totalclock
+		}]
+	});
+
 });
 
 </script>
