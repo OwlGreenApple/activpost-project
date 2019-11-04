@@ -239,8 +239,7 @@ class SearchController extends Controller
 			$countTimeline = count($timeline->getItems());
 			$maxid[0] = $maxId;
 			$maxid[] = $nextMaxId;
-			$totalhours = $totalweek = $hashtag_popularity = $average = $dataPoints['Image'] = $dataPoints['Album'] = $dataPoints['Video'] = array();
-			$viewVideoCount = 0;
+			$viewVideo = $hashtagposts = $totalhours = $totalweek = $hashtag_popularity = $average = $dataPoints['Image'] = $dataPoints['Album'] = $dataPoints['Video'] = array();
 
 			#get max id for pagination
 			/*if($nextMaxId <> null)
@@ -274,6 +273,8 @@ class SearchController extends Controller
 					{   
 
 						$taken = Date('d-m-Y',$item->getTakenAt());
+						$converting_date = Date('Y-m-d',strtotime($taken)); // convert to new format so that not causing 'invalid date' on javascript
+
 						$time =  $this->datediff('ww',$taken,$today,false).'w';
 
 						if($time > 52)
@@ -305,11 +306,7 @@ class SearchController extends Controller
 							preg_match_all("/(#\w+)/", $caption, $hashtagpost);
 							$hashtagposts[] = $hashtagpost[0];
 						}
-						else
-						{
-							$hashtagposts[] = array();
-						}
-				
+						
 						$posts[] = array(
 							'profile'=> $item->getUser()->getProfilePicUrl(),
 							'username' =>$item->getUser()->getUsername(),
@@ -337,18 +334,22 @@ class SearchController extends Controller
 						else if($mediatype == 2)
 						{
 							$typemedia = 'Video';
+							#data video view
+							$viewVideo[] = array(
+								'views'=> $item->getViewCount(),
+								'date_posting'=>$converting_date,
+								'link'=>'https://www.instagram.com/p/'.$item->getCode().'/'
+							);
 						}
 						else
 						{
 							$typemedia = 'Image';
 						}
-						#data for graph
-						$viewVideoCount = $item->getViewCount();
+
+						#data total view for graph
 						$engagement = $item->getCommentCount()+$item->getLikeCount();
 
 						//print('<pre>'.print_r($engagement,true).' '.print_r($taken,true).'</pre>');
-						$converting_date = Date('Y-m-d',strtotime($taken)); // convert to new format so that not causing 'invalid date' on javascript
-
 						$dataPoints[$typemedia][] = array(
 						 	"x" => $converting_date,  //date when posting created
 						 	"y" => $engagement, // engagement rate
@@ -359,6 +360,7 @@ class SearchController extends Controller
 						 	"like" => $item->getLikeCount(),
 						 	"comments" => $item->getCommentCount(),
 						);
+
 
 						#average post by week
 						$totalweek[] = Date('D',$item->getTakenAt());
@@ -378,17 +380,6 @@ class SearchController extends Controller
 
 			#average post by day
 			$totalclock = array_count_values($totalhours);
-
-			/*if(!isset($totalclock['00'])){$totalclock['00'] = 0;}
-			if(!isset($totalclock['03'])){$totalclock['03'] = 0;}
-			if(!isset($totalclock['06'])){$totalclock['06'] = 0;}
-			if(!isset($totalclock['09'])){$totalclock['09'] = 0;}
-			if(!isset($totalclock['12'])){$totalclock['12'] = 0;}
-			if(!isset($totalclock['15'])){$totalclock['15'] = 0;}
-			if(!isset($totalclock['18'])){$totalclock['18'] = 0;}
-			if(!isset($totalclock['21'])){$totalclock['21'] = 0;}
-			*/
-
 			
 			#average post by day
 			$totalday = array_count_values($totalweek);
@@ -401,7 +392,7 @@ class SearchController extends Controller
 			if(!isset($totalday['Sat'])){$totalday['Sat'] = 0;}
 			if(!isset($totalday['Sun'])){$totalday['Sun'] = 0;}
 
-			#graph data
+			#graph data "Most Engaging Content Type"
 			$datagraph = $dataPoints;
 
 			#piegraphdata
@@ -436,7 +427,7 @@ class SearchController extends Controller
 			$average['albumcomments'] = $this->divisionLikeComments($totalalbumcomments,$piedata['album']);
 
 			#video like and comment
-			$totalvideolike = $totalvideocomments = 0;
+			$totalvideolike = $totalvideocomments = $totalvideoviews = 0;
 			foreach($datagraph['Album'] as $rows)
 			{
 				$totalvideolike += $rows['like'];
@@ -465,6 +456,7 @@ class SearchController extends Controller
 			}
 
 			#hashtag column
+			$hashtag_per_post = $hashtag_popularity = [];
 			if(count($hashtag_name) > 0)
 			{
 				foreach($hashtag_name as $hashtag=>$totalhashtag)
@@ -540,11 +532,22 @@ class SearchController extends Controller
 
 			//print('<pre>'.print_r(round($percenthashtag),true).'</pre>');
 
-			$data['post'] = $posts;
-			$data['hashtags'] = $hashtags;
+			$data = array(
+				'post'=>$posts,
+				'hashtags'=>$hashtags,
+				'graph'=>$datagraph,
+				'piedata'=>$piedata, 
+				'avgdata'=>$average, 
+				'totalhashtaginpost'=>$totalhashtaginpost,
+				'hashtagspopularity'=>$hash, 
+				'totaldaypost'=>$totalday, 
+				'totalclock'=>$totalclock,
+				'totalvideoview' => $viewVideo
+			);
+
 			$this->saveCacheInsight($userId,$data);
 
-			return view('user.search-ig.insightig',['data'=>$posts,'hashtags'=>$hashtags,'graph'=>$datagraph,'piedata'=>$piedata, 'avgdata'=>$average, 'totalhashtaginpost'=>$totalhashtaginpost, 'hashtagspopularity'=>$hash, 'totaldaypost'=>$totalday, 'totalclock'=>$totalclock]);
+			return view('user.search-ig.insightig',['data'=>$posts,'hashtags'=>$hashtags,'graph'=>$datagraph,'piedata'=>$piedata, 'avgdata'=>$average, 'totalhashtaginpost'=>$totalhashtaginpost, 'hashtagspopularity'=>$hash, 'totaldaypost'=>$totalday, 'totalclock'=>$totalclock, 'totalvideoview' => $viewVideo]);
 
 		}  	
 			catch (\InstagramAPI\Exception\IncorrectPasswordException $e) {
@@ -705,30 +708,72 @@ class SearchController extends Controller
 			$getdata = $cache->data;
 			$db = json_decode($getdata,true);
 
-			//post
-    		$posts = $db['postinsight'];
+    		$posts = $db['post'];
+	    	$hashtags = $db['hashtags'];
+	    	$datagraph = $db['graph'];
+			$piedata = $db['piedata']; 
+			$average = $db['avgdata']; 
+			$totalhashtaginpost = $db['totalhashtaginpost'];
+			$hash = $db['hashtagspopularity']; 
+			$totalday = $db['totaldaypost']; 
+			$totalclock = $db['totalclock'];
+			$viewVideo = $db['totalvideoview'];
 
-	    	//hashtag
-	    	$hashtags = $db['hashtaginsight'];
-
-			return view('user.search-ig.insightig',['data'=>$posts,'hashtags'=>$hashtags]);
+			return view('user.search-ig.insightig',['data'=>$posts,'hashtags'=>$hashtags,'graph'=>$datagraph,'piedata'=>$piedata, 'avgdata'=>$average, 'totalhashtaginpost'=>$totalhashtaginpost, 'hashtagspopularity'=>$hash, 'totaldaypost'=>$totalday, 'totalclock'=>$totalclock, 'totalvideoview' => $viewVideo]);
 		} else {
 			return false;
 		}
     }
 
-	 private function saveCacheInsight($userId,$data)
+    private function saveCacheInsight($userId,$data)
 	 {
-    	//post
-    	$save['postinsight'] = $data['post'];
-    	//hashtag
-    	$save['hashtaginsight'] = $data['hashtags'];
+
+		$save = array(
+			'post'=>$data['post'],
+			'hashtags'=>$data['hashtags'],
+			'graph'=>$data['graph'],
+			'piedata'=>$data['piedata'], 
+			'avgdata'=>$data['avgdata'], 
+			'totalhashtaginpost'=>$data['totalhashtaginpost'],
+			'hashtagspopularity'=>$data['hashtagspopularity'], 
+			'totaldaypost'=>$data['totaldaypost'], 
+			'totalclock'=>$data['totalclock'],
+			'totalvideoview' => $data['totalvideoview']
+		);
 
     	$json = json_encode($save);
 		$caches = new caches;
+		$caches->type = 1;
 		$caches->keyword = $userId;
 		$caches->data = $json;
 		$caches->save();
+    }
+
+	 private function test()
+	 {
+
+		/*$save = array(
+			'post'=>$data['post'],
+			'hashtags'=>$data['hashtags'],
+			'graph'=>$data['graph'],
+			'piedata'=>$data['piedata'], 
+			'avgdata'=>$data['avgdata'], 
+			'totalhashtaginpost'=>$data['totalhashtaginpost'],
+			'hashtagspopularity'=>$data['hashtagspopularity'], 
+			'totaldaypost'=>$data['totaldaypost'], 
+			'totalclock'=>$data['totalclock'],
+			'totalvideoview' => $data['totalvideoview']
+		);*/
+
+		echo base_path();
+
+		$save = array(
+			'aaa'=>1,
+			'bbb'=>1,
+			'ccc'=>1,
+		);
+    	$json = json_encode($save);
+		//file_put_contents(base_path('datafile/test.json'), $json);
     }
 
 

@@ -15,7 +15,7 @@ class CreateCachesTables extends Migration
     {
         Schema::create('caches', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('type');
+            $table->integer('type')->default(0);
             $table->string('keyword');
             $table->text('data');
             $table->timestamps();

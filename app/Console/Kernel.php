@@ -17,7 +17,8 @@ class Kernel extends ConsoleKernel
         Commands\UserTime::class,
         Commands\DeletePost::class,
         Commands\SynchronAffiliate::class,
-        Commands\UserTimeLog::class
+        Commands\UserTimeLog::class,
+        Commands\UpdateSearchIg::class
         // Commands\UpdatePublishSchedule::class
         // Commands\FillProxy::class
     ];
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
       $schedule->command('count:userstime')->cron('0 */2 * * *')->withoutOverlapping();
+      $schedule->command('cache:sig')->daily()->withoutOverlapping();
       /*
 			// $schedule->command('send:instagram')->withoutOverlapping()->timezone(''.env('IG_TIMEZONE').'');
       $schedule->command('send:instagram')->timezone(''.env('IG_TIMEZONE').'');

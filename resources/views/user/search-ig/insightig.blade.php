@@ -125,6 +125,11 @@
   			</div>
 
   			<div class="col-md-12 mt-3 graph-bg">
+  				<h4>Video's Viewer</h4>
+  			 	<div id="chartViewer" style="height: 300px; width: 100%;"></div>
+  			</div>
+
+  			<div class="col-md-12 mt-3 graph-bg">
   				<h4>Post Performance</h4>
   			 	<div id="chartContainer" style="height: 300px; width: 100%;"></div>
   			</div>
@@ -173,6 +178,7 @@ $(function () {
             valueFormatString: "DD-MMM-YYYY" ,
             labelAngle: 0
         },
+        dataPointWidth: 20,
 		data: [
 			//Image
 			{
@@ -223,6 +229,52 @@ function onClick(e) {
 	//alert(  e.dataSeries.type + ", dataPoint { x:" + e.dataPoint.x + ", y: "+ e.dataPoint.y + " }" );
 }
 
+/* Video viewer by date */
+$(function() {
+
+	var dataviews = [];
+	$.each(<?php echo json_encode($totalvideoview, JSON_NUMERIC_CHECK);?>,function(i, data){
+		dataviews.push({ 'x': new Date(data.date_posting), 'y': data.views, 'link': data.link});
+		//console.log(views.date_posting);
+	});
+
+	$("#chartViewer").CanvasJSChart({ //Pass chart options
+	    axisY2: {
+	        title: "Total Viewer"
+	    },
+	    toolTip: {
+	      	contentFormatter : function(e){
+			  var content = "";
+	          for (var i = 0; i < e.entries.length; i++){
+	            content = 'Date : '+CanvasJS.formatDate(e.entries[i].dataPoint.x, "DD-MMM-YYYY")+'<br/> Total Views : '+addCommas(e.entries[i].dataPoint.y)+'<br/>(Click to visit post)';       
+	          }       
+	          return content;
+			}
+	    },
+	    data: [
+	      {
+	      	cursor:"pointer",
+	        axisYType: "secondary",
+	        type: "line",
+	        click : onClick,
+	        dataPoints: dataviews
+	      }
+	    ]
+	});
+});
+
+function addCommas(nStr)
+{
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
 
 /* Frequently Post */
 $(function() {
@@ -253,13 +305,14 @@ $(function(){
 			labelFontColor: "#4F81BC",
 			tickColor: "#4F81BC"
 		},
-		axisY2: {
+		axisY2: 
+		{
 			title: "Average Comments",
 			titleFontColor: "#C0504E",
 			lineColor: "#C0504E",
 			labelFontColor: "#C0504E",
 			tickColor: "#C0504E"
-		},	
+		},
 		toolTip: {
 			shared: true
 		},
@@ -267,29 +320,33 @@ $(function(){
 			cursor:"pointer",
 			itemclick: toggleDataSeries
 		},
-		data: [{
-			type: "column",
-			name: "Avg Like",
-			legendText: "Average Likes",
-			showInLegend: true, 
-			dataPoints:[
-				{ label: "Image", y: <?php echo $avgdata['imagelike'] ;?> },
-				{ label: "Album", y: <?php echo $avgdata['albumlike'] ;?> },
-				{ label: "Video", y: <?php echo $avgdata['videolike'] ;?> },
-			]
-		},
-		{
-			type: "column",	
-			name: "Average Comments",
-			legendText: "Average Comments",
-			axisYType: "secondary",
-			showInLegend: true,
-			dataPoints:[
-				{ label: "Image", y: <?php echo $avgdata['imagecomments'] ;?> },
-				{ label: "Album", y: <?php echo $avgdata['albumcomments'] ;?> },
-				{ label: "Video", y: <?php echo $avgdata['videocomments'] ;?> },
-			]
-		}]
+		dataPointWidth: 20,
+		data: [
+			{
+				type: "column",
+				name: "Average Like",
+				legendText: "Average Likes",
+				showInLegend: true, 
+				dataPoints:[
+					{ label: "Image", y: <?php echo $avgdata['imagelike'] ;?> },
+					{ label: "Album", y: <?php echo $avgdata['albumlike'] ;?> },
+					{ label: "Video", y: <?php echo $avgdata['videolike'] ;?> },
+				]
+			},
+			{
+				type: "column",	
+				name: "Average Comments",
+				legendText: "Average Comments",
+				axisYType: "secondary",
+				axisYIndex: 1, //When axisYType is secondary, axisYIndex indexes to secondary Y axis & not to primary Y axis
+				showInLegend: true,
+				dataPoints:[
+					{ label: "Image", y: <?php echo $avgdata['imagecomments'] ;?> },
+					{ label: "Album", y: <?php echo $avgdata['albumcomments'] ;?> },
+					{ label: "Video", y: <?php echo $avgdata['videocomments'] ;?> },
+				]
+			},
+		]
 	})
 
 	function toggleDataSeries(e) {
@@ -344,6 +401,7 @@ $(function() {
 		axisX: {
 			title: "Popularity"
 		},
+		dataPointWidth: 20,
 		data: [{        
 			type: "column",  
 			showInLegend: false, 
@@ -369,6 +427,7 @@ $(function() {
 		axisY: {
 			title: "Posts",
 		},
+		dataPointWidth: 30,
 		data: [{        
 			type: "column",  
 			showInLegend: false, 
@@ -413,11 +472,12 @@ $(function() {
 	      	contentFormatter : function(e){
 			  var content = "";
 	          for (var i = 0; i < e.entries.length; i++){
-	            content = 'Hour : '+CanvasJS.formatDate(e.entries[i].dataPoint.x, "HH-mm")+'<br/> Total Post : '+e.entries[i].dataPoint.y;       
+	            content = 'Hour : '+CanvasJS.formatDate(e.entries[i].dataPoint.x, "HH:mm")+'<br/> Total Post : '+e.entries[i].dataPoint.y;       
 	          }       
 	          return content;
 			}
 	     },
+	    dataPointWidth: 20,
 		data: [{        
 			type: "column",  
 			showInLegend: false, 
@@ -425,11 +485,11 @@ $(function() {
 			//legendMarkerColor: "transparent",
 			//legendText: "Popularity",
 			color : "#999",
-			dataPoints: totalclock
+			dataPoints: totalclock,
 		}]
 	});
-
 });
+
 
 </script>
 <script type="text/javascript">

@@ -200,9 +200,9 @@ Route::group(['middleware' => 'auth'], function () {
   Route::get('searchig', 'User\SearchController@index')->name('searchig');
   Route::post('igdata','User\SearchController@getData')->name('igdata');
   Route::get('ctest','User\SearchController@checkCache')->name('ctest');
-  Route::get('insightigdata/{user_id}', 'User\SearchController@getDataInsight')->name('insightigdata');
+  Route::get('insightigdata/{user_id}', 'User\SearchController@getInsight')->name('insightigdata');
 
-  Route::get('testdata','User\SearchController@getDataAPI');
+  Route::get('testdata','User\SearchController@test');
 
   if(env('APP_PROJECT')=='Celebgramme'){
     Route::get('order', 'User\OrderController@index');
