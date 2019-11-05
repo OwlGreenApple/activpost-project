@@ -31,6 +31,14 @@ class UpdateSearchIg extends Command
     public function __construct()
     {
         parent::__construct();
+
+        $this->storage = "mysql";
+        $this->dbhost = "localhost";
+        $this->dbname = "instasearch";
+        $this->dbusername = "root";
+        $this->dbpassword = "";
+        $this->login = "bungariaanastasya";
+        $this->password = "qweasdzxc123";
     }
 
     /**
@@ -46,7 +54,7 @@ class UpdateSearchIg extends Command
          {
             foreach($get_user_id as $row)
             {
-                $this->updateIgData($row->keyword,$row->id);
+                $this->updateIgData($row->keyword,$row->id,$row->nextmaxid);
             }
          }
          else
@@ -55,25 +63,34 @@ class UpdateSearchIg extends Command
          }
     }
 
-    public function updateIgData($userId,$cacheId)
+    public function updateIgData($userId,$cacheId,$nextid)
     {
+
+        /*
+        $getdata = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
+        $db = json_decode($getdata,true);
+
+        dd($db);
+        die('');
+        */
+
          try {
             $error_message="";
             $i = new Instagram(false,false,[
-                "storage"      => "mysql",
-                "dbhost"       => "localhost",
-                "dbname"       => "instasearch",
-                "dbusername"   => "root",
-                "dbpassword"   =>  "",
+                "storage" => $this->storage,
+                "dbhost" => $this->dbhost,
+                "dbname"=> $this->dbname,
+                "dbusername"=> $this->dbusername,
+                "dbpassword"=> $this->dbpassword,
             ]); 
-
-            $i->login("bungariaanastasya", "qweasdzxc123", 300);
+            
+            $i->login($this->login, $this->password, 300);
 
             $totalpost = 0;
             $totalpost = $i->people->getInfoById($userId)->getUser()->getMediaCount();
             $follower = $i->people->getInfoById($userId)->getUser()->getFollowerCount();
 
-            $maxId = null;
+            $maxId = $nextid;
             $today = Date('d-m-Y');
             $timeline = $i->timeline->getUserFeed($userId,$maxId);
             $nextMaxId = $timeline->getNextMaxId();
@@ -83,17 +100,7 @@ class UpdateSearchIg extends Command
             $viewVideo = $hashtagposts = $totalhours = $totalweek = $hashtag_popularity = $average = $dataPoints['Image'] = $dataPoints['Album'] = $dataPoints['Video'] = array();
 
 
-            #determine post total whether even or odd
-            if($totalpost % 2 == 0)
-            {
-                $totalpost = $totalpost/12; //if total post is even then the amount of post should be divide by 12
-            }
-            else
-            {
-                $totalpost = $totalpost/18; //if total post is odd then the amount of post should be divide by 18
-            }
-
-            #get max id for pagination
+            /*#get max id for pagination
             if($nextMaxId <> null)
             {
                 for($x=0;$x<=$totalpost;$x++)
@@ -111,14 +118,15 @@ class UpdateSearchIg extends Command
                     }
                 }
             }
-            
+            */
+
             if($countTimeline > 0)
             {
-                foreach($maxid as $idmax)
-                {
+                #foreach($maxid as $idmax)
+                #{
                     #foreach insight
 
-                    $timeline = $i->timeline->getUserFeed($userId,$idmax);
+                    #$timeline = $i->timeline->getUserFeed($userId,$idmax);
 
                     $sc = new SearchController;
                     foreach ($timeline->getItems() as $item) 
@@ -223,7 +231,7 @@ class UpdateSearchIg extends Command
                     #end foreach insight
 
                  # end foreach maxid  
-                }
+                #}
             } 
             else
             {
@@ -385,6 +393,7 @@ class UpdateSearchIg extends Command
             //print('<pre>'.print_r(round($percenthashtag),true).'</pre>');
 
             $data = array(
+                'maxid'=>$maxId,
                 'post'=>$posts,
                 'hashtags'=>$hashtags,
                 'graph'=>$datagraph,
@@ -397,9 +406,28 @@ class UpdateSearchIg extends Command
                 'totalvideoview'=>$viewVideo
             );
 
-            $json = json_encode($data,true);
-            Cache::where('id',$cacheId)->update(['data'=>$json]);
+            #get old data
+            $getdata = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
+            $db = json_decode($getdata,true);
 
+            #merging old data with new data
+            $merge = array(
+                'maxid'=>$maxId,
+                'post'=>array_merge($db['post'],$data['post']),
+                'hashtags'=>array_merge($db['hashtags'],$data['hashtags']),
+                'graph'=>array_merge($db['graph'],$data['graph']),
+                'piedata'=>array_merge($db['piedata'],$data['piedata']),
+                'avgdata'=>array_merge($db['avgdata'],$data['avgdata']),
+                'totalhashtaginpost'=>array_merge($db['totalhashtaginpost'],$data['totalhashtaginpost']),
+                'hashtagspopularity'=>array_merge($db['hashtagspopularity'],$data['hashtagspopularity']),
+                'totaldaypost'=>array_merge($db['totaldaypost'],$data['totaldaypost']),
+                'totalclock'=>array_merge($db['totalclock'],$data['totalclock']),
+                'totalvideoview'=>array_merge($db['totalvideoview'],$data['totalvideoview']),
+            );
+            #print('<pre>'.print_r($merge,true).'</pre>');
+            $json = json_encode($merge,true);
+            Cache::where('id',$cacheId)->update(['nextmaxid'=>$nextMaxId]);
+            file_put_contents(storage_path('jsondata').'/'.$userId.'.json', $json);
         }   
             catch (\InstagramAPI\Exception\IncorrectPasswordException $e) {
                 //klo error password

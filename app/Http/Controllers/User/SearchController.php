@@ -9,6 +9,16 @@ use Celebpost\caches;
 class SearchController extends Controller
 {
 
+	function __construct() {
+	   $this->storage = "mysql";
+	   $this->dbhost = "localhost";
+	   $this->dbname = "instasearch";
+	   $this->dbusername = "root";
+	   $this->dbpassword = "";
+	   $this->login = "bungariaanastasya";
+	   $this->password = "qweasdzxc123";
+	}
+
     public function index(){
 		return view('user.search-ig.index');
     }
@@ -26,14 +36,14 @@ class SearchController extends Controller
 		try {
 			$error_message="";
 			$i = new Instagram(false,false,[
-				"storage"      => "mysql",
-				"dbhost"       => "localhost",
-				"dbname"   	   => "instasearch",
-				"dbusername"   => "root",
-				"dbpassword"   =>  "",
+				"storage"      => $this->storage,
+				"dbhost"       => $this->dbhost,
+				"dbname"   	   => $this->dbname,
+				"dbusername"   => $this->dbusername,
+				"dbpassword"   => $this->dbpassword,
 			]);	
 			
-			$i->login("bungariaanastasya", "qweasdzxc123", 300);
+			$i->login($this->login, $this->password, 300);
 
 			
 			//hashtag
@@ -220,14 +230,14 @@ class SearchController extends Controller
 		try {
 			$error_message="";
 			$i = new Instagram(false,false,[
-				"storage"      => "mysql",
-				"dbhost"       => "localhost",
-				"dbname"   	   => "instasearch",
-				"dbusername"   => "root",
-				"dbpassword"   =>  "",
+				"storage"      => $this->storage,
+				"dbhost"       => $this->dbhost,
+				"dbname"   	   => $this->dbname,
+				"dbusername"   => $this->dbusername,
+				"dbpassword"   => $this->dbpassword,
 			]);	
-
-			$i->login("bungariaanastasya", "qweasdzxc123", 300);
+			
+			$i->login($this->login, $this->password, 300);
 
 			$totalpost = $i->people->getInfoById($userId)->getUser()->getMediaCount();
 			$follower = $i->people->getInfoById($userId)->getUser()->getFollowerCount();
@@ -533,6 +543,7 @@ class SearchController extends Controller
 			//print('<pre>'.print_r(round($percenthashtag),true).'</pre>');
 
 			$data = array(
+				'maxid'=>$maxId,
 				'post'=>$posts,
 				'hashtags'=>$hashtags,
 				'graph'=>$datagraph,
@@ -545,7 +556,7 @@ class SearchController extends Controller
 				'totalvideoview' => $viewVideo
 			);
 
-			$this->saveCacheInsight($userId,$data);
+			$this->saveCacheInsight($userId,$data,$nextMaxId);
 
 			return view('user.search-ig.insightig',['data'=>$posts,'hashtags'=>$hashtags,'graph'=>$datagraph,'piedata'=>$piedata, 'avgdata'=>$average, 'totalhashtaginpost'=>$totalhashtaginpost, 'hashtagspopularity'=>$hash, 'totaldaypost'=>$totalday, 'totalclock'=>$totalclock, 'totalvideoview' => $viewVideo]);
 
@@ -705,7 +716,7 @@ class SearchController extends Controller
 	 public function checkCacheInsight($userId){
 		$cache = caches::where([['keyword','=',$userId]])->first();
 		if(!is_null($cache)){
-			$getdata = $cache->data;
+			$getdata = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
 			$db = json_decode($getdata,true);
 
     		$posts = $db['post'];
@@ -725,10 +736,11 @@ class SearchController extends Controller
 		}
     }
 
-    private function saveCacheInsight($userId,$data)
+    private function saveCacheInsight($userId,$data,$nextMaxId)
 	 {
 
 		$save = array(
+			'maxid'=>$data['maxid'],
 			'post'=>$data['post'],
 			'hashtags'=>$data['hashtags'],
 			'graph'=>$data['graph'],
@@ -745,35 +757,28 @@ class SearchController extends Controller
 		$caches = new caches;
 		$caches->type = 1;
 		$caches->keyword = $userId;
-		$caches->data = $json;
+		$caches->data = 0;
+		$caches->nextmaxid = $nextMaxId;
 		$caches->save();
+
+		if($caches->save() == true)
+		{
+			file_put_contents(storage_path('jsondata').'/'.$userId.'.json', $json);
+		}
+
     }
 
-	 private function test()
-	 {
+	public function test()
+	{
+		$userId = 515588497;
+		$getdata = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
+		$db = json_decode($getdata,true);
 
-		/*$save = array(
-			'post'=>$data['post'],
-			'hashtags'=>$data['hashtags'],
-			'graph'=>$data['graph'],
-			'piedata'=>$data['piedata'], 
-			'avgdata'=>$data['avgdata'], 
-			'totalhashtaginpost'=>$data['totalhashtaginpost'],
-			'hashtagspopularity'=>$data['hashtagspopularity'], 
-			'totaldaypost'=>$data['totaldaypost'], 
-			'totalclock'=>$data['totalclock'],
-			'totalvideoview' => $data['totalvideoview']
-		);*/
-
-		echo base_path();
-
-		$save = array(
-			'aaa'=>1,
-			'bbb'=>1,
-			'ccc'=>1,
-		);
-    	$json = json_encode($save);
-		//file_put_contents(base_path('datafile/test.json'), $json);
+		$a2 = array('aaaa','bbbbb');
+		#$arrmerge['post'] = array_merge($db['post'],$a2);
+		#$json = json_encode($a2);
+		#file_put_contents(storage_path('jsondata').'/'.$userId.'.json', $json);
+		print('<pre>'.print_r($db['post'],true).'</pre>');
     }
 
 
