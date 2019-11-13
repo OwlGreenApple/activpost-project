@@ -270,7 +270,7 @@ class SearchController extends Controller
 				}
 			}
 			*/
-			
+
 			if($countTimeline > 0)
 			{
 				#foreach($maxid as $idmax)
@@ -317,7 +317,7 @@ class SearchController extends Controller
 							$hashtagposts[] = $hashtagpost[0];
 						}
 						
-						$posts[] = array(
+						$posts[$item->getPk()] = array(
 							'profile'=> $item->getUser()->getProfilePicUrl(),
 							'username' =>$item->getUser()->getUsername(),
 							'fullname' =>$item->getUser()->getFullName(),
@@ -713,9 +713,11 @@ class SearchController extends Controller
 	    return $datediff;
 	}
 
-	 public function checkCacheInsight($userId){
+	 public function checkCacheInsight($userId)
+	 {
 		$cache = caches::where([['keyword','=',$userId]])->first();
-		if(!is_null($cache)){
+		if(!is_null($cache))
+		{
 			$getdata = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
 			$db = json_decode($getdata,true);
 
@@ -731,7 +733,9 @@ class SearchController extends Controller
 			$viewVideo = $db['totalvideoview'];
 
 			return view('user.search-ig.insightig',['data'=>$posts,'hashtags'=>$hashtags,'graph'=>$datagraph,'piedata'=>$piedata, 'avgdata'=>$average, 'totalhashtaginpost'=>$totalhashtaginpost, 'hashtagspopularity'=>$hash, 'totaldaypost'=>$totalday, 'totalclock'=>$totalclock, 'totalvideoview' => $viewVideo]);
-		} else {
+		} 
+		else 
+		{
 			return false;
 		}
     }
@@ -740,7 +744,6 @@ class SearchController extends Controller
 	 {
 
 		$save = array(
-			'maxid'=>$data['maxid'],
 			'post'=>$data['post'],
 			'hashtags'=>$data['hashtags'],
 			'graph'=>$data['graph'],
@@ -770,7 +773,7 @@ class SearchController extends Controller
 
 	public function test()
 	{
-		$userId = 515588497;
+		$userId = 2245770667;
 		$getdata = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
 		$db = json_decode($getdata,true);
 
@@ -778,6 +781,22 @@ class SearchController extends Controller
 		#$arrmerge['post'] = array_merge($db['post'],$a2);
 		#$json = json_encode($a2);
 		#file_put_contents(storage_path('jsondata').'/'.$userId.'.json', $json);
+
+		/*
+			$posts[] = array(
+							'profile'=> $item->getUser()->getProfilePicUrl(),
+							'username' =>$item->getUser()->getUsername(),
+							'fullname' =>$item->getUser()->getFullName(),
+							'code' => 'https://www.instagram.com/p/'.$item->getCode().'/',
+							'comments' =>$item->getCommentCount(),
+							'likes' =>$item->getLikeCount(),
+							'img' => $img,
+							'time'=> $time,
+							'caption'=>$caption
+						);
+		*/
+
+		//array_unshift($db['post'],$a2);
 		print('<pre>'.print_r($db['post'],true).'</pre>');
     }
 

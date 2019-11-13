@@ -30,8 +30,8 @@
 	  						</div>
 	  						<div class="ig-cover ig-caption">{{$rows['caption']}}</div>
 	  						<div class="ig-cover">
-		  						<div class="col-lg-4"><span class="glyphicon glyphicon-heart-empty">{{$rows['likes']}}</span></div>
-		  						<div class="col-lg-4"><span class="glyphicon glyphicon-comment"></span>{{$rows['comments']}}</div>
+		  						<div class="col-lg-6"><span class="glyphicon glyphicon-heart-empty"></span>{{$rows['likes']}}</div>
+		  						<div class="col-lg-6"><span class="glyphicon glyphicon-comment"></span>{{$rows['comments']}}</div>
 		  						<div class="clearfix"></div>
 		  					</div>
 	  					</div>

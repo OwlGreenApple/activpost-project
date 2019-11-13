@@ -46,7 +46,28 @@ class UpdateSearchIg extends Command
      *
      * @return mixed
      */
+
+    # GET LATEST POST
     public function handle()
+    {
+         $get_user_id = Cache::where('type',1)->get();
+
+         if($get_user_id->count() > 0)
+         {
+            foreach($get_user_id as $row)
+            {
+                $this->updateIgData($row->keyword,$row->id,null);
+                //echo $row->keyword."\n";
+            }
+         }
+         else
+         {
+            echo 'Insight data not available';
+         }
+    }
+
+    # GET OLDER POST
+    public function nextMaxId()
     {
          $get_user_id = Cache::where('type',1)->get();
 
@@ -95,8 +116,8 @@ class UpdateSearchIg extends Command
             $timeline = $i->timeline->getUserFeed($userId,$maxId);
             $nextMaxId = $timeline->getNextMaxId();
             $countTimeline = count($timeline->getItems());
-            $maxid[0] = $maxId;
-            $maxid[] = $nextMaxId;
+            //$maxid[0] = $maxId;
+            //$maxid[] = $nextMaxId;
             $viewVideo = $hashtagposts = $totalhours = $totalweek = $hashtag_popularity = $average = $dataPoints['Image'] = $dataPoints['Album'] = $dataPoints['Video'] = array();
 
 
@@ -127,7 +148,6 @@ class UpdateSearchIg extends Command
                     #foreach insight
 
                     #$timeline = $i->timeline->getUserFeed($userId,$idmax);
-
                     $sc = new SearchController;
                     foreach ($timeline->getItems() as $item) 
                     {   
@@ -167,7 +187,7 @@ class UpdateSearchIg extends Command
                             $hashtagposts[] = $hashtagpost[0];
                         }
                         
-                        $posts[] = array(
+                        $posts[$item->getPk()] = array(
                             'profile'=> $item->getUser()->getProfilePicUrl(),
                             'username' =>$item->getUser()->getUsername(),
                             'fullname' =>$item->getUser()->getFullName(),
@@ -393,7 +413,6 @@ class UpdateSearchIg extends Command
             //print('<pre>'.print_r(round($percenthashtag),true).'</pre>');
 
             $data = array(
-                'maxid'=>$maxId,
                 'post'=>$posts,
                 'hashtags'=>$hashtags,
                 'graph'=>$datagraph,
@@ -410,10 +429,35 @@ class UpdateSearchIg extends Command
             $getdata = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
             $db = json_decode($getdata,true);
 
+            #SORTING DATA TO CHECK IF THERE IS SAME VALUE DATA
+
+            /*if($maxId == null)
+            {
+
+            }
+            */
+
+            //array_unshift($db['post'], $data['post']);
+            dd($db['post']);
+            die('');
+
+            $dbpost = sort($db['post']);
+            $datapost = sort($data['post']);
+
+            if($dbpost == $datapost)
+            {
+                array_replace($db['post'], $data['post']);
+            }
+            else
+            {
+                array_unshift($db['post'], $data['post']);
+            }
+
             #merging old data with new data
+            
             $merge = array(
                 'maxid'=>$maxId,
-                'post'=>array_merge($db['post'],$data['post']),
+                'post'=>$db['post'],
                 'hashtags'=>array_merge($db['hashtags'],$data['hashtags']),
                 'graph'=>array_merge($db['graph'],$data['graph']),
                 'piedata'=>array_merge($db['piedata'],$data['piedata']),
@@ -424,10 +468,13 @@ class UpdateSearchIg extends Command
                 'totalclock'=>array_merge($db['totalclock'],$data['totalclock']),
                 'totalvideoview'=>array_merge($db['totalvideoview'],$data['totalvideoview']),
             );
+            
             #print('<pre>'.print_r($merge,true).'</pre>');
             $json = json_encode($merge,true);
             Cache::where('id',$cacheId)->update(['nextmaxid'=>$nextMaxId]);
             file_put_contents(storage_path('jsondata').'/'.$userId.'.json', $json);
+
+            //return $this->nextMaxId();
         }   
             catch (\InstagramAPI\Exception\IncorrectPasswordException $e) {
                 //klo error password
