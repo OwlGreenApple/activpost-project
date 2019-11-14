@@ -544,7 +544,6 @@ class SearchController extends Controller
 			//print('<pre>'.print_r(round($percenthashtag),true).'</pre>');
 
 			$data = array(
-				'maxid'=>$maxId,
 				'post'=>$posts,
 				'hashtags'=>$hashtags,
 				'graph'=>$datagraph,
@@ -772,6 +771,32 @@ class SearchController extends Controller
 
     }
 
+    # TO SUM CLOCK WHEN USER USUALLY UPLOAD POST
+    public function array_merge_numeric_values()
+	{
+		$arrays = func_get_args();
+		$merged = array();
+		foreach ($arrays as $array)
+		{
+			foreach ($array as $key => $value)
+			{
+				if ( ! is_numeric($value))
+				{
+					continue;
+				}
+				if ( ! isset($merged[$key]))
+				{
+					$merged[$key] = $value;
+				}
+				else
+				{
+					$merged[$key] += $value;
+				}
+			}
+		}
+		return $merged;
+	}
+
 	public function test()
 	{
 		$userId = 515588497;
@@ -810,12 +835,27 @@ class SearchController extends Controller
 		#$json = json_encode($a2);
 		#file_put_contents(storage_path('jsondata').'/'.$userId.'.json', $json);
 
+		 $a1 = array(
+	         "a" => 2
+	        ,"b" => 0
+	        ,"c" => 5
+	    );
 
+	    $a2 = array(
+	         "a" => 3
+	        ,"b" => 9
+	        ,"c" => 7
+	        ,"d" => 10
+	    );
+
+
+	    $result = $this->array_merge_numeric_values($a1,$a2);
 		$db['post'] = $source + $db['post'];
-		dd($db['graph']);
+		dd($db['hashtagspopularity']);
 		//print('<pre>'.print_r($db['post'],true).'</pre>');
     }
 
+    
 
 /* end search controller */
 }

@@ -356,16 +356,18 @@ $(function(){
 		]
 	})
 
-	function toggleDataSeries(e) {
-		if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-			e.dataSeries.visible = false;
-		}
-		else {
-			e.dataSeries.visible = true;
-		}
-	}
-
 });
+
+function toggleDataSeries(e) {
+	if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+		e.dataSeries.visible = false;
+	}
+	else {
+		e.dataSeries.visible = true;
+	}
+	e.chart.render();
+}
+
 
 /* Number of Hashtags per Post */
 $(function(){
@@ -386,6 +388,7 @@ $(function(){
 			//gridColor: "rgba(1,77,101,.1)",
 			title: "Total Post"
 		},
+		dataPointWidth: 20,
 		data: [{
 			type: "bar",
 			name: "companies",

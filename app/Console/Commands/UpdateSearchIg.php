@@ -69,15 +69,6 @@ class UpdateSearchIg extends Command
 
     public function updateIgData($userId,$cacheId,$maxid,$nextid)
     {
-
-        /*
-        $getdata = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
-        $db = json_decode($getdata,true);
-
-        dd($db);
-        die('');
-        */
-
          try {
             $error_message="";
             $i = new Instagram(false,false,[
@@ -103,27 +94,6 @@ class UpdateSearchIg extends Command
             //$maxid[0] = $maxId;
             //$maxid[] = $nextMaxId;
             $viewVideo = $hashtagposts = $totalhours = $totalweek = $hashtag_popularity = $average = $dataPoints['Image'] = $dataPoints['Album'] = $dataPoints['Video'] = array();
-
-
-            /*#get max id for pagination
-            if($nextMaxId <> null)
-            {
-                for($x=0;$x<=$totalpost;$x++)
-                {
-                    $timeline = $i->timeline->getUserFeed($userId,$nextMaxId);
-                    $nextMaxId = $timeline->getNextMaxId();
-
-                    if($nextMaxId <> null)
-                    {
-                        $maxid[] = $nextMaxId;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-            */
 
             if($countTimeline > 0)
             {
@@ -183,14 +153,13 @@ class UpdateSearchIg extends Command
                             'caption'=>$caption
                         );
 
-                        #media type
+                        #MEDIA TYPE
                         /*
                             1 = image
                             2 = video / igtv
                             8 = album
                         */
                         $mediatype = $item->getMediaType();
-                        $test[] = $item;
 
                         if($mediatype == 8)
                         {
@@ -635,11 +604,17 @@ class UpdateSearchIg extends Command
                 $posts = array();
             }
 
-            #average post by day
-            $totalclock = array_count_values($totalhours);
-            
+            # GET RECORDED DATA
+            $getdata = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
+            $getdb = json_decode($getdata,true);
+
+            #average post by time
+            $newtotalclock = array_count_values($totalhours);
+            $totalclock = $sc->array_merge_numeric_values($getdb['totalclock'],$newtotalclock);
+
             #average post by day
             $totalday = array_count_values($totalweek);
+            $recorded = array();
 
             if(!isset($totalday['Mon'])){$totalday['Mon'] = 0;}
             if(!isset($totalday['Tue'])){$totalday['Tue'] = 0;}
@@ -649,16 +624,26 @@ class UpdateSearchIg extends Command
             if(!isset($totalday['Sat'])){$totalday['Sat'] = 0;}
             if(!isset($totalday['Sun'])){$totalday['Sun'] = 0;}
 
+            foreach($getdb['totaldaypost'] as $day=>$val)
+            {
+                $recorded[$day] = $val;
+            }
+
+            $totalday['Mon'] += $recorded['Mon'];
+            $totalday['Tue'] += $recorded['Tue'];
+            $totalday['Wed'] += $recorded['Wed'];
+            $totalday['Thu'] += $recorded['Thu'];
+            $totalday['Fri'] += $recorded['Fri'];
+            $totalday['Sat'] += $recorded['Sat'];
+            $totalday['Sun'] += $recorded['Sun'];
+           
             #graph data "Most Engaging Content Type"
             $datagraph = $dataPoints;
-            #get old data
-            $getdatagraph = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
-            $dbgraph = json_decode($getdatagraph,true);
 
             #COMBINE OLD DATA WITH NEW DATA
-            $totalImageGraph = $dbgraph['graph']['Image'] + $datagraph['Image'];
-            $totalAlbumGraph = $dbgraph['graph']['Album'] + $datagraph['Album'];
-            $totalVideoGraph = $dbgraph['graph']['Video'] + $datagraph['Video'];
+            $totalImageGraph = $getdb['graph']['Image'] + $datagraph['Image'];
+            $totalAlbumGraph = $getdb['graph']['Album'] + $datagraph['Album'];
+            $totalVideoGraph = $getdb['graph']['Video'] + $datagraph['Video'];
 
             $updateDataGraph = array(
                 'Image' => $totalImageGraph,
@@ -752,7 +737,11 @@ class UpdateSearchIg extends Command
             {
                 $hashtags = array();
             }
-            
+
+             #for graph 'Number of Hashtags per Post'
+            $newtotalhashtagperpost = array_count_values($hashtag_per_post);
+            $totalhashtaginpost = $sc->array_merge_numeric_values($getdb['totalhashtaginpost'],$newtotalhashtagperpost);
+
             #HASHTAG BY POPULARITY
             $arr = $hashtag_popularity;     
             $hash = $hash['specific'] = $hash['medium'] = $hash['popular'] = $hash['very_popular'] = $hash['x_popular'] = array();
@@ -792,15 +781,12 @@ class UpdateSearchIg extends Command
                 }
             });
         
-            $hash['specific'] = count($hash['specific']);
-            $hash['medium'] = count($hash['medium']);
-            $hash['popular'] = count($hash['popular']);
-            $hash['very_popular'] = count($hash['very_popular']);
-            $hash['x_popular'] = count($hash['x_popular']);
-
-            #for graph 'Number of Hashtags per Post'
-            $totalhashtaginpost = array_count_values($hashtag_per_post);
-
+            $hash['specific'] = count($hash['specific']) + $getdb['hashtagspopularity']['specific'];
+            $hash['medium'] = count($hash['medium']) + $getdb['hashtagspopularity']['medium'];
+            $hash['popular'] = count($hash['popular']) + $getdb['hashtagspopularity']['popular'];
+            $hash['very_popular'] = count($hash['very_popular']) + $getdb['hashtagspopularity']['very_popular'];
+            $hash['x_popular'] = count($hash['x_popular']) + $getdb['hashtagspopularity']['x_popular'];
+        
             //print('<pre>'.print_r(round($percenthashtag),true).'</pre>');
 
             $data = array(
@@ -825,11 +811,26 @@ class UpdateSearchIg extends Command
             $merge['graph'] = $data['graph'];
             $merge['piedata'] = $data['piedata'];
             $merge['avgdata'] = $data['avgdata'];
-            $merge['totalhashtaginpost'] = $db['totalhashtaginpost'] + $data['totalhashtaginpost'];
-            $merge['hashtagspopularity'] = $db['hashtagspopularity'] + $data['hashtagspopularity'];
-            $merge['totaldaypost'] = $db['totaldaypost'] +  $data['totaldaypost'];
-            $merge['totalclock'] = $db['totalclock'] + $data['totalclock'];
+            $merge['totalhashtaginpost'] = $data['totalhashtaginpost'];
+            $merge['hashtagspopularity'] = $data['hashtagspopularity'];
+            $merge['totaldaypost'] = $data['totaldaypost'];
+            $merge['totalclock'] = $data['totalclock'];
             $merge['totalvideoview'] = $db['totalvideoview'] + $data['totalvideoview'];
+
+            /*
+                $merge = array(
+                'post'=>$db['post'],
+                'hashtags'=>array_merge($db['hashtags'],$data['hashtags']),
+                'graph'=>array_merge($db['graph'],$data['graph']),
+                'piedata'=>array_merge($db['piedata'],$data['piedata']),
+                'avgdata'=>array_merge($db['avgdata'],$data['avgdata']),
+                'totalhashtaginpost'=>array_merge($db['totalhashtaginpost'],$data['totalhashtaginpost']),
+                'hashtagspopularity'=>array_merge($db['hashtagspopularity'],$data['hashtagspopularity']),
+                'totaldaypost'=>array_merge($db['totaldaypost'],$data['totaldaypost']),
+                'totalclock'=>array_merge($db['totalclock'],$data['totalclock']),
+                'totalvideoview'=>array_merge($db['totalvideoview'],$data['totalvideoview']),
+            );
+            */
            
             #print('<pre>'.print_r($merge,true).'</pre>');
             $json = json_encode($merge,true);
