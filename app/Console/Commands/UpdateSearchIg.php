@@ -139,6 +139,7 @@ class UpdateSearchIg extends Command
                         {
                             preg_match_all("/(#\w+)/", $caption, $hashtagpost);
                             $hashtagposts[] = $hashtagpost[0];
+                            $hashtagperposts[$item->getPk()] = $hashtagpost[0];
                         }
                         
                         $posts[$item->getPk()] = array(
@@ -211,12 +212,18 @@ class UpdateSearchIg extends Command
             {
                 $posts = array();
             }
+           
+             # GET RECORDED DATA
+            $getdata = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
+            $getdb = json_decode($getdata,true);
+
+            #average post by time
+            $newtotalclock = array_count_values($totalhours);
+            $totalclock = $sc->array_merge_numeric_values($getdb['totalclock'],$newtotalclock);
 
             #average post by day
-            $totalclock = array_count_values($totalhours);
-            
-            #average post by day
             $totalday = array_count_values($totalweek);
+            $recorded = array();
 
             if(!isset($totalday['Mon'])){$totalday['Mon'] = 0;}
             if(!isset($totalday['Tue'])){$totalday['Tue'] = 0;}
@@ -226,16 +233,29 @@ class UpdateSearchIg extends Command
             if(!isset($totalday['Sat'])){$totalday['Sat'] = 0;}
             if(!isset($totalday['Sun'])){$totalday['Sun'] = 0;}
 
+            if(count($getdb['totaldaypost']) > 0)
+            {
+                foreach($getdb['totaldaypost'] as $day=>$val)
+                {
+                    $recorded[$day] = $val;
+                }
+            }
+
+            $totalday['Mon'] += $recorded['Mon'];
+            $totalday['Tue'] += $recorded['Tue'];
+            $totalday['Wed'] += $recorded['Wed'];
+            $totalday['Thu'] += $recorded['Thu'];
+            $totalday['Fri'] += $recorded['Fri'];
+            $totalday['Sat'] += $recorded['Sat'];
+            $totalday['Sun'] += $recorded['Sun'];
+
             #graph data "Most Engaging Content Type"
             $datagraph = $dataPoints;
-            #get old data
-            $getdatagraph = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
-            $dbgraph = json_decode($getdatagraph,true);
 
             #COMBINE OLD DATA WITH NEW DATA
-            $totalImageGraph = $dbgraph['graph']['Image'] + $datagraph['Image'];
-            $totalAlbumGraph = $dbgraph['graph']['Album'] + $datagraph['Album'];
-            $totalVideoGraph = $dbgraph['graph']['Video'] + $datagraph['Video'];
+            $totalImageGraph = $getdb['graph']['Image'] + $datagraph['Image'];
+            $totalAlbumGraph = $getdb['graph']['Album'] + $datagraph['Album'];
+            $totalVideoGraph = $getdb['graph']['Video'] + $datagraph['Video'];
 
             $updateDataGraph = array(
                 'Image' => $totalImageGraph,
@@ -253,22 +273,30 @@ class UpdateSearchIg extends Command
             #image like and comment
             $totalimagelike = 0;
             $totalimagecomments = 0;
-            foreach($totalImageGraph as $rows)
-            {
-                $totalimagelike += $rows['like'];
-                $totalimagecomments += $rows['comments'];
-            }
 
+            if(count($totalImageGraph) > 0)
+            {
+                foreach($totalImageGraph as $rows)
+                {
+                    $totalimagelike += $rows['like'];
+                    $totalimagecomments += $rows['comments'];
+                }
+            }
+           
             $average['imagelike'] = $sc->divisionLikeComments($totalimagelike,$piedata['image']);
             $average['imagecomments'] = $sc->divisionLikeComments($totalimagecomments,$piedata['image']);
 
             #album like and comment
             $totalalbumlike = 0;
             $totalalbumcomments = 0;
-            foreach($totalAlbumGraph as $rows)
+
+            if(count($totalAlbumGraph) > 0)
             {
-                $totalalbumlike += $rows['like'];
-                $totalalbumcomments += $rows['comments'];
+                foreach($totalAlbumGraph as $rows)
+                {
+                    $totalalbumlike += $rows['like'];
+                    $totalalbumcomments += $rows['comments'];
+                }
             }
 
             $average['albumlike'] = $sc->divisionLikeComments($totalalbumlike,$piedata['album']);
@@ -276,10 +304,13 @@ class UpdateSearchIg extends Command
 
             #video like and comment
             $totalvideolike = $totalvideocomments = $totalvideoviews = 0;
-            foreach($totalVideoGraph as $rows)
+            if(count($totalVideoGraph) > 0)
             {
-                $totalvideolike += $rows['like'];
-                $totalvideocomments += $rows['comments'];
+                foreach($totalVideoGraph as $rows)
+                {
+                    $totalvideolike += $rows['like'];
+                    $totalvideocomments += $rows['comments'];
+                }
             }
 
             $average['videolike'] = $sc->divisionLikeComments($totalalbumlike,$piedata['video']);
@@ -313,14 +344,12 @@ class UpdateSearchIg extends Command
                     $hashtagpopularity = $i->hashtag->getInfo($hashtagkey)->getMediaCount();
                     $percenthashtag = ($totalhashtag/$totalpost) * 100;
                     
-                    $hashtags[] = array(
+                    $hashtags[$hashtag] = array(
                         'hashtagname'=>$hashtag,
                         'hashtagpopularity'=>$hashtagpopularity,
                         'hashtaginpost'=>$totalhashtag,
                         'hashtagpercent'=> round($percenthashtag)
                     );
-                    #for graph 'Number of Hashtags per Post'
-                    $hashtag_per_post[] = $totalhashtag;
                     #hashtag by popularity
                     $hashtag_popularity[] = $hashtagpopularity;
                 }
@@ -328,6 +357,17 @@ class UpdateSearchIg extends Command
             else
             {
                 $hashtags = array();
+            }
+
+            # GRAPH 'Number of Hashtags per Post
+            if(count($hashtagperposts) > 0)
+            {
+                foreach($hashtagperposts as $row=>$val)
+                {
+                    $totalhashtagsperpost[$row] = count($val);
+                }
+                $hashtag_per_post = array_count_values($totalhashtagsperpost);
+                $totalhashtaginpost = $sc->array_merge_numeric_values($getdb['totalhashtaginpost'],$hashtag_per_post);
             }
             
             #HASHTAG BY POPULARITY
@@ -369,14 +409,11 @@ class UpdateSearchIg extends Command
                 }
             });
         
-            $hash['specific'] = count($hash['specific']);
-            $hash['medium'] = count($hash['medium']);
-            $hash['popular'] = count($hash['popular']);
-            $hash['very_popular'] = count($hash['very_popular']);
-            $hash['x_popular'] = count($hash['x_popular']);
-
-            #for graph 'Number of Hashtags per Post'
-            $totalhashtaginpost = array_count_values($hashtag_per_post);
+            $hash['specific'] = count($hash['specific']) + $getdb['hashtagspopularity']['specific'];
+            $hash['medium'] = count($hash['medium']) + $getdb['hashtagspopularity']['medium'];
+            $hash['popular'] = count($hash['popular']) + $getdb['hashtagspopularity']['popular'];
+            $hash['very_popular'] = count($hash['very_popular']) + $getdb['hashtagspopularity']['very_popular'];
+            $hash['x_popular'] = count($hash['x_popular']) + $getdb['hashtagspopularity']['x_popular'];
 
             //print('<pre>'.print_r(round($percenthashtag),true).'</pre>');
 
@@ -398,15 +435,15 @@ class UpdateSearchIg extends Command
             $db = json_decode($getdata,true);
 
             $merge['post'] = $data['post'] + $db['post'];
-            $merge['hashtags'] = $data['hashtags'] + $db['hashtags'];
-            $merge['graph'] = $data['graph'] + $db['graph'];
-            $merge['piedata'] = $data['piedata'] + $db['piedata'];
-            $merge['avgdata'] = $data['avgdata'] + $db['avgdata'];
-            $merge['totalhashtaginpost'] = $data['totalhashtaginpost'] + $db['totalhashtaginpost'];
-            $merge['hashtagspopularity'] = $data['hashtagspopularity'] + $db['hashtagspopularity'];
-            $merge['totaldaypost'] = $data['totaldaypost'] + $db['totaldaypost'];
-            $merge['totalclock'] = $data['totalclock'] + $db['totalclock'];
-            $merge['totalvideoview'] = $data['totalvideoview'] + $db['totalvideoview'];
+            $merge['hashtags'] =  $db['hashtags'] + $data['hashtags'];
+            $merge['graph'] = $data['graph'];
+            $merge['piedata'] = $data['piedata'];
+            $merge['avgdata'] = $data['avgdata'];
+            $merge['totalhashtaginpost'] = $data['totalhashtaginpost'];
+            $merge['hashtagspopularity'] = $data['hashtagspopularity'];
+            $merge['totaldaypost'] = $data['totaldaypost'];
+            $merge['totalclock'] = $data['totalclock'];
+            $merge['totalvideoview'] = $db['totalvideoview'] + $data['totalvideoview'];
           
             #print('<pre>'.print_r($merge,true).'</pre>');
             $json = json_encode($merge,true);
@@ -531,6 +568,7 @@ class UpdateSearchIg extends Command
                         {
                             preg_match_all("/(#\w+)/", $caption, $hashtagpost);
                             $hashtagposts[] = $hashtagpost[0];
+                            $hashtagperposts[$item->getPk()] = $hashtagpost[0];
                         }
                         
                         $posts[$item->getPk()] = array(
@@ -624,9 +662,12 @@ class UpdateSearchIg extends Command
             if(!isset($totalday['Sat'])){$totalday['Sat'] = 0;}
             if(!isset($totalday['Sun'])){$totalday['Sun'] = 0;}
 
-            foreach($getdb['totaldaypost'] as $day=>$val)
+            if(count($getdb['totaldaypost']) > 0)
             {
-                $recorded[$day] = $val;
+                foreach($getdb['totaldaypost'] as $day=>$val)
+                {
+                    $recorded[$day] = $val;
+                }
             }
 
             $totalday['Mon'] += $recorded['Mon'];
@@ -661,22 +702,29 @@ class UpdateSearchIg extends Command
             #image like and comment
             $totalimagelike = 0;
             $totalimagecomments = 0;
-            foreach($totalImageGraph as $rows)
+            if(count($totalImageGraph) > 0)
             {
-                $totalimagelike += $rows['like'];
-                $totalimagecomments += $rows['comments'];
+                foreach($totalImageGraph as $rows)
+                {
+                    $totalimagelike += $rows['like'];
+                    $totalimagecomments += $rows['comments'];
+                }
             }
-
+           
             $average['imagelike'] = $sc->divisionLikeComments($totalimagelike,$piedata['image']);
             $average['imagecomments'] = $sc->divisionLikeComments($totalimagecomments,$piedata['image']);
 
             #album like and comment
             $totalalbumlike = 0;
             $totalalbumcomments = 0;
-            foreach($totalAlbumGraph as $rows)
+
+            if(count($totalAlbumGraph) > 0)
             {
-                $totalalbumlike += $rows['like'];
-                $totalalbumcomments += $rows['comments'];
+                foreach($totalAlbumGraph as $rows)
+                {
+                    $totalalbumlike += $rows['like'];
+                    $totalalbumcomments += $rows['comments'];
+                }
             }
 
             $average['albumlike'] = $sc->divisionLikeComments($totalalbumlike,$piedata['album']);
@@ -684,10 +732,13 @@ class UpdateSearchIg extends Command
 
             #video like and comment
             $totalvideolike = $totalvideocomments = $totalvideoviews = 0;
-            foreach($totalVideoGraph as $rows)
+            if(count($totalVideoGraph) > 0)
             {
-                $totalvideolike += $rows['like'];
-                $totalvideocomments += $rows['comments'];
+                foreach($totalVideoGraph as $rows)
+                {
+                    $totalvideolike += $rows['like'];
+                    $totalvideocomments += $rows['comments'];
+                }
             }
 
             $average['videolike'] = $sc->divisionLikeComments($totalalbumlike,$piedata['video']);
@@ -721,14 +772,12 @@ class UpdateSearchIg extends Command
                     $hashtagpopularity = $i->hashtag->getInfo($hashtagkey)->getMediaCount();
                     $percenthashtag = ($totalhashtag/$totalpost) * 100;
                     
-                    $hashtags[] = array(
+                    $hashtags[$hashtag] = array(
                         'hashtagname'=>$hashtag,
                         'hashtagpopularity'=>$hashtagpopularity,
                         'hashtaginpost'=>$totalhashtag,
                         'hashtagpercent'=> round($percenthashtag)
                     );
-                    #for graph 'Number of Hashtags per Post'
-                    $hashtag_per_post[] = $totalhashtag;
                     #hashtag by popularity
                     $hashtag_popularity[] = $hashtagpopularity;
                 }
@@ -738,10 +787,17 @@ class UpdateSearchIg extends Command
                 $hashtags = array();
             }
 
-             #for graph 'Number of Hashtags per Post'
-            $newtotalhashtagperpost = array_count_values($hashtag_per_post);
-            $totalhashtaginpost = $sc->array_merge_numeric_values($getdb['totalhashtaginpost'],$newtotalhashtagperpost);
-
+            # GRAPH 'Number of Hashtags per Post
+            if(count($hashtagperposts) > 0)
+            {
+                foreach($hashtagperposts as $row=>$val)
+                {
+                    $totalhashtagsperpost[$row] = count($val);
+                }
+                $hashtag_per_post = array_count_values($totalhashtagsperpost);
+                $totalhashtaginpost = $sc->array_merge_numeric_values($getdb['totalhashtaginpost'],$hashtag_per_post);
+            }
+            
             #HASHTAG BY POPULARITY
             $arr = $hashtag_popularity;     
             $hash = $hash['specific'] = $hash['medium'] = $hash['popular'] = $hash['very_popular'] = $hash['x_popular'] = array();
@@ -806,8 +862,8 @@ class UpdateSearchIg extends Command
             $getdata = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
             $db = json_decode($getdata,true);
 
-            $merge['post'] =  $db['post'] + $data['post'];
-            $merge['hashtags'] =  $db['hashtags'] + $data['hashtags'];
+            $merge['post'] = $db['post'] + $data['post'];
+            $merge['hashtags'] = $data['hashtags'] + $db['hashtags'];
             $merge['graph'] = $data['graph'];
             $merge['piedata'] = $data['piedata'];
             $merge['avgdata'] = $data['avgdata'];
@@ -815,7 +871,7 @@ class UpdateSearchIg extends Command
             $merge['hashtagspopularity'] = $data['hashtagspopularity'];
             $merge['totaldaypost'] = $data['totaldaypost'];
             $merge['totalclock'] = $data['totalclock'];
-            $merge['totalvideoview'] = $db['totalvideoview'] + $data['totalvideoview'];
+            $merge['totalvideoview'] = $data['totalvideoview'] + $db['totalvideoview'];
 
             /*
                 $merge = array(

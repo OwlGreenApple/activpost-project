@@ -394,7 +394,7 @@ $(function(){
 			name: "companies",
 			axisYType: "secondary",
 			color: "green",
-			toolTipContent: "Hashtags : {y}<br/> Total Post : {label}",
+			toolTipContent: "Hashtags : {label}<br/> Total Post : {y}",
 			dataPoints: hashtagpost
 		}]
 	})

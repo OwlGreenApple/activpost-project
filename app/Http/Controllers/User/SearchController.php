@@ -316,6 +316,7 @@ class SearchController extends Controller
 						{
 							preg_match_all("/(#\w+)/", $caption, $hashtagpost);
 							$hashtagposts[] = $hashtagpost[0];
+							$hashtagperposts[$item->getPk()] = $hashtagpost[0];
 						}
 						
 						$posts[$item->getPk()] = array(
@@ -416,34 +417,44 @@ class SearchController extends Controller
 			#image like and comment
 			$totalimagelike = 0;
 			$totalimagecomments = 0;
-			foreach($datagraph['Image'] as $rows)
-			{
-				$totalimagelike += $rows['like'];
-				$totalimagecomments += $rows['comments'];
-			}
+			if(count($datagraph['Image']) > 0)
+            {
+                foreach($datagraph['Image'] as $rows)
+                {
+                    $totalimagelike += $rows['like'];
+                    $totalimagecomments += $rows['comments'];
+                }
+            }
+           
+            $average['imagelike'] = $sc->divisionLikeComments($totalimagelike,$piedata['image']);
+            $average['imagecomments'] = $sc->divisionLikeComments($totalimagecomments,$piedata['image']);
 
-			$average['imagelike'] = $this->divisionLikeComments($totalimagelike,$piedata['image']);
-			$average['imagecomments'] = $this->divisionLikeComments($totalimagecomments,$piedata['image']);
+            #album like and comment
+            $totalalbumlike = 0;
+            $totalalbumcomments = 0;
 
-			#album like and comment
-			$totalalbumlike = 0;
-			$totalalbumcomments = 0;
-			foreach($datagraph['Album'] as $rows)
-			{
-				$totalalbumlike += $rows['like'];
-				$totalalbumcomments += $rows['comments'];
-			}
+            if(count($datagraph['Album']) > 0)
+            {
+                foreach($datagraph['Album'] as $rows)
+                {
+                    $totalalbumlike += $rows['like'];
+                    $totalalbumcomments += $rows['comments'];
+                }
+            }
 
-			$average['albumlike'] = $this->divisionLikeComments($totalalbumlike,$piedata['album']);
-			$average['albumcomments'] = $this->divisionLikeComments($totalalbumcomments,$piedata['album']);
+            $average['albumlike'] = $sc->divisionLikeComments($totalalbumlike,$piedata['album']);
+            $average['albumcomments'] = $sc->divisionLikeComments($totalalbumcomments,$piedata['album']);
 
-			#video like and comment
-			$totalvideolike = $totalvideocomments = $totalvideoviews = 0;
-			foreach($datagraph['Album'] as $rows)
-			{
-				$totalvideolike += $rows['like'];
-				$totalvideocomments += $rows['comments'];
-			}
+            #video like and comment
+            $totalvideolike = $totalvideocomments = $totalvideoviews = 0;
+            if(count($datagraph['Video']) > 0)
+            {
+                foreach($datagraph['Video'] as $rows)
+                {
+                    $totalvideolike += $rows['like'];
+                    $totalvideocomments += $rows['comments'];
+                }
+            }
 
 			$average['videolike'] = $this->divisionLikeComments($totalalbumlike,$piedata['video']);
 			$average['videocomments'] = $this->divisionLikeComments($totalalbumcomments,$piedata['video']);
@@ -482,8 +493,6 @@ class SearchController extends Controller
 						'hashtaginpost'=>$totalhashtag,
 						'hashtagpercent'=> round($percenthashtag)
 					);
-					#for graph 'Number of Hashtags per Post'
-					$hashtag_per_post[] = $totalhashtag;
 					#hashtag by popularity
 					$hashtag_popularity[] = $hashtagpopularity;
 				}
@@ -491,6 +500,17 @@ class SearchController extends Controller
 			else
 			{
 				$hashtags = array();
+			}
+
+			#for graph 'Number of Hashtags per Post
+
+			if(count($hashtagperposts) > 0)
+			{
+				 foreach($hashtagperposts as $row=>$val)
+	            {
+	                $totalhashtagsperpost[$row] = count($val);
+	            }
+	            $totalhashtaginpost = array_count_values($totalhashtagsperpost);
 			}
 			
 			#hashtag by popularity
@@ -537,9 +557,6 @@ class SearchController extends Controller
 			$hash['popular'] = count($hash['popular']);
 			$hash['very_popular'] = count($hash['very_popular']);
 			$hash['x_popular'] = count($hash['x_popular']);
-
-			#for graph 'Number of Hashtags per Post'
-			$totalhashtaginpost = array_count_values($hashtag_per_post);
 
 			//print('<pre>'.print_r(round($percenthashtag),true).'</pre>');
 
