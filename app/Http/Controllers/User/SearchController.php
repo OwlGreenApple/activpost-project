@@ -280,6 +280,7 @@ class SearchController extends Controller
 
 					#foreach insight
 
+					$sc = new SearchController;
 					foreach ($timeline->getItems() as $item) 
 					{   
 
@@ -318,18 +319,6 @@ class SearchController extends Controller
 							$hashtagposts[] = $hashtagpost[0];
 							$hashtagperposts[$item->getPk()] = $hashtagpost[0];
 						}
-						
-						$posts[$item->getPk()] = array(
-							'profile'=> $item->getUser()->getProfilePicUrl(),
-							'username' =>$item->getUser()->getUsername(),
-							'fullname' =>$item->getUser()->getFullName(),
-							'code' => 'https://www.instagram.com/p/'.$item->getCode().'/',
-							'comments' =>$item->getCommentCount(),
-							'likes' =>$item->getLikeCount(),
-							'img' => $img,
-							'time'=> $time,
-							'caption'=>$caption
-						);
 
 						#media type
 						/*
@@ -357,6 +346,21 @@ class SearchController extends Controller
 						{
 							$typemedia = 'Image';
 						}
+
+						$posts[$item->getPk()] = array(
+							'profile'=> $item->getUser()->getProfilePicUrl(),
+							'username' =>$item->getUser()->getUsername(),
+							'fullname' =>$item->getUser()->getFullName(),
+							'code' => 'https://www.instagram.com/p/'.$item->getCode().'/',
+							'comments' =>$item->getCommentCount(),
+							'likes' =>$item->getLikeCount(),
+							'img' => $img,
+							'time'=> $time,
+							'caption'=>$caption,
+							'taken'=>$item->getTakenAt(), #adding to make easy when post deleted
+							'mediatype'=>$mediatype,
+							'views'=> $item->getViewCount()
+						);
 
 						#data total view for graph
 						$engagement = $item->getCommentCount()+$item->getLikeCount();
@@ -817,12 +821,16 @@ class SearchController extends Controller
 	public function test()
 	{
 		$userId = 515588497;
+		//$userId = 2245770667;
 		$getdata = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
 		$db = json_decode($getdata,true);
 
+		dd($db);
+		die('');
+
 		$a2 = array('text'=>'aaaa','rubber'=>'bbbbb');
-		$source = array(
-			'2176176520861881664'=> array
+		$newdb = array(
+			/*'2176176520861881664'=> array
 				 (
 				 'profile' => 'https://instagram.fsub8-1.fna.fbcdn.net/vp/8f6750afa2146895c714071c51abfd50/5E57F4BA/t51.2885-19/s150x150/12093436_159206814427747_546960802_a.jpg?_nc_ht=instagram.fsub8-1.fna.fbcdn.net&_nc_cat=107',
 				 'username' => 'bungariaanastasya',
@@ -833,20 +841,38 @@ class SearchController extends Controller
 				 'img' => 'https://instagram.fsub8-1.fna.fbcdn.net/vp/d859e411c2661308049ac9c0b8004d27/5E8806B1/t51.2885-15/e15/s480x480/75590889_751700708632733_368283279574312339_n.jpg?_nc_ht=instagram.fsub8-1.fna.fbcdn.net&_nc_cat=105&ig_cache_key=MjE3NjE3NjUyMDg2MTg4MTY2NA%3D%3D.2',
 				 'time' => '0w',
 				 'caption' => 'testupload',
-				  ),
-			 '2176119684376676241' => array
-                (
-                    'profile' => 'https://instagram.fsub8-1.fna.fbcdn.net/vp/8f6750afa2146895c714071c51abfd50/5E57F4BA/t51.2885-19/s150x150/12093436_159206814427747_546960802_a.jpg?_nc_ht=instagram.fsub8-1.fna.fbcdn.net&_nc_cat=107',
-                    'username' => 'bungariaanastasya',
-                    'fullname' => 'anastasya',
-                    'code' => 'https://www.instagram.com/p/B4zIVLIAceR/',
-                    'comments' => 10,
-                    'likes' => 7,
-                    'img' => 'https://instagram.fsub8-1.fna.fbcdn.net/vp/7a29bd0e92fac046d5f17cdf68a67b42/5E4E989D/t51.2885-15/e15/s480x480/73387332_504043800185866_2802116812744979681_n.jpg?_nc_ht=instagram.fsub8-1.fna.fbcdn.net&_nc_cat=110&ig_cache_key=MjE3NjExOTY4NDM3NjY3NjI0MQ%3D%3D.2',
-                    'time' => '0w',
-                    'caption' => 'testaaaa'
-                )
+				  ),*/
+
+				  "2176176520861881664" => array(),
+				  "2176119684376676241" => array(),
+				  "2104400569723789785" => array(),
+				  //"2104162195373185913" => array(),
+				  "2100668753036868118" => array(),
+				  "1987150779589693597" => array(),
+				  //"1981946855261900276" => array(),
+				  "1981786208058270963" => array(),
+				  "1981783162054009185" => array(),
+				  "1205562693063962641" => array(),
+				  "1198219361816048333" => array(),
+				  "1198218813125587643" => array(),
+				  "1107071111088730682" => array(),
+				  "1106903419115434093" => array(),
+				  "1106903186683883626" => array(),
+				  "1106404792186073749" => array(),
+				  "1101141207574802752" => array(),
 		); 
+
+		$olddb = $db['post'];
+
+		$slice = array_slice($olddb,0,10);
+		dd($slice);
+	    $result = array_diff_key($olddb,$newdb);
+		
+		foreach($result as $key=>$val)
+		{
+			unset($olddb[$key]);
+		}
+		
               
 		#$arrmerge['post'] = array_merge($db['post'],$a2);
 		#$json = json_encode($a2);
@@ -865,10 +891,11 @@ class SearchController extends Controller
 	        ,"d" => 10
 	    );
 
+	    //$result = $this->array_merge_numeric_values($a1,$a2);
+		//dd($db['hashtagspopularity']);
 
-	    $result = $this->array_merge_numeric_values($a1,$a2);
-		$db['post'] = $source + $db['post'];
-		dd($db['hashtagspopularity']);
+		//$db['post'] =  $source + $db['post'];
+		
 		//print('<pre>'.print_r($db['post'],true).'</pre>');
     }
 
