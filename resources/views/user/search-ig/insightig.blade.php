@@ -196,7 +196,7 @@ $(function () {
 	        	legendText: "Image",
 		        showInLegend: true,
 		        legendMarkerType: "circle",
-		 		toolTipContent: "<div class='\"'row fixtooltip'\"'><div class='\"'col-md-4 fixcol'\"'><img src={image} style='\"'width:100px'\"' /></div><div class='\"'col-md-8 fixcol'\"'>Engagement Rate: {y}<br/> Posted on: {x}<br /> Type : {type}<br/> Click to jump the post</div></div>",
+		 		toolTipContent: "<div class='\"'fixtooltip'\"'><div class='\"'fixcol'\"'><img src={image} style='\"'width:100px'\"' /></div><div class='\"'fixcol'\"'>Engagement Rate: {y}<br/> Posted on: {x}<br /> Type : {type}<br/> Click to jump the post</div><div class='\"'clearfix'\"'></div></div>",
 				dataPoints: image,
 				click : onClick
 			},
@@ -209,7 +209,7 @@ $(function () {
 	        	legendText: "Album",
 		        showInLegend: true,
 		        legendMarkerType: "circle",
-		 		toolTipContent: "<div class='\"'row fixtooltip'\"'><div class='\"'col-md-4 fixcol'\"'><img src={image} style='\"'width:100px'\"' /></div><div class='\"'col-md-8 fixcol'\"'>Engagement Rate: {y}<br/> Posted on: {x}<br /> Type : {type}<br/> Click to jump the post</div></div>",
+		 		toolTipContent: "<div class='\"'fixtooltip'\"'><div class='\"'fixcol'\"'><img src={image} style='\"'width:100px'\"' /></div><div class='\"'fixcol'\"'>Engagement Rate: {y}<br/> Posted on: {x}<br /> Type : {type}<br/> Click to jump the post</div><div class='\"'clearfix'\"'></div></div>",
 				dataPoints: album,
 				click : onClick
 			},
@@ -222,7 +222,7 @@ $(function () {
 	        	legendText: "Video",
 		        showInLegend: true,
 		        legendMarkerType: "circle",
-		 		toolTipContent: "<div class='\"'row fixtooltip'\"'><div class='\"'col-md-4 fixcol'\"'><img src={image} style='\"'width:100px'\"' /></div><div class='\"'col-md-8 fixcol'\"'>Engagement Rate: {y}<br/> Posted on: {x}<br /> Type : {type}<br/> Click to jump the post</div></div>",
+		 		toolTipContent: "<div class='\"'fixtooltip'\"'><div class='\"'fixcol'\"'><img src={image} style='\"'width:100px'\"' /></div><div class='\"'fixcol'\"'>Engagement Rate: {y}<br/> Posted on: {x}<br /> Type : {type}<br/> Click to jump the post</div><div class='\"'clearfix'\"'></div></div>",
 				dataPoints: video,
 				click : onClick
 			}

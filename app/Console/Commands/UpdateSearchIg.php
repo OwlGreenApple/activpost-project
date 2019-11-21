@@ -50,6 +50,8 @@ class UpdateSearchIg extends Command
     # GET LATEST POST
     public function handle()
     {
+         //$this->filterDBData();
+         //die('');
          $get_user_id = Cache::where('type',1)->get();
 
          if($get_user_id->count() > 0)
@@ -57,6 +59,7 @@ class UpdateSearchIg extends Command
             foreach($get_user_id as $row)
             {
                 $this->updateIgData($row->keyword,$row->id,null,$row->nextmaxid);
+                $this->filterDBData($row->keyword);
                 //echo $row->keyword."\n";
             }
          }
@@ -64,8 +67,6 @@ class UpdateSearchIg extends Command
          {
             echo 'Insight data not available';
          }
-         
-         //$this->filterDBData();
     }
 
 
@@ -891,10 +892,6 @@ class UpdateSearchIg extends Command
             $json = json_encode($merge,true);
             Cache::where('id',$cacheId)->update(['nextmaxid'=>$nextMaxId]);
             file_put_contents(storage_path('jsondata').'/'.$userId.'.json', $json);
-            if($maxpost == true)
-            {
-                $this->filterDBData($userId);
-            }
         }   
             catch (\InstagramAPI\Exception\IncorrectPasswordException $e) {
                 //klo error password
@@ -937,9 +934,8 @@ class UpdateSearchIg extends Command
     #FILTER DATA AFTER ADDING OR LESS DATA
     public function filterDBData($userId)
     {
-        //$userId = 515588497;
-        $viewVideo = $hashtagposts = $totalhours = $totalweek = $hashtag_popularity = $average = $dataPoints['Image'] = $dataPoints['Album'] = $dataPoints['Video'] = array();
-
+        //$userId = 2245770667;
+        $viewVideo = $hashtagposts = $totalhours = $totalweek = $hashtag_popularity = $average = $dataPoints['Image'] = $dataPoints['Album'] = $dataPoints['Video'] = $delPost = array();
         try {   
             $error_message="";
             $i = new Instagram(false,false,[
@@ -958,87 +954,118 @@ class UpdateSearchIg extends Command
             $getdb = json_decode($getdata,true);
             $sc = new SearchController;
 
-            foreach ($getdb['post'] as $key => $item) 
-            {  
+            $post = $getdb['post'];
 
-                if($item['caption'] <> null)
+            if(count($post) > 0)
+            {
+                #CHECK PAGE IS AVAILABLE OR DELETED
+                foreach($post as $key=>$val)
                 {
-                    $caption = $item['caption'];
+                    $check_url = $sc->url_exists($val['code']);
+                    if($check_url == 404)
+                    {
+                        $delPost[] = $key;
+                    }
                 }
-                else
-                {
-                    $caption = null;
-                }
-                preg_match_all("/(#\w+)/", $caption, $hashtagpost);
-                $hashtagposts[] = $hashtagpost[0];
-                $hashtagperposts[$key] = $hashtagpost[0];
-
-                #REPEATED SO THAT POST DATA STILL AVAILABLE
-                $posts[$key] = array(
-                    'profile'=> $item['profile'],
-                    'username' =>$item['username'],
-                    'fullname' =>$item['fullname'],
-                    'code' => $item['code'],
-                    'comments' =>$item['comments'],
-                    'likes' =>$item['likes'],
-                    'img' => $item['img'],
-                    'time'=> $item['time'],
-                    'caption'=>$item['caption'],
-                    'taken'=>$item['taken'], #adding to make easy when post deleted
-                    'mediatype'=>$item['mediatype'],
-                    'views'=> $item['views']
-                );
-
-                #media type
-                /*
-                    1 = image
-                    2 = video / igtv
-                    8 = album
-                */    
-                
-                $mediatype = $item['mediatype'];
-                $taken = Date('d-m-Y',$item['taken']);
-                $converting_date = Date('Y-m-d',strtotime($taken));
-
-                if($mediatype == 8)
-                {
-                    $typemedia = 'Album';
-                }
-                else if($mediatype == 2)
-                {
-                    $typemedia = 'Video';
-                    #data video view
-                    $viewVideo[$key] = array(
-                        'views'=> $item['views'],
-                        'date_posting'=>$converting_date,
-                        'link'=> $item['code']
-                    );
-                }
-                else
-                {
-                    $typemedia = 'Image';
-                }
-
-                #data total view for graph
-                $engagement = $item['comments']+$item['likes'];
-
-               //print('<pre>'.print_r($engagement,true).' '.print_r($taken,true).'</pre>');
-                $dataPoints[$typemedia][$key] = array(
-                    "x" => $converting_date,  //date when posting created
-                    "y" => $engagement, // engagement rate
-                    "z" => $engagement,  // size of bubble
-                    "type"=> $typemedia,
-                    "image" => $item['img'], //image of post code
-                    "link" => $item['code'], //go to post link when user click on bubble
-                    "like" => $item['likes'],
-                    "comments" => $item['comments'],
-                );
-                
-                #average post by week
-                $totalweek[$key] = Date('D',$item['taken']);
-                $totalhours[$key] = Date('H:00',$item['taken']);
+                $postavailable = true;
             }
-            #endforeach
+            else
+            {
+                $postavailable = false;
+            }
+
+            if(count($delPost) > 0)
+            {
+                foreach ($delPost as $arraykey) {
+                    unset($post[$arraykey]);
+                }
+            }
+
+            #MAKE FILTER AFTER DELETE OR ADDING DATA
+            if($postavailable == true)
+            {
+                foreach ($post as $key => $item) 
+                {  
+
+                    if($item['caption'] <> null)
+                    {
+                        $caption = $item['caption'];
+                    }
+                    else
+                    {
+                        $caption = null;
+                    }
+                    preg_match_all("/(#\w+)/", $caption, $hashtagpost);
+                    $hashtagposts[] = $hashtagpost[0];
+                    $hashtagperposts[$key] = $hashtagpost[0];
+
+                    #REPEATED SO THAT POST DATA STILL AVAILABLE
+                    $posts[$key] = array(
+                        'profile'=> $item['profile'],
+                        'username' =>$item['username'],
+                        'fullname' =>$item['fullname'],
+                        'code' => $item['code'],
+                        'comments' =>$item['comments'],
+                        'likes' =>$item['likes'],
+                        'img' => $item['img'],
+                        'time'=> $item['time'],
+                        'caption'=>$item['caption'],
+                        'taken'=>$item['taken'], #adding to make easy when post deleted
+                        'mediatype'=>$item['mediatype'],
+                        'views'=> $item['views']
+                    );
+
+                    #media type
+                    /*
+                        1 = image
+                        2 = video / igtv
+                        8 = album
+                    */    
+                    
+                    $mediatype = $item['mediatype'];
+                    $taken = Date('d-m-Y',$item['taken']);
+                    $converting_date = Date('Y-m-d',strtotime($taken));
+
+                    if($mediatype == 8)
+                    {
+                        $typemedia = 'Album';
+                    }
+                    else if($mediatype == 2)
+                    {
+                        $typemedia = 'Video';
+                        #data video view
+                        $viewVideo[$key] = array(
+                            'views'=> $item['views'],
+                            'date_posting'=>$converting_date,
+                            'link'=> $item['code']
+                        );
+                    }
+                    else
+                    {
+                        $typemedia = 'Image';
+                    }
+
+                    #data total view for graph
+                    $engagement = $item['comments']+$item['likes'];
+
+                   //print('<pre>'.print_r($engagement,true).' '.print_r($taken,true).'</pre>');
+                    $dataPoints[$typemedia][$key] = array(
+                        "x" => $converting_date,  //date when posting created
+                        "y" => $engagement, // engagement rate
+                        "z" => $engagement,  // size of bubble
+                        "type"=> $typemedia,
+                        "image" => $item['img'], //image of post code
+                        "link" => $item['code'], //go to post link when user click on bubble
+                        "like" => $item['likes'],
+                        "comments" => $item['comments'],
+                    );
+                    
+                    #average post by week
+                    $totalweek[$key] = Date('D',$item['taken']);
+                    $totalhours[$key] = Date('H:00',$item['taken']);
+                }
+                #endforeach
+            }
             
             #average post by time
             $totalclock = array_count_values($totalhours);
@@ -1233,7 +1260,6 @@ class UpdateSearchIg extends Command
 
             $json = json_encode($data,true);
             file_put_contents(storage_path('jsondata').'/'.$userId.'.json', $json);
-
         }
         catch (\InstagramAPI\Exception\IncorrectPasswordException $e) {
             //klo error password
@@ -1271,25 +1297,6 @@ class UpdateSearchIg extends Command
             }
         }
         echo $error_message;    
-
-            /*
-            #get old data
-            $getdata = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
-            $db = json_decode($getdata,true);
-
-            /*$merge['post'] = $db['post'] + $data['post'];
-            $merge['hashtags'] = $data['hashtags'] + $db['hashtags'];
-            $merge['graph'] = $data['graph'];
-            $merge['piedata'] = $data['piedata'];
-            $merge['avgdata'] = $data['avgdata'];
-            $merge['totalhashtaginpost'] = $data['totalhashtaginpost'];
-            $merge['hashtagspopularity'] = $data['hashtagspopularity'];
-            $merge['totaldaypost'] = $data['totaldaypost'];
-            $merge['totalclock'] = $data['totalclock'];
-            $merge['totalvideoview'] = $data['totalvideoview'] + $db['totalvideoview'];
-            */
-           
-            #print('<pre>'.print_r($merge,true).'</pre>'); 
     }
 
 /* end class */

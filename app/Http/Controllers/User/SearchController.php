@@ -818,15 +818,87 @@ class SearchController extends Controller
 		return $merged;
 	}
 
+	#CHECK IF URL AVAILABLE, WOULD RETURN 200 IF AVAILABLE BUT 404 IF OTHERWISE
+	public function url_exists($url) {
+	    $handle = curl_init($url);
+		curl_setopt($handle,  CURLOPT_RETURNTRANSFER, TRUE);
+
+		/* Get the HTML or whatever is linked in $url. */
+		$response = curl_exec($handle);
+
+		/* Check for 404 (file not found). */
+		$httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+		return $httpCode;
+		curl_close($handle);
+	}
+
 	public function test()
 	{
-		$userId = 515588497;
-		//$userId = 2245770667;
+		try 
+		{	
+			$error_message="";
+			$i = new Instagram(false,false,[
+				"storage"      => $this->storage,
+				"dbhost"       => $this->dbhost,
+				"dbname"   	   => $this->dbname,
+				"dbusername"   => $this->dbusername,
+				"dbpassword"   => $this->dbpassword,
+			]);	
+			
+			$i->login($this->login, $this->password, 300);
+
+			$timeline = $i->timeline->getUserFeed('2245770667',null);
+			//$media = $i->media->getInfo('2176119684376676241_2245770667');
+			//$i->media->delete('2176119684376676241_2245770667');
+
+			dd($timeline);
+		} 
+
+		catch (\InstagramAPI\Exception\IncorrectPasswordException $e) {
+			//klo error password
+			$error_message = $e->getMessage();
+		}
+		catch (\InstagramAPI\Exception\AccountDisabledException $e) {
+			//klo error password
+			$error_message = $e->getMessage();
+		}
+		catch (\InstagramAPI\Exception\CheckpointRequiredException $e) {
+			//klo error email / phone verification 
+			$error_message = $e->getMessage();
+		}
+				catch (\InstagramAPI\Exception\InstagramException $e) {
+					$is_error = true;
+					// if ($e->hasResponse() && $e->getResponse()->isTwoFactorRequired()) {
+						// echo "2 Factor perlu dioffkan";
+					// } 
+					// else {
+							// all other login errors would get caught here...
+						echo $e->getMessage();
+					// }
+				}	
+		catch (NotFoundException $e) {
+			// echo $e->getMessage();
+			echo "asd";
+		}					
+		catch (Exception $e) {
+			$error_message = "fin ".$e->getMessage();
+			if ($error_message == "InstagramAPI\Response\LoginResponse: The password you entered is incorrect. Please try again.") {
+				$error_message = "fin ".$e->getMessage();
+			} 
+			if ( ($error_message == "InstagramAPI\Response\LoginResponse: Challenge required.") || ( substr($error_message, 0, 18) == "challenge_required") || ($error_message == "InstagramAPI\Response\TimelineFeedResponse: Challenge required.") || ($error_message == "InstagramAPI\Response\LoginResponse: Sorry, there was a problem with your request.") ){
+				$error_message = "fin ".$e->getMessage();
+			}
+		}
+		echo $error_message;
+	}
+	
+	/*
+	public function test()
+	{
+		//$userId = 515588497;
+		$userId = 2245770667;
 		$getdata = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
 		$db = json_decode($getdata,true);
-
-		dd($db);
-		die('');
 
 		$a2 = array('text'=>'aaaa','rubber'=>'bbbbb');
 		$newdb = array(
@@ -841,8 +913,10 @@ class SearchController extends Controller
 				 'img' => 'https://instagram.fsub8-1.fna.fbcdn.net/vp/d859e411c2661308049ac9c0b8004d27/5E8806B1/t51.2885-15/e15/s480x480/75590889_751700708632733_368283279574312339_n.jpg?_nc_ht=instagram.fsub8-1.fna.fbcdn.net&_nc_cat=105&ig_cache_key=MjE3NjE3NjUyMDg2MTg4MTY2NA%3D%3D.2',
 				 'time' => '0w',
 				 'caption' => 'testupload',
-				  ),*/
+				  ),
+				  */
 
+				  /*
 				  "2176176520861881664" => array(),
 				  "2176119684376676241" => array(),
 				  "2104400569723789785" => array(),
@@ -864,6 +938,26 @@ class SearchController extends Controller
 
 		$olddb = $db['post'];
 
+		foreach($olddb as $key=>$val)
+		{
+			$code[] = $val['code'];
+		}
+		dd($code);
+		die('');
+
+		foreach($db['post'] as $key=>$val)
+		{
+			//echo '<a href='.$val['code'].' target="_blank">'.$val['code'].'</a><br/>';
+			$check_url = $this->url_exists($val['code']);
+			if($check_url == 404)
+			{
+				echo $key.'==='.$val['code'].'<br/>';
+			}
+		}
+		//dd($db['post']);
+		$check_url = $this->url_exists('https://www.instagram.com/p/B4zVQQOhJVA/');
+		//print_r($check_url);
+		die('');
 		$slice = array_slice($olddb,0,10);
 		dd($slice);
 	    $result = array_diff_key($olddb,$newdb);
@@ -897,9 +991,8 @@ class SearchController extends Controller
 		//$db['post'] =  $source + $db['post'];
 		
 		//print('<pre>'.print_r($db['post'],true).'</pre>');
-    }
 
-    
+    }
 
 /* end search controller */
 }
