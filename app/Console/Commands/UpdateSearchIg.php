@@ -50,7 +50,7 @@ class UpdateSearchIg extends Command
     # GET LATEST POST
     public function handle()
     {
-         /*$get_user_id = Cache::where('type',1)->get();
+         $get_user_id = Cache::where('type',1)->get();
 
          if($get_user_id->count() > 0)
          {
@@ -63,8 +63,9 @@ class UpdateSearchIg extends Command
          else
          {
             echo 'Insight data not available';
-         }*/
-         $this->filterDBData();
+         }
+         
+         //$this->filterDBData();
     }
 
 
@@ -142,18 +143,6 @@ class UpdateSearchIg extends Command
                             $hashtagposts[] = $hashtagpost[0];
                             $hashtagperposts[$item->getPk()] = $hashtagpost[0];
                         }
-                        
-                        $posts[$item->getPk()] = array(
-                            'profile'=> $item->getUser()->getProfilePicUrl(),
-                            'username' =>$item->getUser()->getUsername(),
-                            'fullname' =>$item->getUser()->getFullName(),
-                            'code' => 'https://www.instagram.com/p/'.$item->getCode().'/',
-                            'comments' =>$item->getCommentCount(),
-                            'likes' =>$item->getLikeCount(),
-                            'img' => $img,
-                            'time'=> $time,
-                            'caption'=>$caption
-                        );
 
                         #MEDIA TYPE
                         /*
@@ -181,6 +170,21 @@ class UpdateSearchIg extends Command
                         {
                             $typemedia = 'Image';
                         }
+
+                         $posts[$item->getPk()] = array(
+                            'profile'=> $item->getUser()->getProfilePicUrl(),
+                            'username' =>$item->getUser()->getUsername(),
+                            'fullname' =>$item->getUser()->getFullName(),
+                            'code' => 'https://www.instagram.com/p/'.$item->getCode().'/',
+                            'comments' =>$item->getCommentCount(),
+                            'likes' =>$item->getLikeCount(),
+                            'img' => $img,
+                            'time'=> $time,
+                            'caption'=>$caption,
+                            'taken'=>$item->getTakenAt(), #adding to make easy when post deleted
+                            'mediatype'=>$mediatype,
+                            'views'=> $item->getViewCount()
+                        );
 
                         #data total view for graph
                         $engagement = $item->getCommentCount()+$item->getLikeCount();
@@ -511,6 +515,7 @@ class UpdateSearchIg extends Command
             $i->login($this->login, $this->password, 300);
 
             $totalpost = 0;
+            $maxpost = false;
             $totalpost = $i->people->getInfoById($userId)->getUser()->getMediaCount();
             $follower = $i->people->getInfoById($userId)->getUser()->getFollowerCount();
 
@@ -571,18 +576,6 @@ class UpdateSearchIg extends Command
                             $hashtagposts[] = $hashtagpost[0];
                             $hashtagperposts[$item->getPk()] = $hashtagpost[0];
                         }
-                        
-                        $posts[$item->getPk()] = array(
-                            'profile'=> $item->getUser()->getProfilePicUrl(),
-                            'username' =>$item->getUser()->getUsername(),
-                            'fullname' =>$item->getUser()->getFullName(),
-                            'code' => 'https://www.instagram.com/p/'.$item->getCode().'/',
-                            'comments' =>$item->getCommentCount(),
-                            'likes' =>$item->getLikeCount(),
-                            'img' => $img,
-                            'time'=> $time,
-                            'caption'=>$caption
-                        );
 
                         #media type
                         /*
@@ -610,6 +603,21 @@ class UpdateSearchIg extends Command
                         {
                             $typemedia = 'Image';
                         }
+
+                         $posts[$item->getPk()] = array(
+                            'profile'=> $item->getUser()->getProfilePicUrl(),
+                            'username' =>$item->getUser()->getUsername(),
+                            'fullname' =>$item->getUser()->getFullName(),
+                            'code' => 'https://www.instagram.com/p/'.$item->getCode().'/',
+                            'comments' =>$item->getCommentCount(),
+                            'likes' =>$item->getLikeCount(),
+                            'img' => $img,
+                            'time'=> $time,
+                            'caption'=>$caption,
+                            'taken'=>$item->getTakenAt(), #adding to make easy when post deleted
+                            'mediatype'=>$mediatype,
+                            'views'=> $item->getViewCount()
+                        );
 
                         #data total view for graph
                         $engagement = $item->getCommentCount()+$item->getLikeCount();
@@ -875,14 +883,18 @@ class UpdateSearchIg extends Command
             $merge['totalvideoview'] = $data['totalvideoview'] + $db['totalvideoview'];
            
             #print('<pre>'.print_r($merge,true).'</pre>');
-            if(count($merge['post']) > 10)
+            if(count($merge['post']) > 300)
             {
                 $merge['post'] = array_slice($merge['post'],0,10);
+                $maxpost = true;
             }
             $json = json_encode($merge,true);
             Cache::where('id',$cacheId)->update(['nextmaxid'=>$nextMaxId]);
             file_put_contents(storage_path('jsondata').'/'.$userId.'.json', $json);
-            $this->filterDBData($userId);
+            if($maxpost == true)
+            {
+                $this->filterDBData($userId);
+            }
         }   
             catch (\InstagramAPI\Exception\IncorrectPasswordException $e) {
                 //klo error password
@@ -922,16 +934,29 @@ class UpdateSearchIg extends Command
             echo $error_message;
     }
 
-    public function filterDBData()
+    #FILTER DATA AFTER ADDING OR LESS DATA
+    public function filterDBData($userId)
     {
-            $userId = 515588497;
-            $viewVideo = $hashtagposts = $totalhours = $totalweek = $hashtag_popularity = $average = $dataPoints['Image'] = $dataPoints['Album'] = $dataPoints['Video'] = array();
+        //$userId = 515588497;
+        $viewVideo = $hashtagposts = $totalhours = $totalweek = $hashtag_popularity = $average = $dataPoints['Image'] = $dataPoints['Album'] = $dataPoints['Video'] = array();
 
-             # GET RECORDED DATA
+        try {   
+            $error_message="";
+            $i = new Instagram(false,false,[
+                "storage"      => $this->storage,
+                "dbhost"       => $this->dbhost,
+                "dbname"       => $this->dbname,
+                "dbusername"   => $this->dbusername,
+                "dbpassword"   => $this->dbpassword,
+            ]); 
+
+            $i->login($this->login, $this->password, 300);
+            $totalpost = $i->people->getInfoById($userId)->getUser()->getMediaCount();
+
+            # GET RECORDED DATA
             $getdata = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
             $getdb = json_decode($getdata,true);
             $sc = new SearchController;
-                    
 
             foreach ($getdb['post'] as $key => $item) 
             {  
@@ -947,14 +972,33 @@ class UpdateSearchIg extends Command
                 preg_match_all("/(#\w+)/", $caption, $hashtagpost);
                 $hashtagposts[] = $hashtagpost[0];
                 $hashtagperposts[$key] = $hashtagpost[0];
-        
+
+                #REPEATED SO THAT POST DATA STILL AVAILABLE
+                $posts[$key] = array(
+                    'profile'=> $item['profile'],
+                    'username' =>$item['username'],
+                    'fullname' =>$item['fullname'],
+                    'code' => $item['code'],
+                    'comments' =>$item['comments'],
+                    'likes' =>$item['likes'],
+                    'img' => $item['img'],
+                    'time'=> $item['time'],
+                    'caption'=>$item['caption'],
+                    'taken'=>$item['taken'], #adding to make easy when post deleted
+                    'mediatype'=>$item['mediatype'],
+                    'views'=> $item['views']
+                );
+
                 #media type
                 /*
                     1 = image
                     2 = video / igtv
                     8 = album
-                */
-                $mediatype = $item->getMediaType();
+                */    
+                
+                $mediatype = $item['mediatype'];
+                $taken = Date('d-m-Y',$item['taken']);
+                $converting_date = Date('Y-m-d',strtotime($taken));
 
                 if($mediatype == 8)
                 {
@@ -964,10 +1008,10 @@ class UpdateSearchIg extends Command
                 {
                     $typemedia = 'Video';
                     #data video view
-                    $viewVideo[$item->getPk()] = array(
-                        'views'=> $item->getViewCount(),
+                    $viewVideo[$key] = array(
+                        'views'=> $item['views'],
                         'date_posting'=>$converting_date,
-                        'link'=>'https://www.instagram.com/p/'.$item->getCode().'/'
+                        'link'=> $item['code']
                     );
                 }
                 else
@@ -976,34 +1020,31 @@ class UpdateSearchIg extends Command
                 }
 
                 #data total view for graph
-                $engagement = $item->getCommentCount()+$item->getLikeCount();
+                $engagement = $item['comments']+$item['likes'];
 
-                //print('<pre>'.print_r($engagement,true).' '.print_r($taken,true).'</pre>');
-                $dataPoints[$typemedia][$item->getPk()] = array(
+               //print('<pre>'.print_r($engagement,true).' '.print_r($taken,true).'</pre>');
+                $dataPoints[$typemedia][$key] = array(
                     "x" => $converting_date,  //date when posting created
                     "y" => $engagement, // engagement rate
                     "z" => $engagement,  // size of bubble
                     "type"=> $typemedia,
-                    "image" => $img, //image of post code
-                    "link" => 'https://www.instagram.com/p/'.$item->getCode().'/', //go to post link when user click on bubble
-                    "like" => $item->getLikeCount(),
-                    "comments" => $item->getCommentCount(),
+                    "image" => $item['img'], //image of post code
+                    "link" => $item['code'], //go to post link when user click on bubble
+                    "like" => $item['likes'],
+                    "comments" => $item['comments'],
                 );
-
-
+                
                 #average post by week
-                $totalweek[$item->getPk()] = Date('D',$item->getTakenAt());
-                $totalhours[$item->getPk()] = Date('H:00',$item->getTakenAt());
-
+                $totalweek[$key] = Date('D',$item['taken']);
+                $totalhours[$key] = Date('H:00',$item['taken']);
             }
-
+            #endforeach
+            
             #average post by time
-            $newtotalclock = array_count_values($totalhours);
-            $totalclock = $sc->array_merge_numeric_values($getdb['totalclock'],$newtotalclock);
+            $totalclock = array_count_values($totalhours);
 
             #average post by day
             $totalday = array_count_values($totalweek);
-            $recorded = array();
 
             if(!isset($totalday['Mon'])){$totalday['Mon'] = 0;}
             if(!isset($totalday['Tue'])){$totalday['Tue'] = 0;}
@@ -1012,30 +1053,14 @@ class UpdateSearchIg extends Command
             if(!isset($totalday['Fri'])){$totalday['Fri'] = 0;}
             if(!isset($totalday['Sat'])){$totalday['Sat'] = 0;}
             if(!isset($totalday['Sun'])){$totalday['Sun'] = 0;}
-
-            if(count($getdb['totaldaypost']) > 0)
-            {
-                foreach($getdb['totaldaypost'] as $day=>$val)
-                {
-                    $recorded[$day] = $val;
-                }
-            }
-
-            $totalday['Mon'] += $recorded['Mon'];
-            $totalday['Tue'] += $recorded['Tue'];
-            $totalday['Wed'] += $recorded['Wed'];
-            $totalday['Thu'] += $recorded['Thu'];
-            $totalday['Fri'] += $recorded['Fri'];
-            $totalday['Sat'] += $recorded['Sat'];
-            $totalday['Sun'] += $recorded['Sun'];
            
             #graph data "Most Engaging Content Type"
             $datagraph = $dataPoints;
 
-            #COMBINE OLD DATA WITH NEW DATA
-            $totalImageGraph = $getdb['graph']['Image'] + $datagraph['Image'];
-            $totalAlbumGraph = $getdb['graph']['Album'] + $datagraph['Album'];
-            $totalVideoGraph = $getdb['graph']['Video'] + $datagraph['Video'];
+            #UPDATE DATA
+            $totalImageGraph = $datagraph['Image'];
+            $totalAlbumGraph = $datagraph['Album'];
+            $totalVideoGraph = $datagraph['Video'];
 
             $updateDataGraph = array(
                 'Image' => $totalImageGraph,
@@ -1145,8 +1170,7 @@ class UpdateSearchIg extends Command
                 {
                     $totalhashtagsperpost[$row] = count($val);
                 }
-                $hashtag_per_post = array_count_values($totalhashtagsperpost);
-                $totalhashtaginpost = $sc->array_merge_numeric_values($getdb['totalhashtaginpost'],$hashtag_per_post);
+                $totalhashtaginpost = array_count_values($totalhashtagsperpost);
             }
             
             #HASHTAG BY POPULARITY
@@ -1188,13 +1212,11 @@ class UpdateSearchIg extends Command
                 }
             });
         
-            $hash['specific'] = count($hash['specific']) + $getdb['hashtagspopularity']['specific'];
-            $hash['medium'] = count($hash['medium']) + $getdb['hashtagspopularity']['medium'];
-            $hash['popular'] = count($hash['popular']) + $getdb['hashtagspopularity']['popular'];
-            $hash['very_popular'] = count($hash['very_popular']) + $getdb['hashtagspopularity']['very_popular'];
-            $hash['x_popular'] = count($hash['x_popular']) + $getdb['hashtagspopularity']['x_popular'];
-        
-            //print('<pre>'.print_r(round($percenthashtag),true).'</pre>');
+            $hash['specific'] = count($hash['specific']);
+            $hash['medium'] = count($hash['medium']);
+            $hash['popular'] = count($hash['popular']);
+            $hash['very_popular'] = count($hash['very_popular']);
+            $hash['x_popular'] = count($hash['x_popular']);
 
             $data = array(
                 'post'=>$posts,
@@ -1209,11 +1231,53 @@ class UpdateSearchIg extends Command
                 'totalvideoview'=>$viewVideo
             );
 
+            $json = json_encode($data,true);
+            file_put_contents(storage_path('jsondata').'/'.$userId.'.json', $json);
+
+        }
+        catch (\InstagramAPI\Exception\IncorrectPasswordException $e) {
+            //klo error password
+            $error_message = $e->getMessage();
+        }
+        catch (\InstagramAPI\Exception\AccountDisabledException $e) {
+            //klo error password
+            $error_message = $e->getMessage();
+        }
+        catch (\InstagramAPI\Exception\CheckpointRequiredException $e) {
+            //klo error email / phone verification 
+            $error_message = $e->getMessage();
+        }
+                catch (\InstagramAPI\Exception\InstagramException $e) {
+                    $is_error = true;
+                    // if ($e->hasResponse() && $e->getResponse()->isTwoFactorRequired()) {
+                        // echo "2 Factor perlu dioffkan";
+                    // } 
+                    // else {
+                            // all other login errors would get caught here...
+                        echo $e->getMessage();
+                    // }
+                }   
+        catch (NotFoundException $e) {
+            // echo $e->getMessage();
+            echo "asd";
+        }                   
+        catch (Exception $e) {
+            $error_message = "fin ".$e->getMessage();
+            if ($error_message == "InstagramAPI\Response\LoginResponse: The password you entered is incorrect. Please try again.") {
+                $error_message = "fin ".$e->getMessage();
+            } 
+            if ( ($error_message == "InstagramAPI\Response\LoginResponse: Challenge required.") || ( substr($error_message, 0, 18) == "challenge_required") || ($error_message == "InstagramAPI\Response\TimelineFeedResponse: Challenge required.") || ($error_message == "InstagramAPI\Response\LoginResponse: Sorry, there was a problem with your request.") ){
+                $error_message = "fin ".$e->getMessage();
+            }
+        }
+        echo $error_message;    
+
+            /*
             #get old data
             $getdata = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
             $db = json_decode($getdata,true);
 
-            $merge['post'] = $db['post'] + $data['post'];
+            /*$merge['post'] = $db['post'] + $data['post'];
             $merge['hashtags'] = $data['hashtags'] + $db['hashtags'];
             $merge['graph'] = $data['graph'];
             $merge['piedata'] = $data['piedata'];
@@ -1223,15 +1287,9 @@ class UpdateSearchIg extends Command
             $merge['totaldaypost'] = $data['totaldaypost'];
             $merge['totalclock'] = $data['totalclock'];
             $merge['totalvideoview'] = $data['totalvideoview'] + $db['totalvideoview'];
+            */
            
-            #print('<pre>'.print_r($merge,true).'</pre>');
-            if(count($merge['post']) > 10)
-            {
-                $merge['post'] = array_slice($merge['post'],0,10);
-            }
-            $json = json_encode($merge,true);
-            Cache::where('id',$cacheId)->update(['nextmaxid'=>$nextMaxId]);
-            file_put_contents(storage_path('jsondata').'/'.$userId.'.json', $json);
+            #print('<pre>'.print_r($merge,true).'</pre>'); 
     }
 
 /* end class */
