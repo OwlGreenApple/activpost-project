@@ -202,7 +202,6 @@ class UpdateSearchIg extends Command
                             "comments" => $item->getCommentCount(),
                         );
 
-
                         #average post by week
                         $totalweek[$item->getPk()] = Date('D',$item->getTakenAt());
                         $totalhours[$item->getPk()] = Date('H:00',$item->getTakenAt());
@@ -222,6 +221,7 @@ class UpdateSearchIg extends Command
              # GET RECORDED DATA
             $getdata = file_get_contents(storage_path('jsondata').'/'.$userId.'.json');
             $getdb = json_decode($getdata,true);
+            $dbpost = count($getdb['post']);
 
             #average post by time
             $newtotalclock = array_count_values($totalhours);
@@ -456,7 +456,7 @@ class UpdateSearchIg extends Command
             Cache::where('id',$cacheId)->update(['nextmaxid'=>$nextMaxId]);
             file_put_contents(storage_path('jsondata').'/'.$userId.'.json', $json);
 
-            if($maxid == null && $nextid <> null)
+            if($maxid == null && $nextid <> null && $dbpost < 300)
             {
                 $this->updateIgNextData($userId,$cacheId,$nextid);
             }
@@ -516,7 +516,6 @@ class UpdateSearchIg extends Command
             $i->login($this->login, $this->password, 300);
 
             $totalpost = 0;
-            $maxpost = false;
             $totalpost = $i->people->getInfoById($userId)->getUser()->getMediaCount();
             $follower = $i->people->getInfoById($userId)->getUser()->getFollowerCount();
 
@@ -884,11 +883,7 @@ class UpdateSearchIg extends Command
             $merge['totalvideoview'] = $data['totalvideoview'] + $db['totalvideoview'];
            
             #print('<pre>'.print_r($merge,true).'</pre>');
-            if(count($merge['post']) > 300)
-            {
-                $merge['post'] = array_slice($merge['post'],0,10);
-                $maxpost = true;
-            }
+           
             $json = json_encode($merge,true);
             Cache::where('id',$cacheId)->update(['nextmaxid'=>$nextMaxId]);
             file_put_contents(storage_path('jsondata').'/'.$userId.'.json', $json);
@@ -979,6 +974,12 @@ class UpdateSearchIg extends Command
                 foreach ($delPost as $arraykey) {
                     unset($post[$arraykey]);
                 }
+            }
+
+            #SELECTION TO MAKE TOTAL POST 300
+            if(count($post) > 300)
+            {
+                $post = array_slice($post,0,300);
             }
 
             #MAKE FILTER AFTER DELETE OR ADDING DATA
