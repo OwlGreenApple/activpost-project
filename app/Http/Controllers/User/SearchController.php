@@ -10,13 +10,24 @@ class SearchController extends Controller
 {
 
 	function __construct() {
-	   $this->storage = "mysql";
-	   $this->dbhost = "localhost";
-	   $this->dbname = "instasearch";
-	   $this->dbusername = "root";
-	   $this->dbpassword = "";
-	   $this->login = "bungariaanastasya";
-	   $this->password = "qweasdzxc123";
+    if ( env('APP_ENV') == "local" ) {
+      $this->storage = "mysql";
+      $this->dbhost = "localhost";
+      $this->dbname = "instasearch";
+      $this->dbusername = "root";
+      $this->dbpassword = "";
+      $this->login = "bungariaanastasya";
+      $this->password = "qweasdzxc123";
+    }
+    else {
+      $this->storage = "mysql";
+      $this->dbhost = env("DB_HOST");
+      $this->dbname = env("DB_DATABASE");
+      $this->dbusername = env("DB_USERNAME");
+      $this->dbpassword = env("DB_PASSWORD");
+      $this->login = "bungariaanastasya";
+      $this->password = "qweasdzxc123";
+    }
 	}
 
     public function index(){

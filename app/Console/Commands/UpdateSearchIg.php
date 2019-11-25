@@ -33,10 +33,10 @@ class UpdateSearchIg extends Command
         parent::__construct();
 
         $this->storage = "mysql";
-        $this->dbhost = "localhost";
-        $this->dbname = "instasearch";
-        $this->dbusername = "root";
-        $this->dbpassword = "";
+        $this->dbhost = env("DB_HOST");
+        $this->dbname = env("DB_DATABASE");
+        $this->dbusername = env("DB_USERNAME");
+        $this->dbpassword = env("DB_PASSWORD");
         $this->login = "bungariaanastasya";
         $this->password = "qweasdzxc123";
     }
