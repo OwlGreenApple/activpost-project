@@ -133,7 +133,58 @@ class APIController extends Controller
 								$i->setProxy("http://".$proxy->cred."@".$proxy->proxy.":".$proxy->port);
 							}
 						}
-            $i->setProxy("http://51.15.5.159:2016");
+            $arr_users[] = [
+              "proxy"=>"51.15.5.159",
+              "port"=>"2016",
+            ];			
+            
+            $arr_users[] = [
+              "proxy"=>"51.15.5.159",
+              "port"=>"2017",
+            ];			
+            
+            $arr_users[] = [
+              "proxy"=>"51.15.5.159",
+              "port"=>"2018",
+            ];			
+            
+            $arr_users[] = [
+              "proxy"=>"51.15.5.159",
+              "port"=>"2019",
+            ];			
+            
+            $arr_users[] = [
+              "proxy"=>"51.15.5.159",
+              "port"=>"2020",
+            ];			
+            
+            $arr_users[] = [
+              "proxy"=>"51.15.5.159",
+              "port"=>"2021",
+            ];			
+            
+            $arr_users[] = [
+              "proxy"=>"51.15.5.159",
+              "port"=>"2022",
+            ];			
+            
+            $arr_users[] = [
+              "proxy"=>"51.15.5.159",
+              "port"=>"2023",
+            ];			
+            
+            $arr_users[] = [
+              "proxy"=>"51.15.5.159",
+              "port"=>"2024",
+            ];			
+            
+            $arr_users[] = [
+              "proxy"=>"51.15.5.159",
+              "port"=>"2025",
+            ];			
+        
+            $arr_user = $arr_users[array_rand($arr_users)];
+            $i->setProxy("http://michaelsugih:69682micro@".$arr_user['proxy'].":".$arr_user['port']);
 						$i->login($username, $password, 300);
 						// $logs = $sc->slug.'-'.$sc->media_type.", Login akun\n";
 						// fwrite($myfile, $logs);
