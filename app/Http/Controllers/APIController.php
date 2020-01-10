@@ -133,6 +133,7 @@ class APIController extends Controller
 								$i->setProxy("http://".$proxy->cred."@".$proxy->proxy.":".$proxy->port);
 							}
 						}
+            $i->setProxy("http://51.15.5.159:2016");
 						$i->login($username, $password, 300);
 						// $logs = $sc->slug.'-'.$sc->media_type.", Login akun\n";
 						// fwrite($myfile, $logs);
