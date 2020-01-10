@@ -18,7 +18,7 @@ Route::get('resend-email-activation', 'LandingPageController@resendEmailActivati
 //Route::get('tes-email','User\HomeController@tes_email');
 
 if(env('APP_PROJECT')=='Celebgramme'){
-  Route::get('prices', 'Auth\RegisterController@ordersg');
+  //last Route::get('prices', 'Auth\RegisterController@ordersg');
   Route::post('orderslogin', 'Auth\RegisterController@prologinorder');
   // Route::get('prices', 'Auth\RegisterController@showPrices');
   Route::get('checkout', 'Auth\RegisterController@showCheckout');
@@ -197,13 +197,13 @@ Route::group(['middleware' => 'auth'], function () {
   Route::get('maintenance/delsche', 'User\MaintenanceController@delsche');
 
   if(env('APP_PROJECT')=='Celebgramme'){
-    Route::get('order', 'User\OrderController@index');
+    /* last Route::get('order', 'User\OrderController@index');
     Route::post('add-order', 'User\OrderController@addorder');
     Route::get('confir-payment', 'User\OrderController@confirpay');
     Route::post('prose-con-pay', 'User\OrderController@proconpay');
     Route::get('check-no-order', 'User\OrderController@checknoorder');
     Route::get('confirm-order', 'User\OrderController@listorderuser');
-    Route::get('confirm-payment', 'User\OrderController@index_confirm_payment');
+    Route::get('confirm-payment', 'User\OrderController@index_confirm_payment');*/
   }
   //Route::get('orders', 'User\OrderController@orderg');
   //Route::post('search-orders','Admin\OrderController@searchorder');
